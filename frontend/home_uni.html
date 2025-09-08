@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diverse Loopers – Redefining University-Industry Collaboration</title>
+    <!-- Google Fonts for the 'Inter' font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        /* --- Base & Typography --- */
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #000000;
+            color: #E5E7EB;
+            overflow-x: hidden;
+        }
+
+        /* --- Animations & Effects --- */
+        @keyframes pan-background {
+            0% {
+                background-position: 0% 0%;
+            }
+
+            100% {
+                background-position: 50px 50px;
+            }
+        }
+
+        .animated-grid-bg {
+            background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: pan-background 20s linear infinite;
+        }
+
+        .text-glow {
+            text-shadow: 0 0 12px rgba(59, 130, 246, 0.6), 0 0 30px rgba(59, 130, 246, 0.4);
+        }
+
+        /* --- Layout --- */
+        .container {
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .container {
+                max-width: 640px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                max-width: 768px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .container {
+                max-width: 1024px;
+            }
+        }
+
+        @media (min-width: 1280px) {
+            .container {
+                max-width: 1280px;
+            }
+        }
+
+        /* --- Header --- */
+        header {
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(1.5rem);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            border-bottom: 1px solid rgba(55, 65, 81, 0.5);
+        }
+
+        header .logo {
+            height: 2.5rem;
+            /* 40px */
+            width: auto;
+        }
+
+        /* --- Timeline (Blueprint Section) --- */
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 36px;
+            bottom: -1.5rem;
+            width: 2px;
+            background-color: #374151;
+            /* gray-700 */
+        }
+
+        .timeline-item:last-child::before {
+            display: none;
+        }
+
+        .blueprint-list {
+            margin-top: 1rem;
+            padding-left: 1.5rem;
+            list-style-type: disc;
+            color: #9CA3AF;
+        }
+
+        .blueprint-list li {
+            margin-top: 0.5rem;
+        }
+
+
+        /* --- Main Content Sections --- */
+        main {
+            padding-top: 5rem;
+        }
+
+        section {
+            padding-top: 6rem;
+            padding-bottom: 6rem;
+        }
+
+        .bg-black {
+            background-color: #000;
+        }
+
+        .hero-section {
+            padding-top: 8rem;
+            padding-bottom: 8rem;
+        }
+
+        @media (min-width: 768px) {
+            .hero-section {
+                padding-top: 12rem;
+                padding-bottom: 12rem;
+            }
+        }
+
+        /* --- Text & Headlines --- */
+        h1 {
+            font-size: 3rem;
+            /* 5xl */
+            font-weight: 900;
+            color: white;
+            line-height: 1;
+            letter-spacing: -0.05em;
+        }
+
+        @media (min-width: 768px) {
+            h1 {
+                font-size: 4.5rem;
+                /* 7xl */
+            }
+        }
+
+        @media (min-width: 1024px) {
+            h1 {
+                font-size: 6rem;
+                /* 8xl */
+            }
+        }
+
+        h2 {
+            font-size: 1rem;
+            /* base */
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            color: #3B82F6;
+            /* blue-500 */
+            text-transform: uppercase;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            /* xl */
+            font-weight: 700;
+            color: white;
+        }
+
+        .manifesto-title {
+            margin-top: 1rem;
+            font-size: 2.25rem;
+            /* 4xl */
+            font-weight: 900;
+            color: white;
+            letter-spacing: -0.025em;
+        }
+
+        @media (min-width: 768px) {
+            .manifesto-title {
+                font-size: 3rem;
+                /* 5xl */
+            }
+        }
+
+        .blueprint-title {
+            margin-top: 1rem;
+            font-size: 2.25rem;
+            /* 4xl */
+            font-weight: 900;
+            color: white;
+            letter-spacing: -0.025em;
+        }
+
+        @media (min-width: 768px) {
+            .blueprint-title {
+                font-size: 3rem;
+                /* 5xl */
+            }
+        }
+
+        p {
+            margin-top: 1.5rem;
+            font-size: 1.25rem;
+            color: #9CA3AF;
+            /* gray-400 */
+        }
+
+        .max-w-2xl {
+            max-width: 42rem;
+        }
+
+        .max-w-3xl {
+            max-width: 48rem;
+        }
+
+        .max-w-4xl {
+            max-width: 56rem;
+        }
+
+        /* --- Buttons --- */
+        .button {
+            display: inline-block;
+            margin-top: 2.5rem;
+            padding: 1rem 2rem;
+            color: white;
+            font-weight: 700;
+            border-radius: 0.5rem;
+            background-color: #3B82F6;
+            /* blue-600 */
+            font-size: 1.125rem;
+            box-shadow: 0 20px 25px -5px rgba(59, 130, 246, 0.3), 0 8px 10px -6px rgba(59, 130, 246, 0.3);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .button:hover {
+            background-color: #2563EB;
+            /* blue-500 */
+            transform: scale(1.05);
+        }
+
+        /* --- Forms --- */
+        form input {
+            width: 95%;
+            padding: 0.75rem 2rem ;
+            border: 1px solid #4B5563;
+            /* gray-700 */
+            border-radius: 0.375rem;
+            background-color: #111827;
+            /* gray-900 */
+            color: white;
+            text-align: center;
+        }
+
+        form input::placeholder {
+            color: #6B7280;
+            /* gray-500 */
+        }
+
+        form input:focus {
+            outline: 2px solid transparent;
+            outline-offset: 2px;
+            border-color: #3B82F6;
+            /* blue-500 */
+            box-shadow: 0 0 0 2px #3B82F6;
+        }
+
+        form button {
+            width: 100%;
+            padding: 0.75rem 2rem;
+            color: white;
+            font-weight: 700;
+            border-radius: 0.375rem;
+            background-color: #3B82F6;
+            /* blue-600 */
+            font-size: 1.125rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        form button:hover {
+            background-color: #2563EB;
+            /* blue-500 */
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.4), 0 4px 6px -4px rgba(59, 130, 246, 0.4);
+        }
+
+        /* --- Navigation Links --- */
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-links a {
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: #9CA3AF;
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+        }
+
+        .nav-links a:hover {
+            background-color: #1F2937;
+            color: #FFFFFF;
+        }
+
+        .nav-links a.active {
+            background-color: #1F2937;
+            color: #FFFFFF;
+        }
+    </style>
+</head>
+
+<body class="animated-grid-bg">
+
+    <!-- Header / Navigation -->
+    <header>
+        <div class="container"
+            style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; padding-bottom: 1rem;">
+            <a href="#" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none;">
+                <img src="logo2.png" alt="Diverse Loopers Logo" class="logo">
+                <span style="font-size: 1.25rem; font-weight: 700; color: white;">Diverse Loopers</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">For Students</a>
+                <a href="home_uni.html" class="active">For Universities</a>
+                <a href="home_bus.html">For Businesses</a>
+            </div>
+            <a href="#contact"
+                style="display: inline-block; padding: 0.5rem 1.5rem; color: white; font-weight: 600; border-radius: 0.375rem; background-color: #3B82F6; text-decoration: none; transition: all 0.3s ease;">
+                Become a Partner
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="container">
+                <div class="max-w-4xl">
+                    <h1>
+                        Stop Preparing Students for the Last Decade. Start Building for the Next.
+                    </h1>
+                    <p>
+                        For too long, universities have been preparing students with models of education that no longer
+                        match the pace and demands of today’s industry. The job market is shifting rapidly, technology
+                        is advancing faster than ever, and traditional education often struggles to keep up.
+                    </p>
+                    <p style="font-size: 1.125rem;">
+                        Diverse Loopers exists to bridge this gap. We invite universities to become co-architects of a
+                        new model of higher education—one that is skills-first, industry-embedded, and outcomes-driven.
+                        This is not just about introducing another program; it’s about reshaping how students learn,
+                        apply knowledge, and succeed in the real world.
+                    </p>
+                    <a href="#blueprint" class="button">
+                        View the Blueprint
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- The Manifesto Section -->
+        <section class="bg-black">
+            <div class="container">
+                <div class="max-w-3xl">
+                    <h2>Our Manifesto – What We Stand For</h2>
+                    <p class="manifesto-title">
+                        At Diverse Loopers, we believe the future of education is built on three uncompromising
+                        principles:
+                    </p>
+                </div>
+                <div style="margin-top: 3rem; display: grid; gap: 2rem;"
+                    class="grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <h3>1. Skill is the New Currency</h3>
+                        <p style="margin: 0; font-size: 1rem;">Degrees alone are no longer enough. Employers demand
+                            verified, job-ready skills. We help students build real portfolios of projects, internships,
+                            and industry-recognized expertise, making them stand out in competitive job markets.</p>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <h3>2. Industry Cannot Be a Guest Lecturer</h3>
+                        <p style="margin: 0; font-size: 1rem;">The corporate world cannot remain an afterthought in
+                            education. It must be a core partner in shaping curriculum, guiding projects, and mentoring
+                            students. We integrate industry professionals directly into the academic journey, ensuring
+                            learning is aligned with actual market needs.</p>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        <h3>3. Education’s ROI Must Be Explicit</h3>
+                        <p style="margin: 0; font-size: 1rem;">The true success of an educational program is not
+                            measured only in grades but in career outcomes—employment, entrepreneurship, and
+                            professional growth. Every student who graduates should be fully prepared to thrive not just
+                            academically, but professionally.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- The Blueprint Section -->
+        <section id="blueprint">
+            <div class="container">
+                <div class="max-w-3xl">
+                    <h2>The Blueprint – How We Partner With You</h2>
+                    <p class="blueprint-title">
+                        We don’t believe in one-size-fits-all. Instead, we co-create with you.
+                    </p>
+                    <p style="font-size: 1.125rem;">
+                        Together, we embark on a three-phase journey designed to embed skills, validate impact, and
+                        scale innovation.
+                    </p>
+                </div>
+                <div style="margin-top: 4rem;">
+                    <div style="position: relative; display: flex; flex-direction: column; gap: 3rem;">
+                        <!-- Timeline Item 1 -->
+                        <div class="timeline-item" style="position: relative; padding-left: 3rem;">
+                            <div
+                                style="position: absolute; left: 0; top: 0; display: flex; align-items: center; justify-content: center; width: 1.5rem; height: 1.5rem; border-radius: 9999px; background-color: #1F2937; border-width: 2px; border-color: #3B82F6;">
+                                <div
+                                    style="width: 0.5rem; height: 0.5rem; border-radius: 9999px; background-color: #3B82F6;">
+                                </div>
+                            </div>
+                            <p style="margin: 0; font-size: 0.875rem; font-weight: 600; color: #60A5FA;">Phase 1:
+                                Co-Creation & Integration (6 Months)</p>
+                            <h3 style="margin-top: 0.5rem; font-size: 1.5rem;">Embed the Ecosystem</h3>
+                            <ul class="blueprint-list" style="font-size: 1rem;">
+                                <li>Collaborate with your faculty to identify a pilot department.</li>
+                                <li>Integrate Diverse Loopers’ platform and ecosystem into your academic flow.</li>
+                                <li>Co-develop Live Curriculum™ modules, aligned with the most urgent needs of the
+                                    industry.</li>
+                                <li>Equip students with access to mentorship, real-world projects, and skill-based
+                                    learning from day one.</li>
+                            </ul>
+                        </div>
+                        <!-- Timeline Item 2 -->
+                        <div class="timeline-item" style="position: relative; padding-left: 3rem;">
+                            <div
+                                style="position: absolute; left: 0; top: 0; display: flex; align-items: center; justify-content: center; width: 1.5rem; height: 1.5rem; border-radius: 9999px; background-color: #1F2937; border-width: 2px; border-color: #374151;">
+                            </div>
+                            <p style="margin: 0; font-size: 0.875rem; font-weight: 600; color: #9CA3AF;">Phase 2: Pilot
+                                Program & Placement (12 Months)</p>
+                            <h3 style="margin-top: 0.5rem; font-size: 1.5rem;">Launch the Pilot & Prove the Model</h3>
+                            <ul class="blueprint-list" style="font-size: 1rem;">
+                                <li>Launch the first cohort of students into the program.</li>
+                                <li>Guide them to build Verified Skill Portfolios with real projects, not just grades.
+                                </li>
+                                <li>Activate our placement ecosystem with partner companies.</li>
+                                <li>Secure internships, interviews, and job opportunities for students.</li>
+                                <li>Provide tangible success metrics (employment rate, placement statistics, ROI).</li>
+                            </ul>
+                        </div>
+                        <!-- Timeline Item 3 -->
+                        <div class="timeline-item" style="position: relative; padding-left: 3rem;">
+                            <div
+                                style="position: absolute; left: 0; top: 0; display: flex; align-items: center; justify-content: center; width: 1.5rem; height: 1.5rem; border-radius: 9999px; background-color: #1F2937; border-width: 2px; border-color: #374151;">
+                            </div>
+                            <p style="margin: 0; font-size: 0.875rem; font-weight: 600; color: #9CA3AF;">Phase 3:
+                                National Spotlight & Scale (Ongoing)</p>
+                            <h3 style="margin-top: 0.5rem; font-size: 1.5rem;">Showcase the Success & Expand</h3>
+                            <ul class="blueprint-list" style="font-size: 1rem;">
+                                <li>Showcase results through case studies and whitepapers that position your institution
+                                    as a national leader.</li>
+                                <li>Expand the model across multiple departments.</li>
+                                <li>Create a sustainable competitive advantage for your university.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why Partner Section -->
+        <section class="bg-black">
+            <div class="container">
+                <div class="max-w-3xl">
+                    <h2>Why Partner With Diverse Loopers?</h2>
+                </div>
+                <div style="margin-top: 3rem; display: grid; gap: 2rem;"
+                    class="grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                    <div style="background-color: #111827; padding: 1.5rem; border-radius: 0.5rem;">
+                        <h3 style="font-size: 1.125rem;">Future-Ready Students</h3>
+                        <p style="margin: 0.5rem 0 0 0; font-size: 1rem;">Graduates leave with industry portfolios, not
+                            just transcripts.</p>
+                    </div>
+                    <div style="background-color: #111827; padding: 1.5rem; border-radius: 0.5rem;">
+                        <h3 style="font-size: 1.125rem;">Enhanced Employability</h3>
+                        <p style="margin: 0.5rem 0 0 0; font-size: 1rem;">Access to internships and placements with our
+                            partner network.</p>
+                    </div>
+                    <div style="background-color: #111827; padding: 1.5rem; border-radius: 0.5rem;">
+                        <h3 style="font-size: 1.125rem;">Faculty Empowerment</h3>
+                        <p style="margin: 0.5rem 0 0 0; font-size: 1rem;">Training, mentorship, and direct collaboration
+                            with industry experts.</p>
+                    </div>
+                    <div style="background-color: #111827; padding: 1.5rem; border-radius: 0.5rem;">
+                        <h3 style="font-size: 1.125rem;">Institutional Leadership</h3>
+                        <p style="margin: 0.5rem 0 0 0; font-size: 1rem;">Position your university as an innovator in
+                            education.</p>
+                    </div>
+                    <div style="background-color: #111827; padding: 1.5rem; border-radius: 0.5rem;">
+                        <h3 style="font-size: 1.125rem;">Stronger Industry Bonds</h3>
+                        <p style="margin: 0.5rem 0 0 0; font-size: 1rem;">Build long-term corporate partnerships.</p>
+                    </div>
+                </div>
+                <p style="margin-top: 3rem; font-size: 1.125rem;">This is not just a partnership; it’s an opportunity to
+                    transform your university into a hub of innovation and employability.</p>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="bg-black">
+            <div class="container">
+                <div style="background-color: rgba(59, 130, 246, 0.1); border-radius: 1rem; border: 1px solid rgba(59, 130, 246, 0.2); overflow: hidden; display: grid;"
+                    class="lg:grid-cols-2">
+                    <div style="padding: 2rem;" class="md:p-12">
+                        <h2 style="font-size: 1.875rem; font-weight: 800; color: white;" class="md:text-4xl">
+                            An Invitation to Build
+                        </h2>
+                        <p style="margin-top: 1rem; font-size: 1.125rem; color: #BFDBFE;">
+                            We are extending an exclusive invitation to visionary universities to join us as founding
+                            partners in this mission. This is not another vendor relationship; this is a co-created
+                            movement that will define the next decade of education.
+                        </p>
+                        <p style="margin-top: 1.5rem; font-size: 1.125rem; color: #BFDBFE;">
+                            If this vision resonates with you, we would be honored to collaborate and design the future
+                            of higher education together.
+                        </p>
+                    </div>
+                    <div style="padding: 2rem;" class="md:p-12">
+                        <form action="#" method="POST" style="display: flex; flex-direction: column; gap: 1.25rem;">
+                            <input type="text" name="university-name" placeholder="University Name" required>
+                            <input type="text" name="name" placeholder="Your Name" required>
+                            <input type="email" name="email" placeholder="Work Email" required>
+                            <button type="submit">
+                                 Start the Conversation
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer style="background-color: #000; border-top: 1px solid rgba(55, 65, 81, 0.5);">
+        <div class="container" style="padding-top: 2rem; padding-bottom: 2rem;">
+            <div style="display: flex; flex-direction: column; justify-content: space-between; align-items: center;"
+                class="md:flex-row">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <img src="logo2.png" alt="Diverse Loopers Logo" class="logo" style="height: 2rem;">
+                    <span style="font-size: 1.125rem; font-weight: 700; color: white;">Diverse Loopers</span>
+                </div>
+                <div style="font-size: 0.875rem; color: #6B7280; margin-top: 1rem;" class="md:mt-0">
+                    &copy; 2024 Diverse Loopers Inc. Let's create a model where students don’t just graduate but thrive.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+
+</html>

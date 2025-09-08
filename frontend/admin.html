@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Diverse Loopers</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --slate-50: #f8fafc;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --white: #ffffff;
+            --indigo-50: #eef2ff;
+            --indigo-100: #e0e7ff;
+            --indigo-600: #4f46e5;
+            --purple-600: #9333ea;
+            --green-500: #22c55e;
+            --red-500: #ef4444;
+            --shadow: 0 4px 10px -1px rgb(0 0 0 / 0.05), 0 2px 6px -2px rgb(0 0 0 / 0.05);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--slate-50);
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+            color: var(--gray-800);
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 16rem;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .logo-img {
+            width: 62px;
+            height: 62px;
+        }
+
+        .sidebar-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .sidebar nav {
+            flex: 1;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: var(--gray-600);
+            border-radius: 0.5rem;
+            text-decoration: none;
+            transition: background-color 0.2s, color 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            background-color: var(--gray-100);
+        }
+
+        .nav-link.active {
+            background-color: var(--indigo-50);
+            color: var(--gray-800);
+            font-weight: 600;
+        }
+
+        .lucide {
+            width: 24px;
+            height: 24px;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2.5rem;
+            overflow-y: auto;
+        }
+
+        .main-header h1 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin: 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background-color: var(--white);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--indigo-600);
+        }
+
+        .stat-card:nth-child(2) {
+            border-left-color: var(--green-500);
+        }
+
+        .stat-card:nth-child(3) {
+            border-left-color: var(--purple-600);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        @media(min-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+
+        .card {
+            background-color: var(--white);
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h2 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        #search-users {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--gray-200);
+            border-radius: 0.375rem;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        tbody tr:nth-child(odd) {
+            background-color: var(--slate-50);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        th {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .avatar-cell {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--gray-200);
+            background-size: cover;
+            background-position: center;
+        }
+
+        .role-badge {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            text-transform: capitalize;
+        }
+
+        .role-user {
+            background-color: var(--gray-100);
+            color: var(--gray-800);
+        }
+
+        .role-admin {
+            background-color: #f3e8ff;
+            color: #6b21a8;
+        }
+
+        .action-cell button,
+        .action-cell select {
+            background: none;
+            border: none;
+            color: var(--indigo-600);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.875rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .action-cell select {
+            padding: 0.25rem;
+            border-radius: 4px;
+            border: 1px solid var(--gray-200);
+        }
+
+        .btn-delete {
+            color: var(--red-500);
+        }
+
+        .activity-feed {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .activity-item {
+            display: flex;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--indigo-50);
+            color: var(--indigo-600);
+            flex-shrink: 0;
+        }
+
+        .activity-text {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+
+        .activity-text strong {
+            color: var(--gray-900);
+        }
+
+        .activity-time {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+        }
+
+        .chart-container {
+            padding: 1.5rem;
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1rem;
+            height: 200px;
+            align-items: flex-end;
+            border-bottom: 1px solid var(--gray-200);
+            padding-bottom: 0.5rem;
+        }
+
+        .chart-bar {
+            background-color: var(--indigo-100);
+            border-radius: 4px;
+            transition: height 0.5s ease-out;
+        }
+
+        .chart-labels {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 1rem;
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            text-align: center;
+            color: var(--gray-500);
+        }
+
+        #skills-list {
+            list-style: none;
+            padding: 1.5rem;
+            margin: 0;
+        }
+
+        #skills-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        #add-skill-form {
+            display: flex;
+            gap: 0.5rem;
+            padding: 1.5rem;
+        }
+
+        #add-skill-form input {
+            flex-grow: 1;
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--gray-200);
+            border-radius: 0.375rem;
+        }
+
+        #add-skill-form button {
+            padding: 0.5rem 1rem;
+            border: none;
+            background-color: var(--indigo-600);
+            color: white;
+            border-radius: 0.375rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <img src="logo2.png" alt="Logo" class="logo-img">
+            <h1 class="sidebar-title">Admin</h1>
+        </div>
+        <nav>
+            <a id="nav-dashboard" class="nav-link active">
+                <svg class="lucide" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <rect width="7" height="9" x="3" y="3" rx="1" />
+                    <rect width="7" height="5" x="14" y="3" rx="1" />
+                    <rect width="7" height="9" x="14" y="12" rx="1" />
+                    <rect width="7" height="5" x="3" y="16" rx="1" />
+                </svg>
+                <span>Dashboard</span>
+            </a>
+            <a id="nav-users" class="nav-link">
+                <svg class="lucide" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+                <span>Users</span>
+            </a>
+            <a id="nav-skills" class="nav-link">
+                <svg class="lucide" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
+                    <path d="M5 3v4" />
+                    <path d="M19 17v4" />
+                    <path d="M3 5h4" />
+                    <path d="M17 19h4" />
+                </svg>
+                <span>Skills Management</span>
+            </a>
+            <a href="#" id="logout-button" class="nav-link">
+                <svg class="lucide" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" x2="9" y1="12" y2="12" />
+                </svg>
+                <span>Logout</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <!-- DASHBOARD VIEW -->
+        <div id="dashboard-view">
+            <header class="main-header">
+                <h1>Dashboard</h1>
+            </header>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Users</div>
+                    <div id="total-users" class="stat-value">...</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Analyses Run</div>
+                    <div id="total-analyses" class="stat-value">...</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Avg. Match %</div>
+                    <div id="avg-match" class="stat-value">...%</div>
+                </div>
+            </div>
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>User Registrations (Last 7 Days)</h2>
+                    </div>
+                    <div class="chart-container">
+                        <div id="chart-grid" class="chart-grid"></div>
+                        <div id="chart-labels" class="chart-labels"></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Recent Activity</h2>
+                    </div>
+                    <ul id="activity-feed" class="activity-feed">
+                        <!-- Activity items will be inserted here -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- USERS VIEW -->
+        <div id="users-view" style="display: none;">
+            <header class="main-header">
+                <h1>User Management</h1>
+            </header>
+            <div class="card">
+                <div class="card-header">
+                    <h2>All Users</h2>
+                    <input type="text" id="search-users" placeholder="Search by name or email...">
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Joined</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SKILLS VIEW -->
+        <div id="skills-view" style="display: none;">
+            <header class="main-header">
+                <h1>Skills Management</h1>
+            </header>
+            <div class="card">
+                <div class="card-header">
+                    <h2>Add New Skill</h2>
+                </div>
+                <form id="add-skill-form">
+                    <input type="text" id="new-skill-input" placeholder="Enter a new skill..." required>
+                    <button type="submit">Add</button>
+                </form>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <h2>Existing Skills</h2>
+                </div>
+                <ul id="skills-list"></ul>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        const SUPABASE_URL = 'https://tjqsmkaiajdpotmafqvw.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqcXNta2FpYWpkcG90bWFmcXZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU5ODA3NDIsImV4cCI6MjA3MTU1Njc0Mn0.9710q9W5EFfCagj340AizUSKiOXYApy0xkTFszFjO8o';
+        const { createClient } = supabase;
+        const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let allUsers = [];
+        let allSkills = [];
+
+        // --- View Switching Logic ---
+        const views = {
+            dashboard: document.getElementById('dashboard-view'),
+            users: document.getElementById('users-view'),
+            skills: document.getElementById('skills-view'),
+        };
+        const navLinks = {
+            dashboard: document.getElementById('nav-dashboard'),
+            users: document.getElementById('nav-users'),
+            skills: document.getElementById('nav-skills'),
+        };
+        function switchView(viewName) {
+            Object.values(views).forEach(v => v.style.display = 'none');
+            Object.values(navLinks).forEach(l => l.classList.remove('active'));
+            views[viewName].style.display = 'block';
+            navLinks[viewName].classList.add('active');
+        }
+        navLinks.dashboard.addEventListener('click', () => switchView('dashboard'));
+        navLinks.users.addEventListener('click', () => switchView('users'));
+        navLinks.skills.addEventListener('click', () => switchView('skills'));
+
+
+        async function main() {
+            const { data: { user } } = await db.auth.getUser();
+            if (!user) { window.location.href = '/index.html'; return; }
+
+            const { data: profile, error } = await db.from('profiles').select('role').eq('id', user.id).single();
+            if (error || !profile || profile.role !== 'admin') {
+                console.warn('Unauthorized access attempt.');
+                // window.location.href = '/index.html'; // Enable for production
+                // return;
+            }
+            loadAllData();
+        }
+
+        function loadAllData() {
+            loadDashboardStats();
+            loadAllUsers();
+            loadSignupChartData();
+            loadAllSkills();
+            loadActivityFeed();
+        }
+
+        async function loadDashboardStats() {
+            const { count: userCount } = await db.from('profiles').select('*', { count: 'exact', head: true });
+            document.getElementById('total-users').textContent = userCount ?? '0';
+
+            const { count: analysisCount } = await db.from('analyses').select('*', { count: 'exact', head: true });
+            document.getElementById('total-analyses').textContent = analysisCount ?? '0';
+
+            const { data: avgData, error } = await db.from('analyses').select('match_percentage');
+            if (avgData && avgData.length > 0) {
+                const avg = avgData.reduce((acc, curr) => acc + curr.match_percentage, 0) / avgData.length;
+                document.getElementById('avg-match').textContent = `${Math.round(avg)}%`;
+            } else {
+                document.getElementById('avg-match').textContent = 'N/A';
+            }
+        }
+
+        async function loadAllUsers() {
+            const { data: users, error } = await db.from('profiles').select(`id, full_name, role, avatar_url, users ( email, created_at )`).order('created_at', { foreignTable: 'users', ascending: false });
+            if (error) { console.error("Error fetching users:", error); return; }
+            allUsers = users.map(u => ({ ...u, ...u.users }));
+            renderUsersTable(allUsers);
+        }
+
+        function renderUsersTable(users) {
+            const tableBody = document.getElementById('users-table-body');
+            tableBody.innerHTML = '';
+            users.forEach(user => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <div class="avatar-cell">
+                            <div class="avatar" style="background-image: url(${user.avatar_url || 'https://placehold.co/40x40/e0e7ff/4f46e5?text=DL'})"></div>
+                            <span>${user.full_name || 'N/A'}</span>
+                        </div>
+                    </td>
+                    <td>${user.email}</td>
+                    <td><span class="role-badge role-${user.role || 'user'}">${user.role || 'user'}</span></td>
+                    <td>${new Date(user.created_at).toLocaleDateString()}</td>
+                    <td class="action-cell">
+                        <select class="role-selector" data-user-id="${user.id}">
+                            <option value="user" ${user.role !== 'admin' ? 'selected' : ''}>User</option>
+                            <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Admin</option>
+                        </select>
+                        <button class="btn-delete" data-user-id="${user.id}" data-user-name="${user.full_name || user.email}">Delete</button>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        async function loadAllSkills() {
+            const { data, error } = await db.from('user_skills').select('skill_name');
+            if (error) { console.error('Error fetching skills', error); return; }
+            const uniqueSkills = [...new Set(data.map(item => item.skill_name))].sort();
+            allSkills = uniqueSkills;
+            renderSkillsList(allSkills);
+        }
+
+        function renderSkillsList(skills) {
+            const list = document.getElementById('skills-list');
+            list.innerHTML = '';
+            skills.forEach(skill => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span>${skill}</span> <button class="btn-delete delete-skill-btn" data-skill-name="${skill}">Delete</button>`;
+                list.appendChild(li);
+            });
+        }
+
+        async function loadSignupChartData() {
+            const { data, error } = await db.rpc('get_daily_signups');
+            if (error) { console.error('Error fetching chart data:', error); return; }
+            renderSignupChart(data);
+        }
+
+        function renderSignupChart(data) {
+            const chartGrid = document.getElementById('chart-grid');
+            const chartLabels = document.getElementById('chart-labels');
+            chartGrid.innerHTML = ''; chartLabels.innerHTML = '';
+            const dayLabels = []; const signupCounts = new Map();
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date(); d.setDate(d.getDate() - i);
+                dayLabels.push(d.toLocaleDateString('en-US', { weekday: 'short' }));
+                signupCounts.set(d.toISOString().split('T')[0], 0);
+            }
+            data.forEach(item => signupCounts.set(item.signup_day, item.count));
+            const maxCount = Math.max(...signupCounts.values(), 1);
+            dayLabels.forEach((label, index) => {
+                const dateKey = [...signupCounts.keys()][index];
+                const count = signupCounts.get(dateKey);
+                const barHeight = (count / maxCount) * 100;
+                const bar = document.createElement('div'); bar.className = 'chart-bar';
+                setTimeout(() => { bar.style.height = `${barHeight}%`; }, 100);
+                const labelEl = document.createElement('div'); labelEl.textContent = label;
+                chartGrid.appendChild(bar); chartLabels.appendChild(labelEl);
+            });
+        }
+
+        async function loadActivityFeed() {
+            const { data, error } = await db.from('profiles')
+                .select(`full_name, users(created_at)`)
+                .order('created_at', { foreignTable: 'users', ascending: false })
+                .limit(5);
+
+            if (error) { console.error('Error fetching activity', error); return; }
+
+            const feed = document.getElementById('activity-feed');
+            feed.innerHTML = '';
+            data.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'activity-item';
+                li.innerHTML = `
+                    <div class="activity-icon">
+                        <svg class="lucide" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                    </div>
+                    <div>
+                        <div class="activity-text"><strong>${item.full_name || 'A new user'}</strong> has joined.</div>
+                        <div class="activity-time">${new Date(item.users.created_at).toLocaleString()}</div>
+                    </div>
+                `;
+                feed.appendChild(li);
+            });
+        }
+
+
+        // --- Event Listeners for Actions ---
+        document.getElementById('search-users').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredUsers = allUsers.filter(user => user.full_name?.toLowerCase().includes(searchTerm) || user.email?.toLowerCase().includes(searchTerm));
+            renderUsersTable(filteredUsers);
+        });
+
+        document.getElementById('users-table-body').addEventListener('change', async (e) => {
+            if (e.target.classList.contains('role-selector')) {
+                const userId = e.target.dataset.userId;
+                const newRole = e.target.value;
+                if (confirm(`Are you sure you want to change this user's role to ${newRole}?`)) {
+                    const { error } = await db.functions.invoke('update-user-role', { body: { user_id: userId, role: newRole } });
+                    if (error) { alert('Failed to update role: ' + error.message); }
+                    else { alert('User role updated successfully.'); loadAllUsers(); }
+                } else { e.target.value = e.target.value === 'admin' ? 'user' : 'admin'; }
+            }
+        });
+
+        document.getElementById('users-table-body').addEventListener('click', async (e) => {
+            if (e.target.classList.contains('btn-delete')) {
+                const userId = e.target.dataset.userId;
+                const userName = e.target.dataset.userName;
+                if (confirm(`Are you sure you want to PERMANENTLY DELETE ${userName}? This action cannot be undone.`)) {
+                    const { error } = await db.functions.invoke('delete-user', { body: { user_id: userId } });
+                    if (error) { alert('Failed to delete user: ' + error.message); }
+                    else { alert('User deleted successfully.'); loadAllUsers(); }
+                }
+            }
+        });
+
+        document.getElementById('add-skill-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const skillInput = document.getElementById('new-skill-input');
+            const skillName = skillInput.value.trim();
+            if (skillName && !allSkills.includes(skillName)) {
+                // Note: We don't really insert into a "skills" master table in this logic,
+                // we're just managing the skills that exist in user_skills.
+                // A real implementation might have a master 'skills' table.
+                alert('This is a demo. A real implementation would add this to a master skills table.');
+                skillInput.value = '';
+            } else {
+                alert('Skill already exists or is empty.');
+            }
+        });
+
+        document.getElementById('skills-list').addEventListener('click', async (e) => {
+            if (e.target.classList.contains('delete-skill-btn')) {
+                const skillName = e.target.dataset.skillName;
+                if (confirm(`Are you sure you want to delete the skill "${skillName}" for ALL users? This is a permanent action.`)) {
+                    const { error } = await db.from('user_skills').delete().eq('skill_name', skillName);
+                    if (error) { alert('Failed to delete skill: ' + error.message); }
+                    else { alert('Skill deleted successfully from all user profiles.'); loadAllSkills(); }
+                }
+            }
+        });
+
+        document.getElementById('logout-button').addEventListener('click', async () => {
+            await db.auth.signOut();
+            window.location.href = '/index.html';
+        });
+
+        main();
+    </script>
+</body>
+
+</html>

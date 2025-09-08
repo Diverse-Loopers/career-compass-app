@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Careers - Diverse Loopers</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-primary: #3b82f6;
+            --color-secondary: #8b5cf6;
+            --color-dark: #1e293b;
+            --color-light: #f1f5f9;
+            --color-text: #334155;
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        /* --- Global & Page Setup --- */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8fafc; /* Slightly lighter bg */
+            color: var(--color-text);
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .explore-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 8rem 1rem 4rem;
+            text-align: center;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInPage 1s ease-out forwards;
+        }
+
+        @keyframes fadeInPage {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* --- Navigation Bar --- */
+        .header {
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0.75rem 1.5rem;
+            box-shadow: var(--shadow-md);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: transform 0.3s ease-out;
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .logo-text {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--color-dark);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--color-text);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            transition: color 0.3s, background-color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--color-primary);
+            background-color: var(--color-light);
+        }
+        
+        .profile-icon-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--color-light);
+            color: var(--color-text);
+        }
+         .profile-icon-btn:hover {
+            background-color: #e2e8f0;
+        }
+
+        .header.scrolled .nav-links {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+        }
+
+        /* --- Section Header --- */
+        .section-header {
+            margin-bottom: 4rem;
+        }
+
+        .section-header h1 {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 700;
+            color: var(--color-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .section-header p {
+            font-size: 1.125rem;
+            color: #64748b;
+            max-width: 600px;
+        }
+
+        /* --- 3D Carousel Core --- */
+        .carousel-wrapper {
+            position: relative;
+            width: 320px;
+            height: 480px; /* Taller for more content */
+            perspective: 1500px;
+        }
+
+        .carousel {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        /* --- Career Card (Front & Back) --- */
+        .career-card {
+            position: absolute;
+            width: 320px;
+            height: 480px;
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .career-card.flipped {
+            transform: rotateY(180deg) !important;
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+            box-sizing: border-box;
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, var(--color-dark), #334155);
+            color: #fff;
+            justify-content: center;
+        }
+
+        .card-icon {
+            font-size: 4.5rem;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+        }
+
+        .card-front h2 {
+            font-size: 1.75rem;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .card-front p {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            font-weight: 500;
+        }
+
+        .card-back {
+            background-color: #fff;
+            color: var(--color-text);
+            transform: rotateY(180deg);
+            box-shadow: var(--shadow-lg);
+            border: 1px solid #e2e8f0;
+            justify-content: flex-start;
+            text-align: left;
+        }
+
+        .card-back h3 {
+            font-size: 1.5rem;
+            color: var(--color-dark);
+            width: 100%;
+            text-align: center;
+            margin-top: 0;
+        }
+        
+        /* --- Card Back Details --- */
+        .card-intro {
+            font-size: 0.85rem;
+            text-align: center;
+            color: #64748b;
+            margin: 0.75rem 0 1.25rem;
+            line-height: 1.6;
+        }
+
+        .details-grid {
+            width: 100%;
+            margin-bottom: 1.25rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .detail-item p {
+            font-size: 0.8rem;
+            color: #64748b;
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .detail-item .value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--color-dark);
+        }
+
+        .skills-section {
+            width: 100%;
+        }
+
+        .skills-section h4 {
+            font-size: 0.9rem;
+            text-align: center;
+            margin-bottom: 0.75rem;
+            color: #64748b;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .skill-tag {
+            background-color: #e0e7ff;
+            color: #4338ca;
+            font-size: 0.8rem;
+            font-weight: 500;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+        }
+
+        .card-back .learn-more-btn {
+            margin-top: auto;
+            background: var(--color-primary);
+            color: #fff;
+            text-decoration: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card-back .learn-more-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
+        }
+
+        /* --- Carousel Navigation --- */
+        .carousel-nav {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .nav-btn {
+            background: #fff;
+            border: 1px solid #cbd5e1;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .nav-btn:hover {
+            background-color: var(--color-primary);
+            color: #fff;
+            transform: scale(1.1);
+        }
+
+        .nav-btn svg {
+            width: 24px;
+            height: 24px;
+            stroke-width: 2.5;
+        }
+
+        /* --- NEW: More Content Section --- */
+        .more-content-section {
+            width: 100%;
+            padding: 6rem 1rem;
+            background-color: #0c0d19;
+        }
+        
+        .info-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .info-card {
+            background-color: var(--color-light);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        
+        .info-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .info-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-card h3 {
+            font-size: 1.25rem;
+            color: var(--color-dark);
+            margin-bottom: 0.5rem;
+        }
+        .more-content-para{
+            color: #fafbfd;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <header class="header">
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                <img src="https://placehold.co/100x100/3b82f6/FFFFFF?text=DL" alt="Diverse Loopers Logo">
+                <span class="logo-text">Diverse Loopers</span>
+            </a>
+            <div class="nav-links">
+                <a href="#" id="go-back-btn">Go Back</a>
+                <a href="index.html">Home</a>
+                <a href="profile.html" class="profile-icon-btn" title="Go to Profile">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                </a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section class="explore-section">
+            <div class="section-header">
+                <h1>Explore Career Paths</h1>
+                <p>Discover your future. Rotate the carousel and click a card to flip it over and learn more about each exciting career path.</p>
+            </div>
+
+            <div class="carousel-wrapper">
+                <div class="carousel" id="career-carousel">
+                    <!-- Cards inserted here -->
+                </div>
+            </div>
+            
+            <div class="carousel-nav">
+                <button class="nav-btn" id="prev-btn" aria-label="Previous Career">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 18l-6-6 6-6"/></svg>
+                </button>
+                <button class="nav-btn" id="next-btn" aria-label="Next Career">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 18l6-6-6-6"/></svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- NEW: "Find Your Fit" Section -->
+        <section class="more-content-section">
+           
+                <div class="more-content-para"><h1>Find Your Fit: What to Consider</h1>
+                <p>Choosing a career is a big decision. Here are a few key factors to think about as you explore your options.</p>
+            </div>
+        
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="icon">💡</div>
+                    <h3>Passion vs. Practicality</h3>
+                    <p>Find a balance between what you love to do and what the market demands. The most fulfilling careers often lie at the intersection of both.</p>
+                </div>
+                 <div class="info-card">
+                    <div class="icon">🏢</div>
+                    <h3>Company Culture</h3>
+                    <p>Think about the environment where you'll thrive. Do you prefer a fast-paced startup, a large corporation, or something in between?</p>
+                </div>
+                 <div class="info-card">
+                    <div class="icon">📈</div>
+                    <h3>Long-Term Growth</h3>
+                    <p>Look for fields with strong future potential and clear opportunities for advancement. Continuous learning is key in the tech industry.</p>
+                </div>
+                 <div class="info-card">
+                    <div class="icon">⚖️</div>
+                    <h3>Work-Life Balance</h3>
+                    <p>Consider the typical demands of a role. A healthy balance is crucial for long-term happiness and avoiding burnout.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- Career Data with Detailed Intros ---
+            const careerData = [
+                {
+                    title: "AI & Machine Learning", icon: "🧠", intro: "As an AI/ML Engineer, you'll be at the forefront of innovation, teaching machines to learn from data to make predictions and decisions.",
+                    averageSalary: "$120k - $180k", demand: "Very High",
+                    keySkills: ["Python", "TensorFlow", "PyTorch", "NLP", "Computer Vision"],
+                    learnMoreLink: "#"
+                },
+                {
+                    title: "Software Development", icon: "💻", intro: "Become the architect of the digital world. Software Developers design, build, and maintain the applications that millions use daily.",
+                    averageSalary: "$100k - $160k", demand: "Very High",
+                    keySkills: ["JavaScript", "React", "Node.js", "Databases", "APIs"],
+                    learnMoreLink: "#"
+                },
+                {
+                    title: "Cloud & DevOps", icon: "☁️", intro: "Ensure that software runs smoothly and scales effortlessly. This role is the bridge between development and operations.",
+                    averageSalary: "$110k - $170k", demand: "High",
+                    keySkills: ["AWS/GCP/Azure", "Docker", "Kubernetes", "CI/CD", "Terraform"],
+                    learnMoreLink: "#"
+                },
+                {
+                    title: "Cybersecurity", icon: "🛡️", intro: "Become a digital guardian. Cybersecurity experts protect systems and data from an ever-evolving landscape of digital threats.",
+                    averageSalary: "$105k - $155k", demand: "High",
+                    keySkills: ["Network Security", "Pen Testing", "Cryptography", "SIEM Tools"],
+                    learnMoreLink: "#"
+                },
+                {
+                    title: "Game Development", icon: "🎮", intro: "Merge artistry with technology to create immersive, interactive worlds that captivate and entertain players globally.",
+                    averageSalary: "$90k - $140k", demand: "Medium",
+                    keySkills: ["C++", "Unity", "Unreal Engine", "3D Math", "Physics"],
+                    learnMoreLink: "#"
+                },
+                {
+                    title: "Embedded Systems", icon: "💡", intro: "Program the 'brains' inside physical products, from smart home devices and wearables to critical medical equipment.",
+                    averageSalary: "$95k - $150k", demand: "Medium",
+                    keySkills: ["C/C++", "Microcontrollers", "RTOS", "IoT Protocols"],
+                    learnMoreLink: "#"
+                }
+            ];
+
+            const carousel = document.getElementById('career-carousel');
+            const nextBtn = document.getElementById('next-btn');
+            const prevBtn = document.getElementById('prev-btn');
+
+            const cardCount = careerData.length;
+            const theta = 360 / cardCount;
+            let currentAngle = 0;
+            
+            function createCards() {
+                const radius = (320 / 2) / Math.tan(Math.PI / cardCount);
+
+                careerData.forEach((career, index) => {
+                    const angle = theta * index;
+                    const card = document.createElement('div');
+                    card.className = 'career-card';
+                    
+                    card.innerHTML = `
+                        <div class="card-face card-front">
+                            <div class="card-icon">${career.icon}</div>
+                            <h2>${career.title}</h2>
+                            <p>Click to Learn More</p>
+                        </div>
+                        <div class="card-face card-back">
+                            <h3>${career.title}</h3>
+                            <p class="card-intro">${career.intro}</p>
+                            <div class="details-grid">
+                                <div class="detail-item">
+                                    <p>Avg. Salary (USD)</p>
+                                    <span class="value">${career.averageSalary}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <p>Job Demand</p>
+                                    <span class="value">${career.demand}</span>
+                                </div>
+                            </div>
+                            <div class="skills-section">
+                                <h4>Key Skills</h4>
+                                <div class="skills-list">
+                                    ${career.keySkills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                                </div>
+                            </div>
+                            <a href="${career.learnMoreLink}" class="learn-more-btn">Learn More</a>
+                        </div>
+                    `;
+                    
+                    card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
+                    card.addEventListener('click', () => card.classList.toggle('flipped'));
+                    carousel.appendChild(card);
+                });
+            }
+
+            function rotateCarousel(direction) {
+                currentAngle += theta * direction;
+                carousel.style.transform = `rotateY(${currentAngle}deg)`;
+                document.querySelectorAll('.career-card.flipped').forEach(card => {
+                    card.classList.remove('flipped');
+                });
+            }
+
+            nextBtn.addEventListener('click', () => rotateCarousel(-1));
+            prevBtn.addEventListener('click', () => rotateCarousel(1));
+
+            document.getElementById('go-back-btn').addEventListener('click', (e) => {
+                e.preventDefault();
+                history.back();
+            });
+
+            let lastScrollTop = 0;
+            const header = document.querySelector('.header');
+            window.addEventListener('scroll', () => {
+                let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                if (scrollTop > lastScrollTop && scrollTop > 80) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+            });
+
+            // --- NEW: Intersection Observer for animating content on scroll ---
+            const infoCards = document.querySelectorAll('.info-card');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.2 // Trigger when 20% of the card is visible
+            });
+
+            infoCards.forEach(card => {
+                observer.observe(card);
+            });
+
+            createCards();
+        });
+    </script>
+
+</body>
+</html>
+

@@ -16,6 +16,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
         rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --color-primary: #3b82f6;
@@ -44,29 +45,7 @@
             color: var(--color-text);
             line-height: 1.7;
             overflow-x: hidden;
-            animation: fadeInAnimation ease 1s;
-            animation-iteration-count: 1;
-            animation-fill-mode: forwards;
         }
-
-        .fade-out {
-            animation: fadeOutAnimation ease 1s;
-            animation-iteration-count: 1;
-            animation-fill-mode: forwards;
-        }
-
-        
-            @keyframes fadeInAnimation {
-    0% {
-        opacity: 0;
-        transform: translateY(20px); /* Start 20px lower */
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0); /* End at normal position */
-    }
-}
-        
 
         .container {
             max-width: 1200px;
@@ -92,17 +71,24 @@
 
         /* --- Header & Navbar --- */
         .header {
-            background-color: rgba(247, 243, 243, 0.863);
-            /* Made it more transparent */
-            backdrop-filter: blur(12px);
-            /* Increased the blur slightly */
+            background-color: rgba(255, 255, 255, 0.8);
+            /* Start transparent */
+            backdrop-filter: blur(10px);
             padding: 1rem 0;
-            box-shadow: var(--shadow-md);
             position: sticky;
             top: 0;
             z-index: 1000;
-            transition: background-color 0.3s;
+            transition: background-color 0.4s ease, border-bottom 0.4s ease, backdrop-filter 0.4s ease;
         }
+
+        .header.scrolled {
+            background-color: rgba(255, 255, 255, 0.8);
+            /* Semi-transparent white */
+            backdrop-filter: blur(10px);
+            /* This creates the frosted glass effect */
+            border-bottom: 1px solid #e2e8f0;
+        }
+
 
         .navbar {
             display: flex;
@@ -128,35 +114,133 @@
             color: var(--color-dark);
         }
 
-        .nav-links {
+        .nav-links,
+        .nav-actions {
             display: none;
         }
 
+        /* Hide on mobile by default */
+
+        /* --- Mobile Menu Styles --- */
+        .hamburger {
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+            transition: all 0.25s;
+            position: relative;
+        }
+
+        .hamburger-top,
+        .hamburger-middle,
+        .hamburger-bottom {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 24px;
+            height: 3px;
+            background: var(--color-dark);
+            transform: rotate(0);
+            transition: all 0.5s;
+        }
+
+        .hamburger-middle {
+            transform: translateY(7px);
+        }
+
+        .hamburger-bottom {
+            transform: translateY(14px);
+        }
+
+        .open .hamburger-top {
+            transform: rotate(45deg) translateY(6px) translateX(6px);
+        }
+
+        .open .hamburger-middle {
+            display: none;
+        }
+
+        .open .hamburger-bottom {
+            transform: rotate(-45deg) translateY(6px) translateX(-6px);
+        }
+
+        .mobile-menu-inner {
+            position: absolute;
+            top: 85px;
+            left: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            animation: slideDown 0.5s ease-out;
+        }
+
+        .mobile-link {
+            color: var(--color-dark);
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        #mobile-login-btn.login {
+            border: 2px solid #e2e8f0;
+            color: var(--color-subtle);
+        }
+
+        /* --- Desktop Navigation Styles --- */
         @media (min-width: 768px) {
+
+            .hamburger,
+            #mobile-menu {
+                display: none;
+            }
+
+            /* Hide mobile elements on desktop */
             .nav-links {
                 display: flex;
                 align-items: center;
                 gap: 2rem;
             }
 
+            .nav-actions {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+            }
+
             .nav-links a {
                 position: relative;
-                /* Needed for the underline animation */
                 text-decoration: none;
                 color: var(--color-subtle);
                 font-weight: 600;
-                /* Made text slightly bolder */
                 padding: 8px 16px;
-                /* Added padding for a button-like feel */
                 border-radius: 50px;
-                /* Creates the rounded pill shape */
                 transition: color 0.3s, background-color 0.3s;
             }
 
             .nav-links a:hover {
                 color: var(--color-primary);
                 background-color: var(--color-light);
-                /* Adds a subtle background on hover */
             }
 
             .nav-links a::after {
@@ -173,14 +257,47 @@
 
             .nav-links a:hover::after {
                 width: 60%;
-                /* The underline grows to 60% width on hover */
             }
         }
 
-        .nav-actions {
+
+        .persona-switcher {
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 1rem;
             display: flex;
-            align-items: center;
-            gap: 1rem;
+            gap: 1.5rem;
+
+
+        }
+
+        .persona-switcher a {
+            color: var(--color-subtle);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding-bottom: 0.25rem;
+            border-bottom: 2px solid transparent;
+            transition: color 0.3s, border-color 0.3s;
+        }
+
+        .persona-switcher a:hover {
+            color: var(--color-dark);
+        }
+
+        .persona-switcher a.active {
+            color: var(--color-primary);
+            font-weight: 600;
+            border-bottom-color: var(--color-primary);
+        }
+
+
+
+        /* Hide switcher on mobile for a cleaner look */
+        @media (max-width: 767px) {
+            .persona-switcher {
+                display: none;
+            }
         }
 
         .btn {
@@ -203,6 +320,7 @@
         }
 
         .btn-primary {
+            text-align: center;
             background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
             color: #fff;
             border: 2px solid transparent;
@@ -214,7 +332,78 @@
             box-shadow: var(--shadow-lg);
         }
 
-        /* --- Hero Section --- */
+        /* Professional footer logout styling */
+        .footer-user-section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--color-primary), var(--color-secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .user-details h4 {
+            margin: 0;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .user-details p {
+            margin: 0;
+            color: var(--color-subtle);
+            font-size: 0.9rem;
+        }
+
+        .logout-btn-footer {
+            width: 100%;
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            border: 2px solid rgba(239, 68, 68, 0.7);
+            color: #ef4444;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .logout-btn-footer:hover {
+            background: #ef4444;
+            color: white;
+            border-color: #ef4444;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            .user-info {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* ... All other styles for Hero, About, Contact, Footer, etc. remain the same ... */
         #hero {
             position: relative;
             text-align: center;
@@ -254,7 +443,6 @@
             max-width: 700px;
         }
 
-        /* --- About Section --- */
         .about-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -291,9 +479,11 @@
             color: var(--color-subtle);
         }
 
-        /* --- Contact Section --- */
         #contact {
-            background-color: var(--color-light);
+            background-color: #e2e8f0;
+            /* A slightly darker grey/blue for contrast */
+            color: var(--color-text);
+            padding: 6rem 0;
         }
 
         .contact-form {
@@ -351,7 +541,6 @@
             min-height: 120px;
         }
 
-        /* --- Footer --- */
         .footer {
             background-color: var(--color-dark);
             color: var(--color-light);
@@ -407,37 +596,433 @@
             font-size: 0.9rem;
             color: var(--color-subtle);
         }
+
+        .programs-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            /* 1 column on mobile */
+            gap: 2rem;
+        }
+
+        /* Card styling for "Why Choose Us" items */
+        .feature-card {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+            /* Added border-color */
+            box-shadow: var(--shadow-md);
+            /* Add initial shadow */
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            /* More pronounced lift */
+            box-shadow: var(--shadow-lg);
+            /* Stronger shadow on hover */
+            border-color: var(--color-primary);
+            /* Highlight border */
+        }
+
+        .feature-icon {
+            margin: 0 auto 1.5rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 0.5rem;
+            color: var(--color-dark);
+        }
+
+        .feature-card p {
+            color: var(--color-subtle);
+            line-height: 1.6;
+        }
+
+        /* Card styling for the main program cards */
+        .program-card {
+            background-color: #fff;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            padding: 2.5rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .program-card:hover {
+            transform: translateY(-8px);
+            /* More pronounced lift */
+            box-shadow: var(--shadow-lg);
+            border-left: 5px solid var(--color-primary);
+        }
+
+        .program-header {
+            margin-bottom: 1rem;
+        }
+
+        .program-header h3 {
+            color: var(--color-dark);
+        }
+
+        .program-tag {
+            display: inline-block;
+            background-color: var(--color-light);
+            color: var(--color-primary);
+            font-weight: 600;
+            font-size: 0.8rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            margin-top: 0.5rem;
+        }
+
+        .program-features {
+            list-style: none;
+            margin-top: 1.5rem;
+            padding-left: 0;
+            color: var(--color-subtle);
+        }
+
+        .program-features li {
+            padding-left: 1.75rem;
+            position: relative;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Custom checkmark for list items */
+        .program-features li::before {
+            content: '✔';
+            position: absolute;
+            left: 0;
+            top: 2px;
+            color: var(--color-primary);
+            font-weight: 600;
+        }
+
+        /* Grid and cards for "Extra Features" */
+        .extra-features-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+       
+
+        /* Responsive adjustments for larger screens */
+        @media (min-width: 768px) {
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+                /* 2 columns on tablets */
+            }
+
+            .programs-grid {
+                grid-template-columns: repeat(2, 1fr);
+                /* 2 columns on tablets */
+            }
+
+            .extra-features-grid {
+                grid-template-columns: repeat(3, 1fr);
+                /* 3 columns on tablets */
+            }
+        }
+
+        @media (min-width: 992px) {
+            .features-grid {
+                grid-template-columns: repeat(4, 1fr);
+                /* 4 columns on desktops */
+            }
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .courses-cta-btn {
+            /* Positioning and Layout */
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin: 3rem auto 4rem;
+            /* Adjusts spacing around the button */
+            width: fit-content;
+
+            /* Appearance */
+            background-color: #fff;
+            color: var(--color-dark);
+            border-radius: 50px;
+            /* Fully rounded pill shape */
+            padding: 0.8rem 1.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            overflow: hidden;
+            /* Important for the border effect */
+
+            /* Effects */
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        /* The Animated Gradient Border */
+        .courses-cta-btn::before {
+            content: '';
+            position: absolute;
+            z-index: -1;
+            top: -2px;
+            left: -2px;
+            width: calc(100% + 4px);
+            height: calc(100% + 4px);
+
+            /* Using a conic-gradient for a smooth spin */
+            background: conic-gradient(from 0deg,
+                    var(--color-primary),
+                    var(--color-secondary),
+                    var(--color-primary));
+
+            border-radius: inherit;
+            /* Matches the button's border-radius */
+            animation: rotate 4s linear infinite;
+        }
+
+        /* Hover State */
+        .courses-cta-btn:hover {
+            transform: translateY(-3px);
+            color: #fff;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Gradient background appears on hover */
+        .courses-cta-btn:hover::after {
+            content: '';
+            position: absolute;
+            z-index: -1;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
+            border-radius: inherit;
+        }
+
+        /* The arrow icon inside the button */
+        .courses-cta-btn .arrow-icon {
+            transition: transform 0.3s ease;
+        }
+
+        /* Arrow moves to the right on hover */
+        .courses-cta-btn:hover .arrow-icon {
+            transform: translateX(5px);
+        }
+
+        #programs {
+            background-color: #f0f4f8;
+            /* A light, soft grey/blue */
+            padding: 6rem 0;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        /* Background for "Why Students Choose Us" section (ID: programs, but target the first child) */
+        /* We'll apply this to the first child div of #programs to avoid affecting the whole background */
+        #programs>div.container>div:first-child:has(h2:contains("Why Students Choose Us")) {
+            position: relative;
+            background-color: #fff;
+            /* White background for the content area */
+            padding: 4rem 2rem;
+            /* Add padding to contain content */
+            border-radius: 15px;
+            /* Slightly rounded corners for the content area */
+            box-shadow: var(--shadow-lg);
+            /* Add shadow to make it pop */
+            margin-bottom: 4rem;
+            /* Space below this content area */
+            overflow: hidden;
+            /* Hide overflow of the pattern */
+            z-index: 1;
+            /* Ensure content is above background pattern */
+        }
+
+        /* Abstract background pattern using pseudo-elements */
+        #programs>div.container>div:first-child:has(h2:contains("Why Students Choose Us"))::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            left: -50px;
+            right: -50px;
+            bottom: -50px;
+            background-image: radial-gradient(circle, #e0f2fe 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.3;
+            z-index: -1;
+            animation: backgroundPan 30s linear infinite;
+            /* Subtle animation */
+        }
+
+        @keyframes backgroundPan {
+            from {
+                background-position: 0 0;
+            }
+
+            to {
+                background-position: 400px 400px;
+                /* Pan pattern across */
+            }
+        }
+
+        /* Adjustments for the section-header within this specific visual block */
+        #programs>div.container>div:first-child:has(h2:contains("Why Students Choose Us")) .section-header {
+            margin-bottom: 2rem !important;
+            /* Adjust margin inside the visual block */
+            position: relative;
+            z-index: 2;
+            /* Ensure text is above the pattern */
+        }
+
+        /* Ensure the features grid also has z-index to be above the pattern */
+        #programs>div.container>div:first-child:has(h2:contains("Why Students Choose Us")) .features-grid {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* From Uiverse.io by joe-watson-sbf */
+        .flip-card {
+            background-color: transparent;
+            width: 190px;
+            height: 254px;
+            perspective: 1000px;
+            font-family: sans-serif;
+        }
+
+        .title {
+            font-size: 1.5em;
+            font-weight: 900;
+            text-align: center;
+            margin: 0;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+            transform-origin:50% 50%;
+        }
+
+        .flip-card-front,
+        .flip-card-back {
+            box-shadow: 0 8px 14px 0 rgba(0, 0, 0, 0.2);
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 21rem;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border: 1px solid coral;
+            border-radius: 1rem;
+        }
+
+        .flip-card-front {
+            background: linear-gradient(120deg, bisque 60%, rgb(255, 231, 222) 88%,
+                    rgb(255, 211, 195) 40%, rgba(255, 127, 80, 0.603) 48%);
+            color: coral;
+        }
+
+        .flip-card-back {
+            background: linear-gradient(120deg, rgb(255, 174, 145) 30%, coral 88%,
+                    bisque 40%, rgb(255, 185, 160) 78%);
+            color: white;
+            transform: rotateY(180deg);
+        }
+        
     </style>
 </head>
 
 <body>
+
+
     <header class="header">
         <div class="container">
             <nav class="navbar">
-                <a href="#" class="logo">
+                <a href="index.html" class="logo">
                     <img src="logo2.png" alt="Diverse Loopers Logo">
                     <span class="logo-text">Diverse Loopers</span>
                 </a>
+
+                <!-- Desktop Menu -->
                 <div class="nav-links">
                     <a href="#about">About Us</a>
                     <a href="#contact">Contact Us</a>
                 </div>
                 <div class="nav-actions">
-                    <a href="login.html" class="btn btn-secondary">Login</a>
+                    <!-- Login button - shown when user is logged out -->
+                    <a href="login.html" id="login-btn" class="btn btn-secondary hidden">Login</a>
+
+                    <!-- Profile button - shown when user is logged in -->
+                    <a href="profile.html" id="profile-btn" class="btn btn-secondary hidden">Profile</a>
+
                     <a href="analyzer.html" class="btn btn-primary">Path Analyzer</a>
                 </div>
+
+                <!-- Mobile Menu Button (Hamburger) -->
+                <button id="menu-btn" class="hamburger">
+                    <span class="hamburger-top"></span>
+                    <span class="hamburger-middle"></span>
+                    <span class="hamburger-bottom"></span>
+                </button>
             </nav>
+            <div class="persona-switcher">
+                <a href="index.html" class="persona-link active" data-persona="students">For Students</a>
+                <a href="home_uni.html" class="persona-link" data-persona="universities">For Universities</a>
+                <a href="home_bus.html" class="persona-link" data-persona="businesses">For Businesses</a>
+            </div>
+
+            <!-- Mobile Menu Panel -->
+            <div id="mobile-menu" class="hidden">
+                <div class="mobile-menu-inner">
+                    <a href="#about" class="mobile-link">About Us</a>
+                    <a href="#contact" class="mobile-link">Contact Us</a>
+                    <!-- Mobile login button -->
+                    <a href="login.html" class="mobile-link hidden" id="mobile-login-btn">Login</a>
+                    <!-- Mobile profile button -->
+                    <a href="profile.html" class="mobile-link hidden" id="mobile-profile-btn">Profile</a>
+                    <a href="analyzer.html" class="btn btn-primary w-full text-center mt-4">Path Analyzer</a>
+                </div>
+            </div>
         </div>
     </header>
+    </div>
 
     <main>
         <section id="hero">
             <canvas id="hero-canvas"></canvas>
             <div class="hero-content container">
-                <h1>Empowering talents for tomorrow.</h1>
-                <p class="tagline">Stop guessing, start planning. Our Career Compass tool provides a personalized,
+                <h1 id="hero-title">Empowering talents for tomorrow.....</h1>
+                <p class="tagline" id="hero-tagline">Stop guessing, start planning. Our Career Compass tool provides a
+                    personalized,
                     data-driven roadmap to bridge the gap between your college curriculum and your dream tech job.</p>
-                <a href="#about" class="btn btn-primary" style="padding: 1rem 2.5rem; font-size: 1.1rem;">Get
+                <a href="analyzer.html" class="btn btn-primary" id="hero-cta"
+                    style="padding: 1rem 2.5rem; font-size: 1.1rem;">Get
                     Started</a>
             </div>
         </section>
@@ -460,6 +1045,166 @@
                     </p>
                 </div>
                 <div class="about-image fade-in"></div>
+            </div>
+        </section>
+
+        <section id="programs">
+            <div class="container">
+                <div class="section-header" style="text-align: center; margin-bottom: 4rem;">
+                    <h2 style="color: var(--color-dark);">Why Students Choose Us</h2>
+                    <p style="font-size: 1.1rem; color: var(--color-subtle);">Your Launchpad for a Career in Tech</p>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon" style="background-color: #dbeafe;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M10 20H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6" />
+                                <path d="m14 4 6 6-6 6" />
+                                <path d="M4 12h16" />
+                            </svg>
+                        </div>
+                        <h3>Practical Learning</h3>
+                        <p>Go beyond theory and gain experience with projects sourced directly from companies.</p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon" style="background-color: #e0e7ff;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <rect width="20" height="14" x="2" y="7" rx="2" ry="2" />
+                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                            </svg>
+                        </div>
+                        <h3>Career Focused</h3>
+                        <p>Whether you’re in your 1st year or final year, we have tailored programs to fit your journey.
+                        </p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon" style="background-color: #fae8ff;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                                <path d="m9 12 2 2 4-4" />
+                            </svg>
+                        </div>
+                        <h3>Guaranteed Opportunities</h3>
+                        <p>Access internships, placements, and projects that build your portfolio.</p>
+                    </div>
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon" style="background-color: #ffedd5;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                                <circle cx="9" cy="7" r="4" />
+                                <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                            </svg>
+                        </div>
+                        <h3>Community Support</h3>
+                        <p>Be part of a growing ecosystem of learners, mentors, and employers.</p>
+                    </div>
+                </div>
+
+                <hr style="margin: 6rem auto; border: 0; height: 1px; background-color: #e2e8f0; max-width: 400px;">
+
+                <div class="section-header" style="text-align: center; margin-bottom: 4rem;">
+                    <h2 style="color: var(--color-dark);">Our Programs for Students</h2>
+                </div>
+
+                <div class="programs-grid">
+                    <div class="program-card fade-in">
+                        <div class="program-header">
+                            <h3>Vision Builders Program (12-Month)</h3>
+                            <span class="program-tag">For Early-Year Students</span>
+                        </div>
+                        <p>Learn at your pace with flexible sessions, hands-on projects, and a supportive community.</p>
+                        <ul class="program-features">
+                            <li>Basics of coding, AI, web development, and digital skills.</li>
+                            <li>Guided mentorship from industry professionals.</li>
+                            <li>Portfolio-building mini-projects.</li>
+                            <li>Networking opportunities with peers and companies.</li>
+                        </ul>
+                    </div>
+                    <div class="program-card fade-in">
+                        <div class="program-header">
+                            <h3>Accelerate Program (6-Month)</h3>
+                            <span class="program-tag">For Final-Year & Graduates</span>
+                        </div>
+                        <p>For final-year students & graduates who want to become job-ready quickly.</p>
+                        <ul class="program-features">
+                            <li>Intensive hands-on training in in-demand tech skills.</li>
+                            <li>Work on live projects with partner companies.</li>
+                            <li>Get interview prep, mock tests, and career counseling.</li>
+                            <li>Direct access to internships and placement support.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div>
+                    <a href="courses.html" class="courses-cta-btn">
+                        Explore Our Courses
+                        <svg class="arrow-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                            stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M5 12h14" />
+                            <path d="m12 5 7 7-7 7" />
+                        </svg>
+                    </a>
+                </div>
+
+
+
+                <hr style="margin: 6rem auto; border: 0; height: 1px; background-color: #e2e8f0; max-width: 400px;">
+
+                <div class="section-header" style="text-align: center; margin-bottom: 4rem;">
+                    <h2 style="color: var(--color-dark);">Extra Features</h2>
+                </div>
+
+                <div class="extra-features-grid">
+                    <div class="flip-card">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <p class="title">Wall of Fame</p>
+                                
+                            </div>
+                            <div class="flip-card-back">
+                                <p class="title">Showcase your achievements and get recognized by the community and employers.</p>
+                               
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flip-card">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <p class="title">Portfolio Builder</p>
+                               
+                            </div>
+                            <div class="flip-card-back">
+                                <p class="title">Create a professional portfolio that speaks louder than your resume.</p>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flip-card">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <p class="title">Mentorship Hub</p>
+                               
+                            </div>
+                            <div class="flip-card-back">
+                                <p class="title">Get guidance from industry experts who care about your success.</p>
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                    
+
+                </div>
             </div>
         </section>
 
@@ -487,9 +1232,24 @@
 
     <footer class="footer">
         <div class="container">
-            <a href="#" class="logo"><img src="logo2.png" alt="Diverse Loopers Logo"><span class="logo-text">Diverse
-                    Loopers</span></a>
+            <a href="index.html" class="logo"><img src="logo2.png" alt="Diverse Loopers Logo"><span
+                    class="logo-text">Diverse Loopers</span></a>
             <p class="tagline">Empowering talents for tomorrow</p>
+
+            <!-- User section - only visible when logged in -->
+            <div class="footer-user-section hidden" id="footer-user-section">
+                <div class="user-info">
+                    <div class="user-avatar" id="user-avatar">U</div>
+                    <div class="user-details">
+                        <h4 id="user-name">Welcome back!</h4>
+                        <p id="user-email">user@example.com</p>
+                    </div>
+                </div>
+                <button class="logout-btn-footer" id="logout-btn">
+                    <span>Sign Out</span>
+                </button>
+            </div>
+
             <div class="footer-links">
                 <a href="#about">About Us</a>
                 <a href="#contact">Contact Us</a>
@@ -504,25 +1264,151 @@
     </footer>
 
     <script>
+        // --- Supabase Session Management ---
+        const SUPABASE_URL = 'https://tjqsmkaiajdpotmafqvw.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqcXNta2FpYWpkcG90bWFmcXZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU5ODA3NDIsImV4cCI6MjA3MTU1Njc0Mn0.9710q9W5EFfCagj340AizUSKiOXYApy0xkTFszFjO8o';
+
+        const { createClient } = supabase;
+        const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // Get all the button elements
+        const loginBtn = document.getElementById('login-btn');
+        const profileBtn = document.getElementById('profile-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const mobileLoginBtn = document.getElementById('mobile-login-btn');
+        const mobileProfileBtn = document.getElementById('mobile-profile-btn');
+        const footerUserSection = document.getElementById('footer-user-section');
+        const userAvatar = document.getElementById('user-avatar');
+        const userName = document.getElementById('user-name');
+        const userEmail = document.getElementById('user-email');
+
+        // Function to get user initials for avatar
+        function getUserInitials(name, email) {
+            if (name && name.trim()) {
+                const nameParts = name.trim().split(' ');
+                if (nameParts.length >= 2) {
+                    return (nameParts[0][0] + nameParts[1][0]).toUpperCase();
+                }
+                return nameParts[0][0].toUpperCase();
+            } else if (email) {
+                return email[0].toUpperCase();
+            }
+            return 'U';
+        }
+
+        // Function to update UI based on authentication state
+        async function updateUIForAuthState(isLoggedIn, user = null) {
+            if (isLoggedIn && user) {
+                // User is logged in - show profile button and footer user section, hide login
+                loginBtn.classList.add('hidden');
+                profileBtn.classList.remove('hidden');
+                mobileLoginBtn.classList.add('hidden');
+                mobileProfileBtn.classList.remove('hidden');
+                footerUserSection.classList.remove('hidden');
+
+                // Update user info in footer
+                const displayName = user.user_metadata?.full_name || user.user_metadata?.name || 'User';
+                const displayEmail = user.email || 'No email';
+
+                userAvatar.textContent = getUserInitials(displayName, displayEmail);
+                userName.textContent = displayName;
+                userEmail.textContent = displayEmail;
+
+            } else {
+                // User is logged out - show login button, hide profile and footer user section
+                loginBtn.classList.remove('hidden');
+                profileBtn.classList.add('hidden');
+                mobileLoginBtn.classList.remove('hidden');
+                mobileProfileBtn.classList.add('hidden');
+                footerUserSection.classList.add('hidden');
+            }
+        }
+
+        // Function to handle logout
+        async function handleLogout() {
+            try {
+                const { error } = await _supabase.auth.signOut();
+                if (error) {
+                    console.error('Error logging out:', error);
+                    alert('Error logging out. Please try again.');
+                } else {
+                    updateUIForAuthState(false);
+                    // Optionally redirect to home page or login page
+                    window.location.reload();
+                }
+            } catch (error) {
+                console.error('Unexpected error during logout:', error);
+                alert('Unexpected error occurred. Please try again.');
+            }
+        }
+
+        // Add event listener for logout button in footer
+        logoutBtn.addEventListener('click', handleLogout);
+
+        // Check authentication state on page load
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const { data: { session } } = await _supabase.auth.getSession();
+                updateUIForAuthState(!!session, session?.user);
+            } catch (error) {
+                console.error('Error checking session:', error);
+                // Default to logged out state if there's an error
+                updateUIForAuthState(false);
+            }
+        });
+
+        // Listen for auth state changes
+        _supabase.auth.onAuthStateChange((event, session) => {
+            updateUIForAuthState(!!session, session?.user);
+        });
+
+
+
+        // --- Sticky Header on Scroll ---
+        const header = document.querySelector('.header');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) { // Activates after scrolling 50 pixels
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+
+        // --- Mobile Menu Toggle ---
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuBtn.addEventListener('click', () => {
+            menuBtn.classList.toggle('open');
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when clicking on links
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => {
+                menuBtn.classList.remove('open');
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
         // --- Interactive Hero Background ---
         const canvas = document.getElementById('hero-canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        canvas.height = document.getElementById('hero').offsetHeight;
 
         let particlesArray;
-
         const mouse = { x: null, y: null, radius: (canvas.height / 120) * (canvas.width / 120) };
-
-        window.addEventListener('mousemove', event => {
-            mouse.x = event.x;
-            mouse.y = event.y;
-        });
+        window.addEventListener('mousemove', event => { mouse.x = event.x; mouse.y = event.y; });
 
         class Particle {
             constructor(x, y, directionX, directionY, size, color) {
-                this.x = x; this.y = y; this.directionX = directionX; this.directionY = directionY;
-                this.size = size; this.color = color;
+                this.x = x;
+                this.y = y;
+                this.directionX = directionX;
+                this.directionY = directionY;
+                this.size = size;
+                this.color = color;
             }
             draw() {
                 ctx.beginPath();
@@ -533,7 +1419,6 @@
             update() {
                 if (this.x > canvas.width || this.x < 0) { this.directionX = -this.directionX; }
                 if (this.y > canvas.height || this.y < 0) { this.directionY = -this.directionY; }
-
                 let dx = mouse.x - this.x;
                 let dy = mouse.y - this.y;
                 let distance = Math.sqrt(dx * dx + dy * dy);
@@ -574,10 +1459,11 @@
 
         window.addEventListener('resize', () => {
             canvas.width = innerWidth;
-            canvas.height = innerHeight;
+            canvas.height = document.getElementById('hero').offsetHeight;
             mouse.radius = (canvas.height / 120) * (canvas.width / 120);
             init();
         });
+
         window.addEventListener('mouseout', () => {
             mouse.x = undefined;
             mouse.y = undefined;
@@ -597,27 +1483,6 @@
 
         const fadeElements = document.querySelectorAll('.fade-in');
         fadeElements.forEach(el => observer.observe(el));
-        // --- Smooth Page Transition Logic ---
-document.addEventListener('DOMContentLoaded', () => {
-    const links = document.querySelectorAll('a');
-
-    links.forEach(link => {
-        link.addEventListener('click', e => {
-            const href = link.getAttribute('href');
-
-            // Check if it's a link to another page (not a scroll link like #about)
-            if (href && !href.startsWith('#')) {
-                e.preventDefault(); // Stop the browser from navigating immediately
-                document.body.classList.add('fade-out');
-
-                // Wait for the animation to finish, then navigate
-                setTimeout(() => {
-                    window.location.href = href;
-                }, 800); // 800ms is slightly less than the 1s animation time
-            }
-        });
-    });
-});
     </script>
 </body>
 

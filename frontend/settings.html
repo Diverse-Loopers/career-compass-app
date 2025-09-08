@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Diverse Loopers Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --slate-50: #f8fafc;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --white: #ffffff;
+            --indigo-50: #eef2ff;
+            --indigo-100: #e0e7ff;
+            --indigo-600: #4f46e5;
+            --indigo-800: #3730a3;
+            --purple-600: #9333ea;
+            --green-500: #22c55e;
+            --red-500: #ef4444;
+            --shadow: 0 4px 10px -1px rgb(0 0 0 / 0.05), 0 2px 6px -2px rgb(0 0 0 / 0.05);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--slate-50);
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+            color: var(--gray-800);
+        }
+
+        .sidebar {
+            width: 16rem;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-img {
+            width: 62px;
+            height: 62px;
+        }
+
+        .sidebar-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .sidebar nav {
+            flex: 1;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: var(--gray-600);
+            border-radius: 0.5rem;
+            text-decoration: none;
+            transition: background-color 0.2s, color 0.2s;
+        }
+
+        .nav-link:hover {
+            background-color: var(--gray-100);
+        }
+
+        .nav-link.active {
+            background-color: var(--indigo-50);
+            color: var(--gray-800);
+            font-weight: 600;
+        }
+
+        .sidebar-footer {
+            padding: 1rem;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .lucide {
+            width: 24px;
+            height: 24px;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2.5rem;
+            background-image: radial-gradient(circle, var(--gray-200) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .main-header h1 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin: 0;
+        }
+
+        .main-header p {
+            color: var(--gray-600);
+            margin-top: 0.25rem;
+        }
+
+        .card {
+            background-color: var(--white);
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow);
+            margin-top: 2rem;
+            border-top: 4px solid var(--indigo-600);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        #role-card {
+            border-top-color: var(--purple-600);
+        }
+
+        #skills-card {
+            border-top-color: var(--green-500);
+        }
+
+        .card-header {
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--gray-200);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .card-header .lucide {
+            color: var(--gray-500);
+        }
+
+        .card-header-text h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .card-header-text p {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            margin: 0.25rem 0 0 0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem 0.25rem;
+            border: none;
+            border-bottom: 2px solid var(--gray-300);
+            border-radius: 0;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+            transition: border-color 0.2s;
+            background-color: transparent;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--indigo-600);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .avatar-upload-container {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .avatar-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: var(--gray-200);
+            background-size: cover;
+            background-position: center;
+            border: 2px solid var(--white);
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            position: relative;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .avatar-preview:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 0 4px var(--indigo-100);
+        }
+
+        .avatar-preview::after {
+            content: 'Edit';
+            position: absolute;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .avatar-preview:hover::after {
+            opacity: 1;
+        }
+
+        .avatar-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 600;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--indigo-600), #5a54e9);
+            color: var(--white);
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
+        }
+
+        .btn-secondary {
+            background-color: var(--white);
+            color: var(--gray-800);
+            border-color: var(--gray-300);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--slate-50);
+        }
+
+        .card-footer {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--gray-200);
+            text-align: right;
+        }
+
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .skill-tag {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: var(--indigo-100);
+            color: var(--indigo-800);
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            animation: popIn 0.3s ease-out;
+        }
+
+        @keyframes popIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .skill-tag button {
+            background: none;
+            border: none;
+            padding: 0;
+            margin: 0;
+            color: var(--indigo-800);
+            cursor: pointer;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+
+        .skill-tag button:hover {
+            opacity: 1;
+        }
+
+        #notification {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            color: var(--white);
+            font-weight: 600;
+            box-shadow: var(--shadow-lg);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.3s, transform 0.3s;
+            pointer-events: none;
+        }
+
+        #notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #notification.success {
+            background-color: var(--green-500);
+        }
+
+        #notification.error {
+            background-color: var(--red-500);
+        }
+    </style>
+</head>
+
+<body>
+    <aside class="sidebar">
+        <a href="index.html" class="sidebar-header-link">
+            <div class="sidebar-header">
+                <div class="sidebar-logo"><img src="logo2.png" alt="Diverse Loopers Logo" class="logo-img"></div>
+                <h1 class="sidebar-title">Diverse Loopers</h1>
+            </div>
+        </a>
+        <nav>
+            <a href="index.html" class="nav-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-home">
+                    <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                </svg>
+                <span>Home</span>
+            </a>
+            <a href="profile.html" class="nav-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-layout-dashboard">
+                    <rect width="7" height="9" x="3" y="3" rx="1" />
+                    <rect width="7" height="5" x="14" y="3" rx="1" />
+                    <rect width="7" height="9" x="14" y="12" rx="1" />
+                    <rect width="7" height="5" x="3" y="16" rx="1" />
+                </svg>
+                <span>Dashboard</span>
+            </a>
+            <a href="#" id="go-back-sidebar-btn" class="nav-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-arrow-left">
+                    <path d="m12 19-7-7 7-7" />
+                    <path d="M19 12H5" />
+                </svg>
+                <span>Go Back</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="#" class="nav-link active">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-settings">
+                    <path
+                        d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 0 2.22l-.15.08a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1 0-2.22l.15-.08a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
+                    <circle cx="12" cy="12" r="3" />
+                </svg>
+                <span>Settings</span>
+            </a>
+            <a href="#" id="logout-button" class="nav-link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="lucide lucide-log-out">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" x2="9" y1="12" y2="12" />
+                </svg>
+                <span>Logout</span>
+            </a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="main-header">
+            <h1>Settings</h1>
+            <p>Manage your account settings, profile, and career goals.</p>
+        </header>
+
+        <form id="settings-form">
+            <!-- Profile Details Card -->
+            <div class="card" id="profile-card">
+                <div class="card-header">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-user-circle">
+                        <circle cx="12" cy="12" r="10" />
+                        <circle cx="12" cy="10" r="3" />
+                        <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662" />
+                    </svg>
+                    <div class="card-header-text">
+                        <h2>Profile Details</h2>
+                        <p>Update your photo and personal details here.</p>
+                    </div>
+                </div>
+                <div class="avatar-upload-container">
+                    <label for="avatar-file" class="avatar-preview" id="avatar-preview"></label>
+                    <input type="file" id="avatar-file" accept="image/*" style="display: none;">
+                </div>
+                <div class="form-grid" style="margin-top: 1.5rem;">
+                    <div class="form-group">
+                        <label for="full-name">Full Name</label>
+                        <input type="text" id="full-name" name="full-name" placeholder="Your Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="university">University</label>
+                        <input type="text" id="university" name="university" placeholder="Your University">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Target Role Card -->
+            <div class="card" id="role-card">
+                <div class="card-header">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-briefcase">
+                        <rect width="20" height="14" x="2" y="7" rx="2" ry="2" />
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                    </svg>
+                    <div class="card-header-text">
+                        <h2>Target Role</h2>
+                        <p>Define your career goal to get a personalized roadmap.</p>
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="target-role">Role Name</label>
+                        <input type="text" id="target-role" name="target-role" placeholder="e.g., Frontend Developer">
+                    </div>
+                    <div class="form-group">
+                        <label for="role-description">Role Description</label>
+                        <textarea id="role-description" name="role-description"
+                            placeholder="A brief description of your ideal role"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Skills Card -->
+            <div class="card" id="skills-card">
+                <div class="card-header">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="lucide lucide-sparkles">
+                        <path
+                            d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
+                        <path d="M5 3v4" />
+                        <path d="M19 17v4" />
+                        <path d="M3 5h4" />
+                        <path d="M17 19h4" />
+                    </svg>
+                    <div class="card-header-text">
+                        <h2>My Skills</h2>
+                        <p>Add or remove skills to keep your profile up-to-date.</p>
+                    </div>
+                </div>
+                <div class="skills-container" id="skills-container">
+                    <!-- Skills will be dynamically added here -->
+                </div>
+                <div class="form-grid" style="margin-top: 1.5rem; grid-template-columns: 1fr auto;">
+                    <div class="form-group">
+                        <label for="new-skill">Add a new skill</label>
+                        <input type="text" id="new-skill" placeholder="e.g., React, Python, SQL">
+                    </div>
+                    <button type="button" id="add-skill-btn" class="btn btn-secondary" style="align-self: end;">Add
+                        Skill</button>
+                </div>
+            </div>
+
+            <!-- Save Button -->
+            <div class="card-footer" style="border: none; padding: 0; margin-top: 2rem;">
+                <button type="submit" class="btn btn-primary" style="padding: 0.75rem 2rem;">Save Changes</button>
+            </div>
+        </form>
+    </main>
+
+    <div id="notification"></div>
+
+    <script type="module">
+        const SUPABASE_URL = 'https://tjqsmkaiajdpotmafqvw.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqcXNta2FpYWpkcG90bWFmcXZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU5ODA3NDIsImV4cCI6MjA3MTU1Njc0Mn0.9710q9W5EFfCagj340AizUSKiOXYApy0xkTFszFjO8o';
+        const { createClient } = supabase;
+        const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let currentUser = null;
+        let currentSkills = [];
+
+        // --- UI Elements ---
+        const avatarPreview = document.getElementById('avatar-preview');
+        const avatarFileInput = document.getElementById('avatar-file');
+        const fullNameInput = document.getElementById('full-name');
+        const universityInput = document.getElementById('university');
+        const targetRoleInput = document.getElementById('target-role');
+        const roleDescriptionInput = document.getElementById('role-description');
+        const skillsContainer = document.getElementById('skills-container');
+        const newSkillInput = document.getElementById('new-skill');
+        const addSkillBtn = document.getElementById('add-skill-btn');
+        const settingsForm = document.getElementById('settings-form');
+        const notification = document.getElementById('notification');
+
+        // --- Utility Functions ---
+        function showNotification(message, type = 'success') {
+            notification.textContent = message;
+            notification.className = `show ${type}`;
+            setTimeout(() => {
+                notification.className = '';
+            }, 3000);
+        }
+
+        // --- Data Rendering ---
+        function renderSkills() {
+            skillsContainer.innerHTML = '';
+            currentSkills.forEach(skill => {
+                const skillTag = document.createElement('span');
+                skillTag.className = 'skill-tag';
+                skillTag.textContent = skill;
+
+                const removeBtn = document.createElement('button');
+                removeBtn.innerHTML = '&times;';
+                removeBtn.onclick = () => removeSkill(skill);
+
+                skillTag.appendChild(removeBtn);
+                skillsContainer.appendChild(skillTag);
+            });
+        }
+
+        // --- Data Fetching and Population ---
+        async function loadUserSettings(userId) {
+            // Fetch profile data
+            const { data: profile, error: profileError } = await db.from('profiles').select('*').eq('id', userId).single();
+            if (profileError && profileError.code !== 'PGRST116') console.error('Error fetching profile:', profileError);
+            if (profile) {
+                fullNameInput.value = profile.full_name || '';
+                universityInput.value = profile.university || '';
+                if (profile.avatar_url) {
+                    avatarPreview.style.backgroundImage = `url(${profile.avatar_url})`;
+                }
+            }
+
+            // Fetch target role
+            const { data: role, error: roleError } = await db.from('target_roles').select('*').eq('user_id', userId).single();
+            if (roleError && roleError.code !== 'PGRST116') console.error('Error fetching target role:', roleError);
+            if (role) {
+                targetRoleInput.value = role.role_name || '';
+                roleDescriptionInput.value = role.description || '';
+            }
+
+            // Fetch skills
+            const { data: skills, error: skillsError } = await db.from('user_skills').select('skill_name').eq('user_id', userId);
+            if (skillsError) console.error('Error fetching skills:', skillsError);
+            if (skills) {
+                currentSkills = skills.map(s => s.skill_name);
+                renderSkills();
+            }
+        }
+
+        // --- Event Handlers ---
+        async function handleAvatarUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const filePath = `${currentUser.id}/${Date.now()}_${file.name}`;
+            const { error: uploadError } = await db.storage.from('avatars').upload(filePath, file);
+            if (uploadError) {
+                showNotification('Error uploading image.', 'error');
+                console.error('Upload error:', uploadError);
+                return;
+            }
+
+            const { data } = db.storage.from('avatars').getPublicUrl(filePath);
+            const publicUrl = data.publicUrl;
+
+            const { error: updateError } = await db.from('profiles').upsert({
+                id: currentUser.id,
+                avatar_url: publicUrl,
+                email: currentUser.email // Add this line
+            }, { onConflict: 'id' }); if (updateError) {
+                showNotification('Error saving avatar URL.', 'error');
+                console.error('Update error:', updateError);
+            } else {
+                avatarPreview.style.backgroundImage = `url(${publicUrl})`;
+                showNotification('Profile picture updated!');
+            }
+        }
+
+        async function addSkill() {
+            const skillName = newSkillInput.value.trim();
+            if (skillName && !currentSkills.includes(skillName)) {
+                const { error } = await db.from('user_skills').insert({ user_id: currentUser.id, skill_name: skillName });
+                if (error) {
+                    showNotification('Error adding skill.', 'error');
+                } else {
+                    currentSkills.push(skillName);
+                    renderSkills();
+                    newSkillInput.value = '';
+                }
+            }
+        }
+
+        async function removeSkill(skillName) {
+            const { error } = await db.from('user_skills').delete().match({ user_id: currentUser.id, skill_name: skillName });
+            if (error) {
+                showNotification('Error removing skill.', 'error');
+            } else {
+                currentSkills = currentSkills.filter(s => s !== skillName);
+                renderSkills();
+            }
+        }
+
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            // 1. Update Profile
+            const { error: profileError } = await db.from('profiles').upsert({
+                id: currentUser.id,
+                full_name: fullNameInput.value,
+                university: universityInput.value,
+                email: currentUser.email // Add this line
+            }, { onConflict: 'id' });
+
+            // 2. Update Target Role
+            const { error: roleError } = await db.from('target_roles').upsert({
+                user_id: currentUser.id,
+                role_name: targetRoleInput.value,
+                description: roleDescriptionInput.value
+            }, { onConflict: 'user_id' });
+
+            if (profileError || roleError) {
+                showNotification('Error saving settings.', 'error');
+                console.error('Save errors:', profileError, roleError);
+            } else {
+                showNotification('Settings saved successfully!');
+            }
+        }
+
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            const { data: { user }, error } = await db.auth.getUser();
+            if (error || !user) {
+                window.location.href = '/index.html';
+                return;
+            }
+            currentUser = user;
+            loadUserSettings(user.id);
+
+            // Event Listeners
+            avatarFileInput.addEventListener('change', handleAvatarUpload);
+            addSkillBtn.addEventListener('click', addSkill);
+            settingsForm.addEventListener('submit', handleFormSubmit);
+            document.getElementById('logout-button').addEventListener('click', async () => {
+                await db.auth.signOut();
+                window.location.href = '/index.html';
+            });
+            document.getElementById('go-back-sidebar-btn').addEventListener('click', (e) => {
+                e.preventDefault();
+                history.back();
+            });
+        });
+
+    </script>
+</body>
+
+</html>

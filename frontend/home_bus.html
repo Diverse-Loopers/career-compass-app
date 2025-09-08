@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diverse Loopers – Your Gateway to Talent, Innovation & Results</title>
+    <!-- Google Fonts for the 'Inter' font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --color-primary: #3b82f6;
+            --color-secondary: #ec4899;
+        }
+
+        /* --- Base & Typography --- */
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+            background-color: #FFFFFF;
+            color: #1F2937;
+            overflow-x: hidden;
+        }
+
+        /* --- Animations & Effects --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.6s ease-out;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- Layout --- */
+        .container {
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 1.5rem;
+            padding-right: 1.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .container {
+                max-width: 640px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                max-width: 768px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .container {
+                max-width: 1024px;
+            }
+        }
+
+        @media (min-width: 1280px) {
+            .container {
+                max-width: 1280px;
+            }
+        }
+
+        /* --- Header --- */
+        header {
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(1.5rem);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            border-bottom: 1px solid #E5E7EB;
+        }
+
+        header .logo {
+            height: 2.5rem;
+            width: auto;
+        }
+
+        /* --- Timeline (How it Works Section) --- */
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 36px;
+            bottom: -1.5rem;
+            width: 2px;
+            background-color: #E5E7EB;
+        }
+
+        .timeline-item:last-child::before {
+            display: none;
+        }
+
+        /* --- Main Content Sections --- */
+        main {
+            padding-top: 5rem;
+        }
+
+        section {
+            padding-top: 6rem;
+            padding-bottom: 6rem;
+        }
+
+        .bg-light {
+            background-color: #F9FAFB;
+        }
+
+        /* --- Hero Section --- */
+        .hero-section {
+            padding-top: 8rem;
+            padding-bottom: 8rem;
+            position: relative;
+            background: url('https://placehold.co/1920x1080/F0F9FF/1E40AF?text=Modern+Workspace') no-repeat center center;
+            background-size: cover;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 1));
+        }
+
+        .hero-section .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        @media (min-width: 768px) {
+            .hero-section {
+                padding-top: 10rem;
+                padding-bottom: 10rem;
+            }
+        }
+
+        /* --- Text & Headlines --- */
+        h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            color: #111827;
+            line-height: 1.1;
+            letter-spacing: -0.05em;
+        }
+
+        @media (min-width: 768px) {
+            h1 {
+                font-size: 4rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            h1 {
+                font-size: 5rem;
+            }
+        }
+
+        h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            color: var(--color-secondary);
+            text-transform: uppercase;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .section-title {
+            margin-top: 1rem;
+            font-size: 2.25rem;
+            font-weight: 900;
+            color: #111827;
+            letter-spacing: -0.025em;
+        }
+
+        @media (min-width: 768px) {
+            .section-title {
+                font-size: 3rem;
+            }
+        }
+
+        p {
+            margin-top: 1.5rem;
+            font-size: 1.125rem;
+            color: #4B5563;
+            line-height: 1.7;
+        }
+
+        .max-w-3xl {
+            max-width: 48rem;
+        }
+
+        .max-w-4xl {
+            max-width: 56rem;
+        }
+
+        /* --- Buttons --- */
+        .button {
+            display: inline-block;
+            margin-top: 2.5rem;
+            padding: 1rem 2rem;
+            color: white;
+            font-weight: 700;
+            border-radius: 0.5rem;
+            background-color: var(--color-primary);
+            font-size: 1.125rem;
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.2), 0 4px 6px -4px rgba(59, 130, 246, 0.2);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .button:hover {
+            background-color: #2563EB;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 25px -5px rgba(59, 130, 246, 0.3), 0 8px 10px -6px rgba(59, 130, 246, 0.3);
+        }
+
+        /* --- Forms --- */
+        form input {
+            width: 97%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #D1D5DB;
+            border-radius: 0.375rem;
+            background-color: #FFFFFF;
+            color: #111827;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        form input::placeholder {
+            color: #6B7280;
+        }
+
+        form input:focus {
+            outline: 2px solid transparent;
+            outline-offset: 2px;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+        }
+
+        form button {
+            width: 100%;
+            padding: 0.75rem 2rem;
+            color: white;
+            font-weight: 700;
+            border-radius: 0.375rem;
+            background-color: var(--color-primary);
+            font-size: 1.125rem;
+            border: none;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        form button:hover {
+            background-color: #2563EB;
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.4), 0 4px 6px -4px rgba(59, 130, 246, 0.4);
+        }
+
+        /* --- Navigation Links --- */
+        .nav-links {
+            display: none;
+        }
+
+        @media (min-width: 768px) {
+            .nav-links {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+        }
+
+        .nav-links a {
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: #4B5563;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .nav-links a:hover {
+            background-color: #F3F4F6;
+            color: #111827;
+        }
+
+        .nav-links a.active {
+            background-color: #F3F4F6;
+            color: #111827;
+        }
+
+        /* Card Styles */
+        .card {
+            background-color: #FFFFFF;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            border: 1px solid #E5E7EB;
+            transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.08);
+        }
+
+        .icon-circle {
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #EFF6FF;
+            color: var(--color-primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .icon-circle svg {
+            width: 1.75rem;
+            height: 1.75rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header / Navigation -->
+    <header>
+        <div class="container"
+            style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; padding-bottom: 1rem;">
+            <a href="#" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none;">
+                <img src="logo2.png" alt="Diverse Loopers Logo" class="logo">
+                <span style="font-size: 1.25rem; font-weight: 700; color: #111827;">Diverse Loopers</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">For Students</a>
+                <a href="home_uni.html">For Universities</a>
+                <a href="for_business.html" class="active">For Businesses</a>
+            </div>
+            <a href="#contact" class="button" style="margin-top: 0; padding: 0.5rem 1.5rem; font-size: 0.875rem;">
+                Start a Project
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="container">
+                <div class="max-w-4xl text-center mx-auto">
+                    <h1 class="reveal">
+                        Get Your Work Done with the Best Cream of the Market.
+                    </h1>
+                    <p class="reveal" style="transition-delay: 0.1s;">
+                        Businesses today face a paradox. The demand for skilled professionals is skyrocketing, but the
+                        talent pool is often underprepared, overpriced, or inaccessible.
+                    </p>
+                    <p style="font-size: 1.125rem;" class="reveal" style="transition-delay: 0.2s;">
+                        Diverse Loopers solves this problem by giving you direct access to students and professionals
+                        trained on real-world projects, guided by industry experts, and ready to deliver results.
+                    </p>
+                    <a href="#contact" class="button reveal" style="transition-delay: 0.3s;">
+                        Start a Project With Us Today
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why Businesses Partner Section -->
+        <section class="bg-light">
+            <div class="container">
+                <div class="max-w-3xl text-center mx-auto reveal">
+                    <h2>Why Businesses Partner With Us</h2>
+                    <p class="section-title">
+                        Achieve More Than Just Project Delivery
+                    </p>
+                </div>
+                <div style="margin-top: 4rem; display: grid; gap: 2rem;"
+                    class="grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                    <!-- Benefit 1 -->
+                    <div class="card reveal">
+                        <div class="icon-circle">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z">
+                                </path>
+                            </svg>
+                        </div>
+                        <h3>Top-Quality Talent</h3>
+                        <p style="margin: 0.5rem 0 0 0; font-size: 1rem;">Work with handpicked, trained, and mentored
+                            students and early professionals—the cream of the market.</p>
+                    </div>
+                    <!-- Benefit 2 -->
+                    <div class="card reveal" style="transition-delay: 0.1s;">
+                        <div class="icon-circle">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v.01M12 6v-1m0-1V4m0 2v1m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M12 18c-1.657 0-3-.895-3-2s1.343-2 3-2 3-.895 3-2-1.343-2-3-2m0 8c1.11 0 2.08.402 2.599 1M12 18v-1m0 1v.01M12 20v-1m0-1v-1m0 2v1m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1">
+                                </path>
+                            </svg>
+                        </div>
+                        <h3>Cost-Effective Solutions</h3>
+                        <p style="margin: 0.5rem 0 0 0; font-size: 1rem;">Get high-quality execution without the
+                            sky-high costs of traditional outsourcing through our efficient hybrid model.</p>
+                    </div>
+                    <!-- Benefit 3 -->
+                    <div class="card reveal" style="transition-delay: 0.2s;">
+                        <div class="icon-circle">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z">
+                                </path>
+                            </svg>
+                        </div>
+                        <h3>Fresh Innovation</h3>
+                        <p style="margin: 0.5rem 0 0 0; font-size: 1rem;">Students bring new ideas and the latest tech
+                            knowledge, while expert mentors ensure professional-level execution.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section id="how-it-works">
+            <div class="container">
+                <div class="max-w-3xl text-center mx-auto reveal">
+                    <h2>The Business Partnership Model</h2>
+                    <p class="section-title">
+                        Get Work Done Quickly and Reliably
+                    </p>
+                </div>
+                <div style="margin-top: 4rem;">
+                    <div
+                        style="position: relative; display: flex; flex-direction: column; gap: 3rem; max-width: 48rem; margin: auto;">
+                        <!-- Timeline Item 1 -->
+                        <div class="timeline-item reveal" style="position: relative; padding-left: 3rem;">
+                            <div
+                                style="position: absolute; left: 0; top: 0; display: flex; align-items: center; justify-content: center; width: 1.5rem; height: 1.5rem; border-radius: 9999px; background-color: #F3F4F6; border-width: 2px; border-color: var(--color-primary);">
+                                <div
+                                    style="width: 0.5rem; height: 0.5rem; border-radius: 9999px; background-color: var(--color-primary);">
+                                </div>
+                            </div>
+                            <p style="margin: 0; font-size: 0.875rem; font-weight: 600; color: var(--color-primary);">
+                                Phase 1: Share Your Project</p>
+                            <h3 style="margin-top: 0.5rem; font-size: 1.5rem;">Submit Your Requirements</h3>
+                            <p style="margin-top: 0.5rem; font-size: 1rem;">Businesses submit projects (tech, digital,
+                                marketing, operations, etc.). We scope the requirements and match you with the right
+                                talent pool.</p>
+                        </div>
+                        <!-- Timeline Item 2 -->
+                        <div class="timeline-item reveal" style="position: relative; padding-left: 3rem;">
+                            <div
+                                style="position: absolute; left: 0; top: 0; display: flex; align-items: center; justify-content: center; width: 1.5rem; height: 1.5rem; border-radius: 9999px; background-color: #F9FAFB; border-width: 2px; border-color: #D1D5DB;">
+                            </div>
+                            <p style="margin: 0; font-size: 0.875rem; font-weight: 600; color: #6B7280;">Phase 2: Talent
+                                + Mentorship Execution</p>
+                            <h3 style="margin-top: 0.5rem; font-size: 1.5rem;">We Get to Work</h3>
+                            <p style="margin-top: 0.5rem; font-size: 1rem;">Students and professionals from our
+                                ecosystem work on your project. Every project is mentored and reviewed by industry
+                                experts to guarantee quality.</p>
+                        </div>
+                        <!-- Timeline Item 3 -->
+                        <div class="timeline-item reveal" style="position: relative; padding-left: 3rem;">
+                            <div
+                                style="position: absolute; left: 0; top: 0; display: flex; align-items: center; justify-content: center; width: 1.5rem; height: 1.5rem; border-radius: 9999px; background-color: #F9FAFB; border-width: 2px; border-color: #D1D5DB;">
+                            </div>
+                            <p style="margin: 0; font-size: 0.875rem; font-weight: 600; color: #6B7280;">Phase 3:
+                                Delivery & Ongoing Partnership</p>
+                            <h3 style="margin-top: 0.5rem; font-size: 1.5rem;">Receive Results</h3>
+                            <p style="margin-top: 0.5rem; font-size: 1rem;">Receive high-quality deliverables, on time
+                                and on budget. Optionally continue working with top-performing talent and build a
+                                long-term pipeline.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects We Handle Section -->
+        <section class="bg-light">
+            <div class="container">
+                <div class="max-w-3xl text-center mx-auto reveal">
+                    <h2>Types of Projects We Handle</h2>
+                </div>
+                <div style="margin-top: 3rem; display: grid; gap: 2rem;"
+                    class="grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+                    <div class="card reveal" style="text-align: center;">
+                        <h3 style="font-size: 1.125rem;">Web & App Development</h3>
+                    </div>
+                    <div class="card reveal" style="text-align: center; transition-delay: 0.1s;">
+                        <h3 style="font-size: 1.125rem;">AI/ML Solutions</h3>
+                    </div>
+                    <div class="card reveal" style="text-align: center; transition-delay: 0.2s;">
+                        <h3 style="font-size: 1.125rem;">Digital Marketing & Branding</h3>
+                    </div>
+                    <div class="card reveal" style="text-align: center; transition-delay: 0.3s;">
+                        <h3 style="font-size: 1.125rem;">Business Support & Ops</h3>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact">
+            <div class="container">
+                <div class="reveal"
+                    style="background-color: #111827; color: white; border-radius: 1rem; overflow: hidden; display: grid;"
+                    class="lg:grid-cols-2">
+                    <div style="padding: 2rem;" class="md:p-12">
+                        <h2 style="font-size: 1.875rem; font-weight: 800; color: white;" class="md:text-4xl">
+                            An Invitation to Collaborate
+                        </h2>
+                        <p style="margin-top: 1rem; font-size: 1.125rem; color: #9CA3AF;">
+                            By working with us, you don’t just get projects delivered—you invest in a sustainable
+                            ecosystem of skilled talent that will continue to grow and benefit your industry.
+                        </p>
+                        <p style="margin-top: 1.5rem; font-size: 1.125rem; color: #9CA3AF;">
+                            Start a project with us today and experience how the best cream of the market can power your
+                            business success.
+                        </p>
+                    </div>
+                    <div style="padding: 2rem;" class="md:p-12">
+                        <form action="#" method="POST" style="display: flex; flex-direction: column; gap: 1.25rem;">
+                            <input type="text" name="company-name" placeholder="Company Name" required
+                                style="background-color: #1F2937; border-color: #374151; color: white;">
+                            <input type="text" name="name" placeholder="Your Name" required
+                                style="background-color: #1F2937; border-color: #374151; color: white;">
+                            <input type="email" name="email" placeholder="Work Email" required
+                                style="background-color: #1F2937; border-color: #374151; color: white;">
+                            <button type="submit">
+                                Start a Project
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer style="background-color: #F9FAFB; border-top: 1px solid #E5E7EB;">
+        <div class="container" style="padding-top: 2rem; padding-bottom: 2rem;">
+            <div style="display: flex; flex-direction: column; justify-content: space-between; align-items: center;"
+                class="md:flex-row">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <img src="logo2.png" alt="Diverse Loopers Logo" class="logo" style="height: 2rem;">
+                    <span style="font-size: 1.125rem; font-weight: 700; color: #111827;">Diverse Loopers</span>
+                </div>
+                <div style="font-size: 0.875rem; color: #6B7280; margin-top: 1rem; text-align: center;" class="md:mt-0">
+                    &copy; 2024 Diverse Loopers Inc. Your Gateway to Talent, Innovation & Results.
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // JS for reveal on scroll animation
+        document.addEventListener("DOMContentLoaded", function () {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            const revealElements = document.querySelectorAll('.reveal');
+            revealElements.forEach(el => {
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+
+</html>
