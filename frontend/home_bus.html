@@ -87,6 +87,37 @@
             width: auto;
         }
 
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+
+        .header-left, .header-right {
+            flex: 1;
+        }
+
+        .header-right {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .header-cta-button {
+            margin-top: 0;
+            padding: 0.5rem 1.5rem;
+            font-size: 0.875rem;
+            display: none; /* Hidden on mobile by default */
+        }
+
+        @media (min-width: 768px) {
+            .header-cta-button {
+                display: inline-block; /* Visible on desktop */
+            }
+        }
+
         /* --- Timeline (How it Works Section) --- */
         .timeline-item::before {
             content: '';
@@ -214,7 +245,7 @@
         /* --- Buttons --- */
         .button {
             display: inline-block;
-            margin-top: 2.5rem;
+            margin-top: -0.5rem;
             padding: 1rem 2rem;
             color: white;
             font-weight: 700;
@@ -336,6 +367,73 @@
             width: 1.75rem;
             height: 1.75rem;
         }
+        
+        /* --- MOBILE NAVIGATION STYLES START --- */
+        .mobile-menu-button {
+            display: block; /* Show on mobile */
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 100;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            z-index: 90;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .mobile-menu.open {
+            transform: translateX(0);
+        }
+        
+        .mobile-menu a {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #4B5563;
+            text-decoration: none;
+        }
+
+        .mobile-menu a.active {
+            color: var(--color-primary);
+        }
+
+        .mobile-menu .button {
+            margin-top: 1rem;
+        }
+        
+        .hidden {
+            display: none;
+        }
+
+        .mobile-menu-close-button {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #1F2937;
+        }
+
+        @media (min-width: 768px) {
+            .mobile-menu-button {
+                display: none; /* Hide hamburger on desktop */
+            }
+        }
+        /* --- MOBILE NAVIGATION STYLES END --- */
     </style>
 </head>
 
@@ -343,22 +441,47 @@
 
     <!-- Header / Navigation -->
     <header>
-        <div class="container"
-            style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; padding-bottom: 1rem;">
-            <a href="#" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none;">
-                <img src="logo2.png" alt="Diverse Loopers Logo" class="logo">
-                <span style="font-size: 1.25rem; font-weight: 700; color: #111827;">Diverse Loopers</span>
-            </a>
+        <div class="container header-container">
+            <!-- Left -->
+            <div class="header-left">
+                <a href="#" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none;">
+                    <img src="logo2.png" alt="Diverse Loopers Logo" class="logo">
+                    <span style="font-size: 1.25rem; font-weight: 700; color: #111827;">Diverse Loopers</span>
+                </a>
+            </div>
+            
+            <!-- Center -->
             <div class="nav-links">
                 <a href="index.html">For Students</a>
                 <a href="home_uni.html">For Universities</a>
                 <a href="for_business.html" class="active">For Businesses</a>
             </div>
-            <a href="#contact" class="button" style="margin-top: 0; padding: 0.5rem 1.5rem; font-size: 0.875rem;">
-                Start a Project
-            </a>
+            
+            <!-- Right -->
+            <div class="header-right">
+                <a href="#contact" class="button header-cta-button">
+                    Start a Project
+                </a>
+                
+                <!-- Mobile Menu Button (Hamburger) -->
+                <button id="mobile-menu-btn" class="mobile-menu-button">
+                     <svg id="menu-open-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="28" height="28"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                     <svg id="menu-close-icon" class="hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="28" height="28"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
         </div>
     </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="mobile-menu">
+        <button id="mobile-menu-close-btn" class="mobile-menu-close-button">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="32" height="32"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+        <a href="index.html">For Students</a>
+        <a href="home_uni.html">For Universities</a>
+        <a href="for_business.html" class="active">For Businesses</a>
+        <a href="#contact" class="button">Start a Project</a>
+    </div>
 
     <!-- Main Content -->
     <main>
@@ -591,8 +714,36 @@
             revealElements.forEach(el => {
                 observer.observe(el);
             });
+            
+            // --- MOBILE NAVIGATION SCRIPT START ---
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const openIcon = document.getElementById('menu-open-icon');
+            const closeIcon = document.getElementById('menu-close-icon');
+            const mobileMenuCloseBtn = document.getElementById('mobile-menu-close-btn');
+
+            function closeTheMenu() {
+                mobileMenu.classList.remove('open');
+                openIcon.classList.remove('hidden');
+                closeIcon.classList.add('hidden');
+            }
+
+            mobileMenuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('open');
+                openIcon.classList.toggle('hidden');
+                closeIcon.classList.toggle('hidden');
+            });
+            
+            mobileMenuCloseBtn.addEventListener('click', closeTheMenu);
+            
+            // Close menu when a link inside is clicked
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', closeTheMenu);
+            });
+            // --- MOBILE NAVIGATION SCRIPT END ---
         });
     </script>
 </body>
 
 </html>
+

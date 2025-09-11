@@ -138,6 +138,8 @@
             flex: 1;
             padding: 2.5rem;
             background-color: #0c0d19;
+            position: relative;
+            /* Added for mobile menu button positioning */
         }
 
         .main-header {
@@ -277,13 +279,82 @@
             color: var(--pink-800);
         }
 
-        @media (max-width: 640px) {
+        /* --- MOBILE NAVIGATION STYLES START --- */
+        .mobile-nav-container {
+            display: none;
+        }
+
+        .mobile-menu-button {
+            display: none;
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            background: #1f2937;
+            border: 1px solid #374151;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            z-index: 1000;
+        }
+
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #0c0d19;
+            z-index: 999;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .mobile-nav.open {
+            transform: translateX(0);
+        }
+
+        .mobile-nav .sidebar-header {
+            justify-content: space-between;
+        }
+
+        .mobile-nav .nav-link {
+            color: #d1d5db;
+            font-size: 1.125rem;
+        }
+
+        .mobile-nav .nav-link.active {
+            background-color: #1f2937;
+            color: white;
+        }
+
+        .mobile-nav .nav-link:hover {
+            background-color: #111827;
+        }
+
+        /* --- MOBILE NAVIGATION STYLES END --- */
+
+        @media (max-width: 768px) {
+
+            /* Changed from 640px to 768px */
+            body {
+                flex-direction: column;
+            }
+
             .sidebar {
                 display: none;
             }
 
             .main-content {
                 padding: 1.5rem;
+                padding-top: 5rem;
+                /* Space for the button */
+            }
+
+            .mobile-menu-button,
+            .mobile-nav-container {
+                display: block;
             }
         }
 
@@ -558,7 +629,8 @@
         /* RESPONSIVE STYLES FOR ROADMAP */
         @media (max-width: 768px) {
             .roadmap-section {
-                padding: 4rem 1rem;
+                padding: 4rem 0rem;
+                /* Adjusted padding for mobile */
             }
 
             .roadmap-timeline {
@@ -595,6 +667,10 @@
                 transform: none !important;
             }
 
+            .roadmap-item:hover {
+                transform: translateY(-5px) scale(1.01) !important;
+            }
+
             .roadmap-item-dot {
                 top: 20px;
                 left: -20px;
@@ -610,18 +686,14 @@
         }
 
         /* --- Add these new styles for the roadmap icons --- */
-
         .roadmap-endpoint {
             position: absolute;
             font-size: 2.5rem;
-            /* Makes icons larger */
             z-index: 5;
             transform: translate(-50%, -50%);
-            /* Centers the icon on its coordinates */
             filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
             opacity: 0;
             transition: opacity 0.5s 1s ease-in-out;
-            /* Fade in after a delay */
         }
 
         .roadmap-endpoint.visible {
@@ -664,45 +736,52 @@
             }
         }
 
-        /* --- Add these styles for the mobile view --- */
         @media (max-width: 768px) {
             .roadmap-endpoint {
                 transform: translate(-50%, 0);
-                /* Adjust centering for vertical line */
                 left: 0 !important;
-                /* Position relative to the vertical line */
             }
 
             #roadmap-start-icon {
                 top: -15px !important;
-                /* Place at the very top of the line */
             }
 
             #roadmap-end-icon {
                 bottom: -15px !important;
-                /* Place at the very bottom */
                 top: auto !important;
             }
         }
 
         .roadmap-intro-text {
             font-size: 1.125rem;
-            /* 18px */
             color: var(--gray-600);
             max-width: 600px;
-            /* Controls the width of the text block */
             margin-left: auto;
-            /* Centers the text block */
             margin-right: auto;
-            /* Centers the text block */
             line-height: 1.6;
         }
     </style>
 </head>
 
-<body class="flex min-h-screen">
+<body>
+    <!-- MOBILE NAVIGATION CONTAINER START -->
+    <div class="mobile-nav-container">
+        <button id="mobile-menu-button" class="mobile-menu-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+            <span style="margin-left: 0.5rem;">Menu</span>
+        </button>
+        <div id="mobile-nav" class="mobile-nav">
+            <!-- Cloned Sidebar content will go here -->
+        </div>
+    </div>
+    <!-- MOBILE NAVIGATION CONTAINER END -->
 
-    <aside class="sidebar">
+    <aside class="sidebar" id="desktop-sidebar">
         <a href="index.html" class="sidebar-header-link">
             <div class="sidebar-header">
                 <div class="sidebar-logo"><img src="logo3-removebg-preview.png" alt="Diverse Loopers Logo"
@@ -806,6 +885,7 @@
     </aside>
 
     <main class="main-content">
+        <!-- The main content remains unchanged -->
         <header class="main-header">
             <h1 id="welcome-message">Welcome back!</h1>
             <p id="welcome-message">Let's chart the course for your dream career.</p>
@@ -851,7 +931,6 @@
         </div>
 
         <div class="roadmap-section" id="roadmap-section">
-
             <h2 id="roadmap-title">Your Personalized Path to Success</h2>
             <p class="roadmap-intro-text">
                 This isn't just a list; it's your strategic guide to bridging the gap between your current skills and
@@ -881,11 +960,50 @@
     </main>
 
     <script type="module">
-        // IMPORTANT: Replace with your Supabase project URL and anon key
+        // All your existing script logic remains the same...
         const SUPABASE_URL = 'https://tjqsmkaiajdpotmafqvw.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqcXNta2FpYWpkcG90bWFmcXZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU5ODA3NDIsImV4cCI6MjA3MTU1Njc0Mn0.9710q9W5EFfCagj340AizUSKiOXYApy0xkTFszFjO8o';
-
         let db;
+
+        // --- MOBILE NAVIGATION SCRIPT START ---
+        function setupMobileNav() {
+            const mobileMenuBtn = document.getElementById('mobile-menu-button');
+            const mobileNav = document.getElementById('mobile-nav');
+            const desktopSidebar = document.getElementById('desktop-sidebar');
+
+            if (!mobileMenuBtn || !mobileNav || !desktopSidebar) return;
+
+            // Clone the sidebar content into the mobile nav
+            const clonedHeader = desktopSidebar.querySelector('.sidebar-header-link').cloneNode(true);
+            const clonedNav = desktopSidebar.querySelector('nav').cloneNode(true);
+            const clonedFooter = desktopSidebar.querySelector('.sidebar-footer').cloneNode(true);
+
+            // Add a close button to the mobile header
+            const closeBtn = document.createElement('button');
+            closeBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+            closeBtn.style.background = 'none';
+            closeBtn.style.border = 'none';
+            closeBtn.style.color = 'white';
+            closeBtn.style.cursor = 'pointer';
+
+            clonedHeader.querySelector('.sidebar-header').appendChild(closeBtn);
+            mobileNav.appendChild(clonedHeader);
+            mobileNav.appendChild(clonedNav);
+            mobileNav.appendChild(clonedFooter);
+
+            const openMenu = () => mobileNav.classList.add('open');
+            const closeMenu = () => mobileNav.classList.remove('open');
+
+            mobileMenuBtn.addEventListener('click', openMenu);
+            closeBtn.addEventListener('click', closeMenu);
+
+            // Close menu when a link is clicked
+            mobileNav.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', closeMenu);
+            });
+        }
+        // --- MOBILE NAVIGATION SCRIPT END ---
+
 
         async function main() {
             if (!SUPABASE_URL || SUPABASE_URL === 'YOUR_SUPABASE_URL') {
@@ -906,6 +1024,9 @@
                 }
             });
 
+            // Setup mobile nav functionality
+            setupMobileNav();
+
             const { data: { user }, error: userError } = await db.auth.getUser();
 
             if (userError || !user) {
@@ -918,7 +1039,6 @@
 
         async function fetchDashboardData(userId) {
             try {
-                // --- This section is the same ---
                 // Fetch user's name
                 const {
                     data: profile,
@@ -937,7 +1057,6 @@
                     document.getElementById('welcome-message').textContent = `Welcome!`;
                 }
 
-                // --- This section is the same ---
                 // Fetch user's skills
                 const {
                     data: skills,
@@ -961,7 +1080,6 @@
                     skillsContainer.innerHTML = '<span style="font-size: 0.875rem; color: var(--gray-500);">No skills added yet.</span>';
                 }
 
-                // --- This section is the same ---
                 // Fetch user's target role and update roadmap title
                 const {
                     data: targetRole,
@@ -989,8 +1107,7 @@
                 roleNameEl.classList.remove('skeleton', 'skeleton-title');
                 roleDescEl.classList.remove('skeleton', 'skeleton-text');
 
-
-                // --- CHANGE 1: GET THE ID OF THE LATEST ANALYSIS ---
+                // Get the ID of the latest analysis
                 const {
                     data: latestAnalysis,
                     error: analysisError
@@ -1022,7 +1139,7 @@
                     document.getElementById('analysis-circle-fg').style.strokeDasharray = '0, 100';
                 }
 
-                // --- CHANGE 2: FETCH THE ROADMAP USING THE LATEST ANALYSIS ID ---
+                // Fetch the roadmap using the latest analysis ID
                 let roadmap = []; // Initialize roadmap as empty
                 if (latestAnalysis) {
                     const { data: roadmapData, error: roadmapError } = await db
@@ -1037,25 +1154,50 @@
                     }
                 }
 
-                // The rest of your code now uses the correctly filtered roadmap
-                const roadmapContainer = document.getElementById('roadmap-container');
                 const roadmapItemsContainer = document.getElementById('roadmap-items-container');
                 roadmapItemsContainer.innerHTML = '';
 
                 if (roadmap.length > 0) {
-                    // (The entire drawRoadmap function remains here, unchanged)
                     const drawRoadmap = () => {
-                        // ... your existing drawRoadmap code ...
                         roadmapItemsContainer.innerHTML = '';
+                        const roadmapContainer = document.getElementById('roadmap-container');
                         const roadmapPathSvg = document.getElementById('roadmap-path-svg');
                         const wavyPath = document.getElementById('wavy-path');
                         const containerWidth = roadmapContainer.offsetWidth;
+
+                        // MOBILE VIEW LOGIC
+                        if (window.innerWidth <= 768) {
+                            roadmap.forEach((item, index) => {
+                                const roadmapItemDiv = document.createElement('div');
+                                roadmapItemDiv.className = `roadmap-item`;
+                                roadmapItemDiv.style.animationDelay = `${index * 150}ms`;
+                                roadmapItemDiv.innerHTML = `
+                                    <div class="roadmap-item-dot"></div>
+                                    <div class="roadmap-item-content">
+                                        <div class="roadmap-item-content-main">
+                                            <h3 class="roadmap-item-title">${item.skill_name}</h3>
+                                            <p class="roadmap-item-description">${item.description}</p>
+                                        </div>
+                                        <div class="roadmap-item-footer">
+                                            <a href="courses.html" class="link">Find Courses &rarr;</a>
+                                        </div>
+                                    </div>
+                                `;
+                                roadmapItemsContainer.appendChild(roadmapItemDiv);
+                            });
+                            // Position icons for mobile
+                            const startIcon = document.getElementById('roadmap-start-icon');
+                            const endIcon = document.getElementById('roadmap-end-icon');
+                            startIcon.classList.add('visible');
+                            endIcon.classList.add('visible');
+                            return; // Stop here for mobile
+                        }
+
+                        // DESKTOP VIEW LOGIC
                         if (containerWidth === 0) return;
 
-                        // --- ADD THIS: Get the icon elements ---
                         const startIcon = document.getElementById('roadmap-start-icon');
                         const endIcon = document.getElementById('roadmap-end-icon');
-
                         const itemHeight = 250;
                         const timelineHeight = (roadmap.length) * itemHeight;
                         roadmapContainer.style.height = `${timelineHeight + 400}px`;
@@ -1078,7 +1220,6 @@
                             currentY = nextY;
                         }
 
-                        // --- ADD THIS: Position the start icon and make it visible ---
                         startIcon.style.left = `${midX}px`;
                         startIcon.style.top = `50px`;
                         startIcon.classList.add('visible');
@@ -1086,32 +1227,28 @@
                         wavyPath.setAttribute('d', pathData);
                         const pathLength = wavyPath.getTotalLength();
 
-                        // --- ADD THIS: Position the end icon and make it visible ---
-                        if (pathLength > 0 && window.innerWidth > 768) {
+                        if (pathLength > 0) {
                             const endPoint = wavyPath.getPointAtLength(pathLength);
                             endIcon.style.left = `${endPoint.x}px`;
                             endIcon.style.top = `${endPoint.y}px`;
                             endIcon.classList.add('visible');
-                        } else {
-                            endIcon.classList.add('visible'); // For mobile view
                         }
 
-                        // This is your existing code to place the cards, it remains the same
                         roadmap.forEach((item, index) => {
                             const roadmapItemDiv = document.createElement('div');
                             const alignment = index % 2 === 0 ? 'left' : 'right';
                             roadmapItemDiv.className = `roadmap-item ${alignment}`;
                             roadmapItemDiv.innerHTML = `
-            <div class="roadmap-item-content">
-                <div class="roadmap-item-content-main">
-                    <h3 class="roadmap-item-title">${item.skill_name}</h3>
-                    <p class="roadmap-item-description">${item.description}</p>
-                </div>
-                <div class="roadmap-item-footer">
-                     <a href="courses.html" class="link">Find Courses &rarr;</a>
-                </div>
-            </div>
-        `;
+                                <div class="roadmap-item-content">
+                                    <div class="roadmap-item-content-main">
+                                        <h3 class="roadmap-item-title">${item.skill_name}</h3>
+                                        <p class="roadmap-item-description">${item.description}</p>
+                                    </div>
+                                    <div class="roadmap-item-footer">
+                                        <a href="courses.html" class="link">Find Courses &rarr;</a>
+                                    </div>
+                                </div>
+                            `;
                             roadmapItemsContainer.appendChild(roadmapItemDiv);
                             const percentage = (index + 0.5) / roadmap.length;
                             const point = wavyPath.getPointAtLength(pathLength * percentage);
@@ -1127,14 +1264,16 @@
                             const spaceFromDot = 40;
                             const cardXOffset = (alignment === 'left') ? -(cardWidth + spaceFromDot) : spaceFromDot;
                             roadmapItemDiv.style.position = 'absolute';
-                            roadmapItemDiv.style.top = `${point.y - (itemHeight / 2)}px`;
+                            roadmapItemDiv.style.top = `${point.y - 120}px`;
                             roadmapItemDiv.style.left = `${point.x + cardXOffset}px`;
                             roadmapItemDiv.style.animationDelay = `${index * 200}ms`;
                         });
                     };
+
                     const resizeObserver = new ResizeObserver(() => {
                         drawRoadmap();
                     });
+
                     const mainContent = document.querySelector('.main-content');
                     if (mainContent) {
                         resizeObserver.observe(mainContent);

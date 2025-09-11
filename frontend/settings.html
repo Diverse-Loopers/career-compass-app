@@ -376,6 +376,7 @@
             transform: translateY(20px);
             transition: opacity 0.3s, transform 0.3s;
             pointer-events: none;
+            z-index: 1001;
         }
 
         #notification.show {
@@ -390,11 +391,95 @@
         #notification.error {
             background-color: var(--red-500);
         }
+        
+        /* --- MOBILE NAVIGATION STYLES START --- */
+        .mobile-nav-container { display: none; }
+        .mobile-menu-button {
+            display: none;
+            position: fixed;
+            top: 1.5rem;
+            left: 1.5rem;
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            color: var(--gray-800);
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            z-index: 1000;
+        }
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 80%;
+            max-width: 18rem;
+            height: 100%;
+            background-color: var(--white);
+            z-index: 999;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-lg);
+        }
+        .mobile-nav.open {
+            transform: translateX(0);
+        }
+        .mobile-nav-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 998;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            pointer-events: none;
+        }
+        .mobile-nav-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .mobile-nav .sidebar-header {
+             justify-content: space-between;
+        }
+        .mobile-nav .nav-link {
+            font-size: 1.125rem;
+        }
+        /* --- MOBILE NAVIGATION STYLES END --- */
+
+
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar {
+                display: none;
+            }
+            .main-content {
+                padding: 1.5rem;
+                padding-top: 5rem;
+            }
+            .mobile-menu-button, .mobile-nav-container {
+                display: block;
+            }
+        }
     </style>
 </head>
 
 <body>
-    <aside class="sidebar">
+     <!-- MOBILE NAVIGATION CONTAINER START -->
+    <div class="mobile-nav-container">
+        <button id="mobile-menu-button" class="mobile-menu-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+        </button>
+        <div id="mobile-nav-overlay" class="mobile-nav-overlay"></div>
+        <div id="mobile-nav" class="mobile-nav">
+             <!-- Cloned Sidebar content will go here -->
+        </div>
+    </div>
+    <!-- MOBILE NAVIGATION CONTAINER END -->
+
+    <aside class="sidebar" id="desktop-sidebar">
         <a href="index.html" class="sidebar-header-link">
             <div class="sidebar-header">
                 <div class="sidebar-logo"><img src="logo2.png" alt="Diverse Loopers Logo" class="logo-img"></div>
@@ -716,6 +801,64 @@
                 showNotification('Settings saved successfully!');
             }
         }
+        
+        function goBackOrFallback(e) {
+            e.preventDefault();
+            if (history.length > 1) {
+                history.back();
+            } else {
+                window.location.href = 'profile.html';
+            }
+        }
+
+        // --- MOBILE NAVIGATION SCRIPT ---
+        function setupMobileNav() {
+            const mobileMenuBtn = document.getElementById('mobile-menu-button');
+            const mobileNav = document.getElementById('mobile-nav');
+            const mobileNavOverlay = document.getElementById('mobile-nav-overlay');
+            const desktopSidebar = document.getElementById('desktop-sidebar');
+
+            if (!mobileMenuBtn || !mobileNav || !desktopSidebar) return;
+
+            // Clone sidebar content
+            const clonedHeader = desktopSidebar.querySelector('.sidebar-header-link').cloneNode(true);
+            const clonedNav = desktopSidebar.querySelector('nav').cloneNode(true);
+            const clonedFooter = desktopSidebar.querySelector('.sidebar-footer').cloneNode(true);
+            
+            // Add close button
+            const closeBtn = document.createElement('button');
+            closeBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+            closeBtn.style.cssText = "background: none; border: none; color: var(--gray-500); cursor: pointer;";
+            
+            clonedHeader.querySelector('.sidebar-header').appendChild(closeBtn);
+            mobileNav.appendChild(clonedHeader);
+            mobileNav.appendChild(clonedNav);
+            mobileNav.appendChild(clonedFooter);
+
+            const openMenu = () => {
+                mobileNav.classList.add('open');
+                mobileNavOverlay.classList.add('open');
+            };
+            const closeMenu = () => {
+                mobileNav.classList.remove('open');
+                mobileNavOverlay.classList.remove('open');
+            };
+
+            mobileMenuBtn.addEventListener('click', openMenu);
+            closeBtn.addEventListener('click', closeMenu);
+            mobileNavOverlay.addEventListener('click', closeMenu);
+
+            const mobileGoBackBtn = mobileNav.querySelector('#go-back-sidebar-btn');
+            if(mobileGoBackBtn) {
+                mobileGoBackBtn.addEventListener('click', goBackOrFallback);
+            }
+            
+            mobileNav.querySelectorAll('a').forEach(link => {
+                 if (link.id !== 'go-back-sidebar-btn') {
+                    link.addEventListener('click', closeMenu);
+                }
+            });
+        }
 
 
         // --- Initialization ---
@@ -736,13 +879,13 @@
                 await db.auth.signOut();
                 window.location.href = '/index.html';
             });
-            document.getElementById('go-back-sidebar-btn').addEventListener('click', (e) => {
-                e.preventDefault();
-                history.back();
-            });
+            document.getElementById('go-back-sidebar-btn').addEventListener('click', goBackOrFallback);
+
+            setupMobileNav(); // Initialize mobile navigation
         });
 
     </script>
 </body>
 
 </html>
+

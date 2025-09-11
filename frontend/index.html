@@ -709,9 +709,11 @@
             display: grid;
             grid-template-columns: 1fr;
             gap: 1.5rem;
+            justify-items: center;
+            /* Center items on the grid axis */
         }
 
-       
+
 
         /* Responsive adjustments for larger screens */
         @media (min-width: 768px) {
@@ -897,10 +899,11 @@
             z-index: 2;
         }
 
-        /* From Uiverse.io by joe-watson-sbf */
+        /* From Uiverse.io by joe-watson-sbf - MODIFIED */
         .flip-card {
             background-color: transparent;
-            width: 190px;
+            width: 21rem;
+            /* Matched to the inner card width */
             height: 254px;
             perspective: 1000px;
             font-family: sans-serif;
@@ -924,7 +927,7 @@
 
         .flip-card:hover .flip-card-inner {
             transform: rotateY(180deg);
-            transform-origin:50% 50%;
+            transform-origin: 50% 50%;
         }
 
         .flip-card-front,
@@ -934,7 +937,8 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            width: 21rem;
+            width: 100%;
+            /* Changed from 21rem to 100% */
             height: 100%;
             -webkit-backface-visibility: hidden;
             backface-visibility: hidden;
@@ -954,7 +958,6 @@
             color: white;
             transform: rotateY(180deg);
         }
-        
     </style>
 </head>
 
@@ -1001,7 +1004,10 @@
             <div id="mobile-menu" class="hidden">
                 <div class="mobile-menu-inner">
                     <a href="#about" class="mobile-link">About Us</a>
-                    <a href="#contact" class="mobile-link">Contact Us</a>
+
+                    <a href="home_bus.html" class="mobile-link">For Businesses</a>
+                    <a href="home_uni.html" class="mobile-link">For Universities</a>
+
                     <!-- Mobile login button -->
                     <a href="login.html" class="mobile-link hidden" id="mobile-login-btn">Login</a>
                     <!-- Mobile profile button -->
@@ -1169,11 +1175,12 @@
                         <div class="flip-card-inner">
                             <div class="flip-card-front">
                                 <p class="title">Wall of Fame</p>
-                                
+
                             </div>
                             <div class="flip-card-back">
-                                <p class="title">Showcase your achievements and get recognized by the community and employers.</p>
-                               
+                                <p class="title">Showcase your achievements and get recognized by the community and
+                                    employers.</p>
+
                             </div>
                         </div>
                     </div>
@@ -1181,11 +1188,12 @@
                         <div class="flip-card-inner">
                             <div class="flip-card-front">
                                 <p class="title">Portfolio Builder</p>
-                               
+
                             </div>
                             <div class="flip-card-back">
-                                <p class="title">Create a professional portfolio that speaks louder than your resume.</p>
-                                
+                                <p class="title">Create a professional portfolio that speaks louder than your resume.
+                                </p>
+
                             </div>
                         </div>
                     </div>
@@ -1193,16 +1201,16 @@
                         <div class="flip-card-inner">
                             <div class="flip-card-front">
                                 <p class="title">Mentorship Hub</p>
-                               
+
                             </div>
                             <div class="flip-card-back">
                                 <p class="title">Get guidance from industry experts who care about your success.</p>
-                                
+
                             </div>
                         </div>
                     </div>
 
-                    
+
 
                 </div>
             </div>
