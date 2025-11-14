@@ -1540,46 +1540,46 @@
 
         // --- CAROUSEL CONTROL FUNCTIONS ---
 
-        // function updateScrollButtons() {
-        //     if (!scrollContainer || !scrollLeftBtn || !scrollRightBtn) return;
+        function updateScrollButtons() {
+            if (!scrollContainer || !scrollLeftBtn || !scrollRightBtn) return;
 
-        //     // Hide left button if scrolled fully left
-        //     scrollLeftBtn.classList.toggle('hidden', scrollContainer.scrollLeft === 0);
+            // Hide left button if scrolled fully left
+            scrollLeftBtn.classList.toggle('hidden', scrollContainer.scrollLeft === 0);
 
-        //     // Hide right button if scrolled fully right
-        //     const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
-        //     // Use a small tolerance (1px) because of floating point inaccuracies
-        //     scrollRightBtn.classList.toggle('hidden', scrollContainer.scrollLeft >= maxScroll - 1);
-        // }
+            // Hide right button if scrolled fully right
+            const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+            // Use a small tolerance (1px) because of floating point inaccuracies
+            scrollRightBtn.classList.toggle('hidden', scrollContainer.scrollLeft >= maxScroll - 1);
+        }
 
-        // function scrollEvents(direction) {
-        //     if (!scrollGrid || !scrollContainer) return;
+        function scrollEvents(direction) {
+            if (!scrollGrid || !scrollContainer) return;
 
-        //     // Get the computed style of the grid (to read the gap size)
-        //     const gridStyle = window.getComputedStyle(scrollGrid);
-        //     // Read the actual gap value defined in CSS (default to 2rem = 32px)
-        //     const gap = parseFloat(gridStyle.getPropertyValue('gap') || '32');
+            // Get the computed style of the grid (to read the gap size)
+            const gridStyle = window.getComputedStyle(scrollGrid);
+            // Read the actual gap value defined in CSS (default to 2rem = 32px)
+            const gap = parseFloat(gridStyle.getPropertyValue('gap') || '32');
 
-        //     // Calculate the width of one card (container width / number of visible cards)
-        //     const cardWidth = scrollContainer.clientWidth / CARD_SCROLL_COUNT;
+            // Calculate the width of one card (container width / number of visible cards)
+            const cardWidth = scrollContainer.clientWidth / CARD_SCROLL_COUNT;
 
-        //     // The scroll distance is the width of the cards plus the space (gap) between them
-        //     const scrollDistance = (cardWidth + (gap / CARD_SCROLL_COUNT)) * CARD_SCROLL_COUNT;
+            // The scroll distance is the width of the cards plus the space (gap) between them
+            const scrollDistance = (cardWidth + (gap / CARD_SCROLL_COUNT)) * CARD_SCROLL_COUNT;
 
-        //     // Perform the scroll
-        //     scrollContainer.scrollBy({
-        //         left: direction * scrollDistance,
-        //         behavior: 'smooth'
-        //     });
+            // Perform the scroll
+            scrollContainer.scrollBy({
+                left: direction * scrollDistance,
+                behavior: 'smooth'
+            });
 
-        //     // Wait for the scroll animation to finish before updating buttons
-        //     setTimeout(updateScrollButtons, 500);
-        // }
+            // Wait for the scroll animation to finish before updating buttons
+            setTimeout(updateScrollButtons, 500);
+        }
 
-        // // Add listeners for the new buttons (Check if elements exist before adding listeners)
-        // if (scrollRightBtn) scrollRightBtn.addEventListener('click', () => scrollEvents(1));
-        // if (scrollLeftBtn) scrollLeftBtn.addEventListener('click', () => scrollEvents(-1));
-        // if (scrollContainer) scrollContainer.addEventListener('scroll', updateScrollButtons);
+        // Add listeners for the new buttons (Check if elements exist before adding listeners)
+        if (scrollRightBtn) scrollRightBtn.addEventListener('click', () => scrollEvents(1));
+        if (scrollLeftBtn) scrollLeftBtn.addEventListener('click', () => scrollEvents(-1));
+        if (scrollContainer) scrollContainer.addEventListener('scroll', updateScrollButtons);
 
 
         // --- Supabase Session Management ---
