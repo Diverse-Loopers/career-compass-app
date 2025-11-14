@@ -69,12 +69,16 @@
             font-size: 1.5rem;
             font-weight: 700;
             color: var(--color-dark);
+            transition: font-size 0.3s;
+            /* Added transition */
         }
-        
+
         .nav-links {
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            transition: all 0.3s;
+            /* Added transition */
         }
 
         .nav-links a {
@@ -93,20 +97,34 @@
             color: var(--color-primary);
             background-color: #eef2ff;
         }
-        
+
         .nav-links a.active {
             color: var(--color-primary);
             background-color: #e0e7ff;
         }
-        
+
+        /* --- New Mobile Menu Button Styling --- */
+        .menu-toggle-btn {
+            display: none;
+            /* Hidden by default on desktop */
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            color: var(--color-dark);
+            z-index: 1001;
+            /* Ensure it's above other header content */
+        }
+
         .profile-icon-btn {
             padding: 0.5rem;
+            /* On desktop, keep this inline */
         }
 
         .main-content {
-            /* Removed padding-top to eliminate whitespace */
+            /* No changes needed here */
         }
-        
+
         .animated-header-area {
             background: var(--color-light);
             padding: 5rem 0;
@@ -134,22 +152,93 @@
             animation: animate 25s linear infinite;
             bottom: -150px;
         }
-        
-        .circles li:nth-child(2) { left: 10%; width: 80px; height: 80px; animation-delay: 2s; animation-duration: 12s; background: rgba(236, 72, 153, 0.2); }
-        .circles li:nth-child(3) { left: 70%; width: 20px; height: 20px; animation-delay: 4s; }
-        .circles li:nth-child(4) { left: 40%; width: 60px; height: 60px; animation-delay: 0s; animation-duration: 18s; background: rgba(236, 72, 153, 0.15); }
-        .circles li:nth-child(5) { left: 65%; width: 20px; height: 20px; animation-delay: 0s; }
-        .circles li:nth-child(6) { left: 75%; width: 110px; height: 110px; animation-delay: 3s; background: rgba(59, 130, 246, 0.1); }
-        .circles li:nth-child(7) { left: 35%; width: 150px; height: 150px; animation-delay: 7s; }
-        .circles li:nth-child(8) { left: 50%; width: 25px; height: 25px; animation-delay: 15s; animation-duration: 45s; }
-        .circles li:nth-child(9) { left: 20%; width: 15px; height: 15px; animation-delay: 2s; animation-duration: 35s; background: rgba(236, 72, 153, 0.2); }
-        .circles li:nth-child(10) { left: 85%; width: 150px; height: 150px; animation-delay: 0s; animation-duration: 11s; }
+
+        .circles li:nth-child(2) {
+            left: 10%;
+            width: 80px;
+            height: 80px;
+            animation-delay: 2s;
+            animation-duration: 12s;
+            background: rgba(236, 72, 153, 0.2);
+        }
+
+        .circles li:nth-child(3) {
+            left: 70%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 4s;
+        }
+
+        .circles li:nth-child(4) {
+            left: 40%;
+            width: 60px;
+            height: 60px;
+            animation-delay: 0s;
+            animation-duration: 18s;
+            background: rgba(236, 72, 153, 0.15);
+        }
+
+        .circles li:nth-child(5) {
+            left: 65%;
+            width: 20px;
+            height: 20px;
+            animation-delay: 0s;
+        }
+
+        .circles li:nth-child(6) {
+            left: 75%;
+            width: 110px;
+            height: 110px;
+            animation-delay: 3s;
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .circles li:nth-child(7) {
+            left: 35%;
+            width: 150px;
+            height: 150px;
+            animation-delay: 7s;
+        }
+
+        .circles li:nth-child(8) {
+            left: 50%;
+            width: 25px;
+            height: 25px;
+            animation-delay: 15s;
+            animation-duration: 45s;
+        }
+
+        .circles li:nth-child(9) {
+            left: 20%;
+            width: 15px;
+            height: 15px;
+            animation-delay: 2s;
+            animation-duration: 35s;
+            background: rgba(236, 72, 153, 0.2);
+        }
+
+        .circles li:nth-child(10) {
+            left: 85%;
+            width: 150px;
+            height: 150px;
+            animation-delay: 0s;
+            animation-duration: 11s;
+        }
 
         @keyframes animate {
-            0% { transform: translateY(0) rotate(0deg); opacity: 1; border-radius: 0; }
-            100% { transform: translateY(-1000px) rotate(720deg); opacity: 0; border-radius: 50%; }
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+                border-radius: 0;
+            }
+
+            100% {
+                transform: translateY(-1000px) rotate(720deg);
+                opacity: 0;
+                border-radius: 50%;
+            }
         }
-        
+
         .section-header {
             text-align: center;
             margin-bottom: 3rem;
@@ -162,8 +251,11 @@
             font-weight: 700;
             color: var(--color-dark);
             margin-bottom: 0.5rem;
+            transition: font-size 0.3s;
+            /* Added transition */
         }
-        .heading{
+
+        .heading {
             background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -174,9 +266,8 @@
             font-weight: 600;
             margin-top: -0.5rem;
             margin-bottom: 1.5rem;
-            /* background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent; */
+            transition: font-size 0.3s;
+            /* Added transition */
         }
 
         .section-header p {
@@ -186,8 +277,7 @@
             margin: 0.5rem auto 0;
             line-height: 1.8;
         }
-        
-        /* MODIFICATION START: Revamped "Why Choose Us" section */
+
         .why-choose-section {
             padding: 5rem 0;
         }
@@ -197,10 +287,13 @@
             font-size: 2.25rem;
             margin-bottom: 4rem;
             color: var(--color-dark);
+            transition: font-size 0.3s;
+            /* Added transition */
         }
-        
+
         .why-choose-grid {
             display: grid;
+            /* DEFAULT/DESKTOP: Flexible grid for 4 columns on large screens */
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 2rem;
             max-width: 1200px;
@@ -213,7 +306,7 @@
             padding: 2rem;
             border-radius: 1rem;
             text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
             opacity: 0;
             transform: translateY(30px);
             transition: opacity 0.6s ease-out, transform 0.6s ease-out, box-shadow 0.3s ease-in-out;
@@ -228,7 +321,7 @@
             box-shadow: var(--shadow-lg);
             transform: translateY(-5px);
         }
-        
+
         .why-choose-icon-wrapper {
             display: inline-flex;
             align-items: center;
@@ -240,29 +333,29 @@
             color: var(--color-primary);
             margin-bottom: 1.5rem;
         }
-        
+
         .why-choose-card h4 {
             font-size: 1.25rem;
             font-weight: 600;
             margin: 0 0 0.5rem 0;
             color: var(--color-dark);
         }
-        
+
         .why-choose-card p {
             margin: 0;
             line-height: 1.7;
             color: var(--color-subtle);
         }
-        /* MODIFICATION END */
-        
+
         .courses-section {
-             background-color: var(--color-light);
-             padding: 5rem 0;
+            background-color: var(--color-light);
+            padding: 5rem 0;
         }
-        
+
         .courses-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            /* Default: Use a minimum width that ensures single column on smaller phones (e.g., 300px min) */
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 2.5rem;
         }
 
@@ -284,10 +377,12 @@
         }
 
         .course-card:hover {
-            transform: translateY(-8px) scale(1.02);
+            transform: translateY(-8px) scale(1.01);
+            /* Reduced scale slightly for mobile stability */
             box-shadow: var(--shadow-lg);
         }
 
+        /* Ensure image text is responsive too */
         .course-image {
             height: 200px;
             overflow: hidden;
@@ -299,7 +394,8 @@
             color: white;
             font-size: 2.5rem;
             font-weight: 700;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+            transition: font-size 0.3s;
         }
 
         .course-content {
@@ -343,29 +439,29 @@
             border-radius: 0.5rem;
             cursor: not-allowed;
         }
-        
+
         .footer {
             background-color: var(--color-dark);
             color: var(--color-light);
             padding: 4rem 0;
         }
-        
+
         .footer .container {
             text-align: center;
         }
-        
+
         .footer .logo-text {
             color: #fff;
         }
-        
+
         .footer p {
-             color: var(--color-subtle);
-             margin: 1rem 0 2rem;
-             max-width: 500px;
-             margin-left: auto;
-             margin-right: auto;
+            color: var(--color-subtle);
+            margin: 1rem 0 2rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
         }
-        
+
         .social-links {
             display: flex;
             justify-content: center;
@@ -377,11 +473,12 @@
             color: var(--color-light);
             transition: color 0.3s, transform 0.3s;
         }
+
         .social-links a:hover {
             color: var(--color-primary);
             transform: scale(1.1);
         }
-        
+
         .footer .copyright {
             font-size: 0.9rem;
             color: var(--color-subtle);
@@ -390,6 +487,128 @@
             margin-top: 2rem;
         }
 
+
+        /* ======================================= */
+        /* --- MOBILE RESPONSIVENESS (<= 768px) ---*/
+        /* ======================================= */
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .logo img {
+                height: 40px;
+                /* Smaller logo on mobile */
+            }
+
+            .logo-text {
+                font-size: 1.25rem;
+                /* Smaller text on mobile */
+            }
+
+            /* Show the hamburger menu button */
+            .menu-toggle-btn {
+                display: block;
+            }
+
+            /* Hide the main nav links by default */
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 61px;
+                /* Adjust based on header height */
+                left: 0;
+                width: 100%;
+                background-color: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(8px);
+                border-top: 1px solid #e2e8f0;
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+                padding: 0.5rem 0;
+            }
+
+            /* State for when the menu is open (toggled by JS) */
+            .nav-links.open {
+                display: flex;
+            }
+
+            .nav-links a {
+                padding: 0.75rem 1.5rem;
+                width: auto;
+                /* Let link fill its container */
+                border-radius: 0;
+                justify-content: flex-start;
+                margin: 0;
+                /* Remove horizontal gaps on mobile */
+            }
+
+            /* Keep active state visual distinctive */
+            .nav-links a.active {
+                background-color: #f0f4ff;
+                border-left: 4px solid var(--color-primary);
+            }
+
+            /* Hide the profile icon in the main list on mobile, as it often looks better outside or hidden */
+            .profile-icon-btn {
+                display: none;
+                /* Removed from the stacking menu to keep it clean */
+            }
+
+            /* --- MOBILE-SPECIFIC: Force 2 cards per row (2x2 layout) on mobile screens only --- */
+            .why-choose-grid {
+                grid-template-columns: repeat(2, 1fr);
+                /* Forces two equal columns for 2x2 layout */
+                gap: 1rem;
+                /* Reduced gap for space */
+            }
+
+            .why-choose-card {
+                padding: 1.5rem 1rem;
+                /* Reduce card padding for tighter fit */
+            }
+        }
+
+        /* Further adjustments for smaller phones (e.g., iPhone SE width) */
+        @media (max-width: 500px) {
+            .animated-header-area {
+                padding: 3rem 0;
+            }
+
+            .section-header h1 {
+                font-size: 2rem;
+                /* Reduce main title further */
+            }
+
+            .section-header .sub-heading {
+                font-size: 1.15rem;
+                /* Reduce sub-heading further */
+            }
+
+            .section-header p {
+                font-size: 0.95rem;
+            }
+
+            .why-choose-section {
+                padding: 3rem 0;
+            }
+
+            .why-choose-section h3 {
+                font-size: 1.75rem;
+                margin-bottom: 2rem;
+            }
+
+            /* The .why-choose-grid inherits the 2-column layout from the 768px media query. */
+
+            .courses-grid {
+                grid-template-columns: 1fr;
+                /* Course cards still collapse to one column for tighter fit */
+            }
+
+            .course-image {
+                font-size: 2rem;
+            }
+        }
     </style>
 </head>
 
@@ -398,20 +617,46 @@
         <div class="container">
             <nav class="navbar">
                 <a href="index.html" class="logo">
-                    <img src="logo2.png" alt="Diverse Loopers Logo">
+                    <img src="logo2.png" alt="Diverse Loopers Logo"
+                        onerror="this.onerror=null; this.src='https://placehold.co/50x50/3b82f6/ffffff?text=DL';">
                     <span class="logo-text">Diverse Loopers</span>
                 </a>
-                 <div class="nav-links">
+
+                <!-- New hamburger button for mobile -->
+                <button class="menu-toggle-btn" id="menu-toggle-btn" aria-label="Toggle navigation menu">
+                    <svg id="menu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                    <svg id="close-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+
+                <div class="nav-links" id="nav-links">
                     <a href="#" id="go-back-btn" title="Go Back">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
                         <span>Back</span>
                     </a>
                     <a href="index.html">Home</a>
                     <a href="courses.html" class="active">Courses</a>
                     <a href="profile.html" class="profile-icon-btn" title="View Profile">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
                         </svg>
+                        <span class="mobile-only">Profile</span> <!-- Added a span for mobile menu clarity -->
                     </a>
                 </div>
             </nav>
@@ -420,17 +665,29 @@
 
     <main class="main-content">
         <div class="animated-header-area">
-             <div class="container">
+            <div class="container">
                 <div class="section-header">
                     <h1 class="heading">Our Upcoming Courses</h1>
                     <h2 class="sub-heading">Future-Ready Skills. Real-World Impact.</h2>
-                    <p>At Diverse Loopers, we don’t just teach — we prepare you for the future of work. Our upcoming expert-led programs are designed to bridge the gap between academic learning and real industry demands, equipping you with the most in-demand technical skills, hands-on experience, and career pathways that employers truly value.</p>
+                    <p>At Diverse Loopers, we don’t just teach — we prepare you for the future of work. Our upcoming
+                        expert-led programs are designed to bridge the gap between academic learning and real industry
+                        demands, equipping you with the most in-demand technical skills, hands-on experience, and career
+                        pathways that employers truly value.</p>
                 </div>
             </div>
             <ul class="circles">
-                    <li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li><li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
+                <li></li>
             </ul>
-        </div >
+        </div>
 
         <div class="why-choose-section">
             <div class="container">
@@ -438,28 +695,50 @@
                 <div class="why-choose-grid">
                     <div class="why-choose-card">
                         <div class="why-choose-icon-wrapper">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="3" y1="9" x2="21" y2="9"></line>
+                                <line x1="9" y1="21" x2="9" y2="9"></line>
+                            </svg>
                         </div>
                         <h4>Industry-Aligned Curriculum</h4>
                         <p>Learn the skills that companies are actively hiring for right now.</p>
                     </div>
                     <div class="why-choose-card">
                         <div class="why-choose-icon-wrapper">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <polyline points="16 18 22 12 16 6"></polyline>
+                                <polyline points="8 6 2 12 8 18"></polyline>
+                            </svg>
                         </div>
                         <h4>Hands-On Projects</h4>
                         <p>Build a portfolio of real-world projects that will prove your expertise.</p>
                     </div>
                     <div class="why-choose-card">
                         <div class="why-choose-icon-wrapper">
-                           <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            </svg>
                         </div>
                         <h4>Career-Oriented Training</h4>
                         <p>Get comprehensive support, from interview prep to job opportunities.</p>
                     </div>
                     <div class="why-choose-card">
                         <div class="why-choose-icon-wrapper">
-                           <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="9" cy="7" r="4"></circle>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                            </svg>
                         </div>
                         <h4>Mentorship from Experts</h4>
                         <p>Receive direct guidance and insights from professionals in the field.</p>
@@ -467,11 +746,13 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="courses-section">
             <div class="container">
                 <div class="section-header" style="margin-bottom: 4rem;">
-                        <p>Explore our upcoming courses below and be among the first to gain access to the tools, projects, and mentorship that will transform your career.</p>
+                    <!-- Removed H1/H2 here as they were already in the animated header -->
+                    <p>Explore our upcoming courses below and be among the first to gain access to the tools, projects,
+                        and mentorship that will transform your career.</p>
                 </div>
 
                 <div id="courses-grid" class="courses-grid">
@@ -484,14 +765,33 @@
     <footer class="footer">
         <div class="container">
             <a href="index.html" class="logo" style="justify-content: center;">
-                <img src="logo2.png" alt="Diverse Loopers Logo">
+                <img src="logo2.png" alt="Diverse Loopers Logo"
+                    onerror="this.onerror=null; this.src='https://placehold.co/50x50/3b82f6/ffffff?text=DL';">
                 <span class="logo-text">Diverse Loopers</span>
             </a>
             <p>Empowering the next generation of tech talent with practical, hands-on learning experiences.</p>
             <div class="social-links">
-                <a href="#" title="Twitter"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a>
-                <a href="#" title="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg></a>
-                <a href="#" title="GitHub"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a>
+                <a href="#" title="Twitter"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path
+                            d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z">
+                        </path>
+                    </svg></a>
+                <a href="#" title="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                        <rect x="2" y="9" width="4" height="12"></rect>
+                        <circle cx="4" cy="4" r="2"></circle>
+                    </svg></a>
+                <a href="#" title="GitHub"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path
+                            d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+                        </path>
+                    </svg></a>
             </div>
             <div class="copyright">
                 &copy; 2024 Diverse Loopers. All Rights Reserved.
@@ -501,6 +801,7 @@
 
 
     <script type="module">
+        // Data unchanged
         const coursesData = [
             { category: 'Software Development', title: 'Full-Stack Web Development', description: 'Master HTML, CSS, JavaScript, React, and Node.js to build complete web applications from scratch.', color: '#3b82f6', imageText: 'Full-Stack', imageVisual: 'linear-gradient(45deg, #3b82f6, #60a5fa)' },
             { category: 'Software Development', title: 'Advanced Front-End Frameworks', description: 'Dive deep into modern frameworks like React, Vue, and Svelte. Learn state management and advanced component design.', color: '#3b82f6', imageText: 'Front-End', imageVisual: 'linear-gradient(45deg, #10b981, #34d399)' },
@@ -523,10 +824,10 @@
         function createCourseCard(course) {
             const card = document.createElement('div');
             card.className = 'course-card';
-            
+
             card.innerHTML = `
                 <div class="course-image" style="background-image: ${course.imageVisual};">
-                   ${course.imageText}
+                    ${course.imageText}
                 </div>
                 <div class="course-content">
                     <span class="course-category" style="background-color: ${course.color};">${course.category}</span>
@@ -543,13 +844,14 @@
             coursesData.forEach(course => {
                 grid.appendChild(createCourseCard(course));
             });
-            
-            // MODIFICATION: Observe both course cards and why-choose cards
+
+            // Intersection Observer for scroll animations (Why Choose & Course Cards)
             const animatedElements = document.querySelectorAll('.course-card, .why-choose-card');
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target); // Stop observing once visible
                     }
                 });
             }, {
@@ -559,23 +861,44 @@
                 observer.observe(card);
             });
 
-            const heading = document.getElementById('courses-heading');
-            const params = new URLSearchParams(window.location.search);
-            const skill = params.get('skill');
-
-            if (skill) {
-                heading.textContent = `Showing courses for: ${decodeURIComponent(skill)}`;
-                heading.style.display = 'block';
-            }
-            
             // Go Back Button functionality
             const backBtn = document.getElementById('go-back-btn');
             backBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 history.back();
             });
+
+            // --- Mobile Menu Toggle Logic (CRITICAL FIX) ---
+            const menuToggleBtn = document.getElementById('menu-toggle-btn');
+            const navLinks = document.getElementById('nav-links');
+            const menuIcon = document.getElementById('menu-icon');
+            const closeIcon = document.getElementById('close-icon');
+
+            menuToggleBtn.addEventListener('click', () => {
+                const isMenuOpen = navLinks.classList.toggle('open');
+
+                // Toggle the icons for accessibility/visual feedback
+                if (isMenuOpen) {
+                    menuIcon.style.display = 'none';
+                    closeIcon.style.display = 'block';
+                } else {
+                    menuIcon.style.display = 'block';
+                    closeIcon.style.display = 'none';
+                }
+            });
+
+            // Close menu if a link is clicked (mobile experience improvement)
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth <= 768) {
+                        navLinks.classList.remove('open');
+                        menuIcon.style.display = 'block';
+                        closeIcon.style.display = 'none';
+                    }
+                });
+            });
         });
     </script>
 </body>
-</html>
 
+</html>

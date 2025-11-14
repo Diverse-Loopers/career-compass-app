@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Diverse Loopers</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --slate-50: #f8fafc;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+            --white: #ffffff;
+            --indigo-50: #eef2ff;
+            --indigo-100: #e0e7ff;
+            --indigo-600: #4f46e5;
+            --purple-600: #9333ea;
+            --green-500: #22c55e;
+            --red-500: #ef4444;
+            --shadow: 0 4px 10px -1px rgb(0 0 0 / 0.05), 0 2px 6px -2px rgb(0 0 0 / 0.05);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--slate-50);
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+            color: var(--gray-800);
+        }
+
+        .sidebar {
+            width: 16rem;
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .logo-img {
+            width: 62px;
+            height: 62px;
+            border-radius: 8px;
+        }
+
+        .sidebar-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .sidebar nav {
+            flex: 1;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            color: var(--gray-600);
+            border-radius: 0.5rem;
+            text-decoration: none;
+            transition: background-color 0.2s, color 0.2s;
+            cursor: pointer;
+        }
+
+        .nav-link:hover {
+            background-color: var(--gray-100);
+        }
+
+        .nav-link.active {
+            background-color: var(--indigo-50);
+            color: var(--gray-800);
+            font-weight: 600;
+        }
+
+        .lucide {
+            width: 24px;
+            height: 24px;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2.5rem;
+            overflow-y: auto;
+            max-height: 100vh;
+        }
+
+        .main-header h1 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin: 0;
+        }
+
+        /* --- Custom Dialog Styles (Replacing native alert/confirm) --- */
+        #dialog-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(2px);
+            z-index: 9999;
+            display: none;
+        }
+
+        #message-box,
+        #confirm-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow-lg);
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            z-index: 10000;
+            display: none;
+        }
+
+        #message-box h4,
+        #confirm-box h4 {
+            color: var(--gray-900);
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+        }
+
+        .dialog-buttons {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .dialog-btn {
+            padding: 0.6rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        #message-box-close-btn {
+            background: var(--indigo-600);
+            color: var(--white);
+            border: none;
+        }
+
+        #confirm-cancel-btn {
+            background: var(--gray-200);
+            color: var(--gray-800);
+            border: none;
+        }
+
+        #confirm-ok-btn {
+            background: var(--red-500);
+            color: var(--white);
+            border: none;
+        }
+
+        /* --- Shared Card/Grid Styles --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background-color: var(--white);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--indigo-600);
+        }
+
+        .stat-card:nth-child(2) {
+            border-left-color: var(--green-500);
+        }
+
+        .stat-card:nth-child(3) {
+            border-left-color: var(--purple-600);
+        }
+
+        .stat-card:nth-child(4) {
+            border-left-color: #f59e0b;
+            /* Amber */
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        @media(min-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+
+        .card {
+            background-color: var(--white);
+            border-radius: 0.75rem;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h2 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        /* --- Form Styles --- */
+        .form-grid {
+            padding: 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        @media(min-width: 768px) {
+            .form-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.4rem;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--gray-200);
+            border-radius: 0.5rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--indigo-600);
+            outline: none;
+        }
+
+        .form-actions {
+            grid-column: 1 / -1;
+            padding: 1rem 1.5rem 1.5rem;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .btn-primary {
+            background-color: var(--indigo-600);
+            color: var(--white);
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: #4338ca;
+            /* Darker Indigo */
+        }
+
+        .btn-secondary {
+            background-color: var(--gray-200);
+            color: var(--gray-800);
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--gray-100);
+        }
+
+        /* --- Table/List Styles --- */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        tbody tr:nth-child(odd) {
+            background-color: var(--slate-50);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        th {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .action-cell button,
+        .action-cell select {
+            background: none;
+            border: none;
+            color: var(--indigo-600);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.875rem;
+            font-family: 'Inter', sans-serif;
+            margin-right: 0.75rem;
+        }
+
+        .action-cell button:last-child {
+            margin-right: 0;
+        }
+
+        .btn-edit {
+            color: var(--indigo-600);
+        }
+
+        .btn-delete {
+            color: var(--red-500);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Custom Dialog HTML -->
+    <div id="dialog-overlay"></div>
+    <div id="message-box">
+        <h4>Notification</h4>
+        <p id="message-box-text"></p>
+        <div class="dialog-buttons">
+            <button id="message-box-close-btn" class="dialog-btn">OK</button>
+        </div>
+    </div>
+    <div id="confirm-box">
+        <h4 id="confirm-box-title">Confirm Action</h4>
+        <p id="confirm-box-text"></p>
+        <div class="dialog-buttons">
+            <button id="confirm-cancel-btn" class="dialog-btn">Cancel</button>
+            <button id="confirm-ok-btn" class="dialog-btn">Confirm</button>
+        </div>
+    </div>
+    <!-- End Dialog HTML -->
+
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <img src="logo2.png" alt="Logo" class="logo-img">
+            <h1 class="sidebar-title">Admin Panel</h1>
+        </div>
+        <nav>
+            <a id="nav-dashboard" class="nav-link active">
+                <svg class="lucide" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <rect width="7" height="9" x="3" y="3" rx="1" />
+                    <rect width="7" height="5" x="14" y="3" rx="1" />
+                    <rect width="7" height="9" x="14" y="12" rx="1" />
+                    <rect width="7" height="5" x="3" y="16" rx="1" />
+                </svg>
+                <span>Dashboard</span>
+            </a>
+            <a id="nav-events" class="nav-link">
+                <!-- NEW EVENTS LINK -->
+                <svg class="lucide" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <rect width="18" height="18" x="3" y="4" rx="2" ry="2" />
+                    <line x1="16" x2="16" y1="2" y2="6" />
+                    <line x1="8" x2="8" y1="2" y2="6" />
+                    <line x1="3" x2="21" y1="10" y2="10" />
+                    <path d="M8 14h.01" />
+                    <path d="M12 14h.01" />
+                    <path d="M16 14h.01" />
+                    <path d="M8 18h.01" />
+                    <path d="M12 18h.01" />
+                    <path d="M16 18h.01" />
+                </svg>
+                <span>Events Management</span>
+            </a>
+            <a id="nav-users" class="nav-link">
+                <svg class="lucide" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                </svg>
+                <span>Users</span>
+            </a>
+            <a id="nav-skills" class="nav-link">
+                <svg class="lucide" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
+                    <path d="M5 3v4" />
+                    <path d="M19 17v4" />
+                    <path d="M3 5h4" />
+                    <path d="M17 19h4" />
+                </svg>
+                <span>Skills Management</span>
+            </a>
+            <a href="#" id="logout-button" class="nav-link">
+                <svg class="lucide" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                    <polyline points="16 17 21 12 16 7" />
+                    <line x1="21" x2="9" y1="12" y2="12" />
+                </svg>
+                <span>Logout</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <!-- DASHBOARD VIEW -->
+        <div id="dashboard-view">
+            <header class="main-header">
+                <h1>Dashboard</h1>
+            </header>
+            <!-- Stats and charts content -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Users</div>
+                    <div id="total-users" class="stat-value">...</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Analyses Run</div>
+                    <div id="total-analyses" class="stat-value">...</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Avg. Match %</div>
+                    <div id="avg-match" class="stat-value">...%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Events</div>
+                    <div id="total-events" class="stat-value">...</div>
+                </div>
+            </div>
+            <div class="dashboard-grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>User Registrations (Last 7 Days)</h2>
+                    </div>
+                    <div class="chart-container">
+                        <div id="chart-grid" class="chart-grid"></div>
+                        <div id="chart-labels" class="chart-labels"></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h2>Recent Activity</h2>
+                    </div>
+                    <ul id="activity-feed" class="activity-feed">
+                        <!-- Activity items will be inserted here -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- EVENTS VIEW (NEW) -->
+        <div id="events-view" style="display: none;">
+            <header class="main-header">
+                <h1 id="events-view-title">Events Management</h1>
+            </header>
+            <!-- Add/Edit Event Card -->
+            <div class="card" style="margin-bottom: 2rem;">
+                <div class="card-header">
+                    <h2 id="event-form-title">Add New Event</h2>
+                </div>
+                <form id="event-form">
+                    <input type="hidden" id="event-id">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="event-title">Title</label>
+                            <input type="text" id="event-title" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="event-date">Date & Time</label>
+                            <input type="datetime-local" id="event-date" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="event-description">Description</label>
+                            <textarea id="event-description" rows="3" required></textarea>
+                        </div>
+                        <!-- <div class="form-group">
+                            <label for="event-media-url">Media URL (Image/Thumbnail)</label>
+                            <input type="url" id="event-media-url">
+                        </div>
+                        <div class="form-group">
+                            <label for="event-join-link">Join/Registration Link</label>
+                            <input type="url" id="event-join-link">
+                        </div> -->
+                        <div class="form-group">
+                            <label for="event-image-upload">Upload Image (.jpg, .png)</label>
+                            <!-- New File Input -->
+                            <input type="file" id="event-image-upload" accept="image/png, image/jpeg"
+                                style="padding: 0.5rem 1rem;">
+                            <!-- Hidden input to store the final public URL. The JS updates this field. -->
+                            <input type="hidden" id="event-media-url">
+                        </div>
+                        <div class="form-group" id="current-image-preview" style="display: none;">
+                            <label>Current Image</label>
+                            <img id="image-preview" src="" alt="Current Event Image"
+                                style="max-width: 100%; max-height: 150px; border-radius: 8px; object-fit: contain;">
+                        </div>
+
+                        <!-- NOTE: The 'Join/Registration Link' form group should immediately follow the above block. -->
+                        <div class="form-group">
+                            <label for="event-join-link">Join/Registration Link</label>
+                            <input type="url" id="event-join-link">
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="event-location">Location/Venue</label>
+                            <input type="text" id="event-location">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" id="event-submit-btn" class="btn-primary">Add Event</button>
+                        <button type="button" id="event-cancel-btn" class="btn-secondary" style="display: none;">Cancel
+                            Edit</button>
+                    </div>
+                </form>
+            </div>
+            <!-- Existing Events Card -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>Existing Events</h2>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Date</th>
+                                <th>Location</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="events-table-body">
+                            <!-- Events will be populated here -->
+                            <tr>
+                                <td colspan="4" style="text-align: center;">Loading events...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- USERS VIEW -->
+        <div id="users-view" style="display: none;">
+            <header class="main-header">
+                <h1>User Management</h1>
+            </header>
+            <div class="card">
+                <div class="card-header">
+                    <h2>All Users</h2>
+                    <input type="text" id="search-users" placeholder="Search by name or email...">
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Joined</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SKILLS VIEW -->
+        <div id="skills-view" style="display: none;">
+            <header class="main-header">
+                <h1>Skills Management</h1>
+            </header>
+            <div class="card">
+                <div class="card-header">
+                    <h2>Add New Skill (Demo)</h2>
+                </div>
+                <form id="add-skill-form" class="form-grid">
+                    <div class="form-group full-width">
+                        <input type="text" id="new-skill-input" placeholder="Enter a new skill..." required>
+                    </div>
+                    <div class="form-group full-width">
+                        <button type="submit" class="btn-primary">Add Skill</button>
+                    </div>
+                </form>
+            </div>
+            <div class="card" style="margin-top: 2rem;">
+                <div class="card-header">
+                    <h2>Existing Skills</h2>
+                </div>
+                <ul id="skills-list"></ul>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+
+
+        // --- Custom Dialog Logic (Replaces alert/confirm) ---
+        const dialogOverlay = document.getElementById('dialog-overlay');
+        const messageBox = document.getElementById('message-box');
+        const confirmBox = document.getElementById('confirm-box');
+
+        function showMessageBox(message) {
+            document.getElementById('message-box-text').textContent = message;
+            dialogOverlay.style.display = 'block';
+            messageBox.style.display = 'block';
+            document.getElementById('message-box-close-btn').onclick = () => {
+                dialogOverlay.style.display = 'none';
+                messageBox.style.display = 'none';
+            };
+        }
+
+        function showConfirmBox(title, message, onConfirm) {
+            document.getElementById('confirm-box-title').textContent = title;
+            document.getElementById('confirm-box-text').textContent = message;
+            dialogOverlay.style.display = 'block';
+            confirmBox.style.display = 'block';
+
+            const cleanup = () => {
+                dialogOverlay.style.display = 'none';
+                confirmBox.style.display = 'none';
+            };
+
+            document.getElementById('confirm-ok-btn').onclick = () => {
+                onConfirm();
+                cleanup();
+            };
+
+            document.getElementById('confirm-cancel-btn').onclick = cleanup;
+        }
+
+        // --- Supabase Configuration ---
+        const SUPABASE_URL = 'https://tjqsmkaiajdpotmafqvw.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqcXNta2FpYWpkcG90bWFmcXZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU5ODA3NDIsImV4cCI6MjA3MTU1Njc0Mn0.9710q9W5EFfCagj340AizUSKiOXYApy0xkTFszFjO8o';
+        const { createClient } = supabase;
+        const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let allUsers = [];
+        let allSkills = [];
+        let allEvents = [];
+
+        // --- Image Upload Helper Function (Supabase Storage) ---
+
+        /**
+         * Uploads a file to Supabase Storage and returns the public URL.
+         */
+        async function uploadImage(file, eventId) {
+            if (!file) return null;
+
+            const fileExtension = file.name.split('.').pop();
+            const filePath = `events/${eventId}-${Date.now()}.${fileExtension}`;
+
+            const { data, error } = await db.storage
+                .from('events-images') // NOTE: Bucket name MUST match your Supabase configuration
+                .upload(filePath, file, {
+                    cacheControl: '3600',
+                    upsert: true
+                });
+
+            if (error) {
+                showMessageBox('Image Upload Failed: ' + error.message);
+                console.error('Image Upload Error:', error);
+                return null;
+            }
+
+            const { data: publicUrlData } = db.storage
+                .from('events-images')
+                .getPublicUrl(filePath);
+
+            return publicUrlData.publicUrl;
+        }
+
+        // --- View Switching Logic ---
+        const views = {
+            dashboard: document.getElementById('dashboard-view'),
+            users: document.getElementById('users-view'),
+            skills: document.getElementById('skills-view'),
+            events: document.getElementById('events-view'),
+        };
+        const navLinks = {
+            dashboard: document.getElementById('nav-dashboard'),
+            users: document.getElementById('nav-users'),
+            skills: document.getElementById('nav-skills'),
+            events: document.getElementById('nav-events'),
+        };
+        function switchView(viewName) {
+            Object.values(views).forEach(v => v.style.display = 'none');
+            Object.values(navLinks).forEach(l => l.classList.remove('active'));
+            views[viewName].style.display = 'block';
+            navLinks[viewName].classList.add('active');
+
+            // Reload data when switching to relevant views
+            if (viewName === 'users') { loadAllUsers(); }
+            if (viewName === 'skills') { loadAllSkills(); }
+            if (viewName === 'events') { loadAllEvents(); }
+        }
+
+        navLinks.dashboard.addEventListener('click', () => switchView('dashboard'));
+        navLinks.users.addEventListener('click', () => switchView('users'));
+        navLinks.skills.addEventListener('click', () => switchView('skills'));
+        navLinks.events.addEventListener('click', () => switchView('events'));
+
+        // --- Core Authentication and Loading ---
+
+        async function main() {
+            const { data: { user } } = await db.auth.getUser();
+
+            // 1. Session Check (Redirects non-logged-in users)
+            if (!user) {
+                window.location.href = 'shiva_login.html';
+                return;
+            }
+
+            // 2. Authorization Check (Relies on admin_login.html having passed the UUID check)
+            const { data: adminCheck, error: adminError } = await db.from('admin_list').select('user_id').eq('user_id', user.id).limit(1);
+
+            if (adminError || !adminCheck || adminCheck.length === 0) {
+                console.warn('Authorization failed: User not in admin_list. Redirecting.');
+                await db.auth.signOut();
+                window.location.href = 'shiva_login.html';
+                return;
+            }
+
+            // Load all data after passing authorization
+            loadAllData();
+        }
+
+        function loadAllData() {
+            loadDashboardStats();
+            loadAllUsers();
+            loadSignupChartData();
+            loadAllSkills();
+            loadActivityFeed();
+            loadAllEvents();
+        }
+
+
+        // --- DASHBOARD FUNCTIONS ---
+        async function loadDashboardStats() {
+            // Total Users/Profiles
+            const { count: userCount } = await db.from('profiles').select('*', { count: 'exact', head: true });
+            document.getElementById('total-users').textContent = userCount ?? '0';
+
+            // Total Analyses
+            const { count: analysisCount } = await db.from('analyses').select('*', { count: 'exact', head: true });
+            document.getElementById('total-analyses').textContent = analysisCount ?? '0';
+
+            // Total Events
+            const { count: eventCount } = await db.from('events').select('*', { count: 'exact', head: true });
+            document.getElementById('total-events').textContent = eventCount ?? '0';
+
+            // Average Match Percentage
+            const { data: avgData } = await db.from('analyses').select('match_percentage');
+            if (avgData && avgData.length > 0) {
+                const avg = avgData.reduce((acc, curr) => acc + curr.match_percentage, 0) / avgData.length;
+                document.getElementById('avg-match').textContent = `${Math.round(avg)}%`;
+            } else {
+                document.getElementById('avg-match').textContent = 'N/A';
+            }
+        }
+
+        async function loadSignupChartData() {
+            const { data } = await db.rpc('get_daily_signups'); // Relies on your custom RPC function
+            if (data) { renderSignupChart(data); }
+        }
+
+        function renderSignupChart(data) {
+            const chartGrid = document.getElementById('chart-grid');
+            const chartLabels = document.getElementById('chart-labels');
+            chartGrid.innerHTML = ''; chartLabels.innerHTML = '';
+            const dayLabels = []; const signupCounts = new Map();
+            for (let i = 6; i >= 0; i--) {
+                const d = new Date(); d.setDate(d.getDate() - i);
+                dayLabels.push(d.toLocaleDateString('en-US', { weekday: 'short' }));
+                signupCounts.set(d.toISOString().split('T')[0], 0);
+            }
+            data.forEach(item => signupCounts.set(item.signup_day, item.count));
+            const maxCount = Math.max(...signupCounts.values(), 1);
+            dayLabels.forEach((label, index) => {
+                const dateKey = [...signupCounts.keys()][index];
+                const count = signupCounts.get(dateKey);
+                const barHeight = (count / maxCount) * 100;
+                const bar = document.createElement('div'); bar.className = 'chart-bar';
+                setTimeout(() => { bar.style.height = `${barHeight}%`; }, 100);
+                const labelEl = document.createElement('div'); labelEl.textContent = label;
+                chartGrid.appendChild(bar); chartLabels.appendChild(labelEl);
+            });
+        }
+
+        async function loadActivityFeed() {
+            const { data } = await db.from('profiles')
+                .select(`full_name, users(created_at)`)
+                .order('created_at', { foreignTable: 'users', ascending: false })
+                .limit(5);
+
+            const feed = document.getElementById('activity-feed');
+            feed.innerHTML = '';
+            if (!data) return;
+
+            data.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'activity-item';
+                li.innerHTML = `
+                <div class="activity-icon">
+                    <svg class="lucide" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                </div>
+                <div>
+                    <div class="activity-text"><strong>${item.full_name || 'A new user'}</strong> has joined.</div>
+                    <div class="activity-time">${new Date(item.users.created_at).toLocaleString()}</div>
+                </div>
+            `;
+                feed.appendChild(li);
+            });
+        }
+
+
+        // --- USER MANAGEMENT FUNCTIONS ---
+        async function loadAllUsers() {
+            const { data: users } = await db.from('profiles').select(`id, full_name, role, avatar_url, users ( email, created_at )`).order('created_at', { foreignTable: 'users', ascending: false });
+            if (!users) { console.error("Error fetching users."); return; }
+            allUsers = users.map(u => ({ ...u, ...u.users }));
+            renderUsersTable(allUsers);
+        }
+
+        function renderUsersTable(users) {
+            const tableBody = document.getElementById('users-table-body');
+            tableBody.innerHTML = '';
+            users.forEach(user => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                <td>
+                    <div class="avatar-cell">
+                        <div class="avatar" style="background-image: url(${user.avatar_url || 'https://placehold.co/40x40/e0e7ff/4f46e5?text=DL'})"></div>
+                        <span>${user.full_name || 'N/A'}</span>
+                    </div>
+                </td>
+                <td>${user.email}</td>
+                <td><span class="role-badge role-${user.role || 'user'}">${user.role || 'user'}</span></td>
+                <td>${new Date(user.created_at).toLocaleDateString()}</td>
+                <td class="action-cell">
+                    <!-- Role selector remains for illustration, but actual role enforcement is via admin_list/RLS -->
+                    <select class="role-selector" data-user-id="${user.id}">
+                        <option value="user" ${user.role !== 'admin' ? 'selected' : ''}>User</option>
+                        <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Admin</option>
+                    </select>
+                    <button class="btn-delete" data-user-id="${user.id}" data-user-name="${user.full_name || user.email}">Delete</button>
+                </td>
+            `;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        // --- SKILLS MANAGEMENT FUNCTIONS ---
+        async function loadAllSkills() {
+            const { data } = await db.from('user_skills').select('skill_name');
+            if (!data) { console.error('Error fetching skills'); return; }
+            const uniqueSkills = [...new Set(data.map(item => item.skill_name))].sort();
+            allSkills = uniqueSkills;
+            renderSkillsList(allSkills);
+        }
+
+        function renderSkillsList(skills) {
+            const list = document.getElementById('skills-list');
+            list.innerHTML = '';
+            skills.forEach(skill => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span>${skill}</span> <button class="btn-delete delete-skill-btn" data-skill-name="${skill}">Delete</button>`;
+                list.appendChild(li);
+            });
+        }
+
+
+        // --- EVENT MANAGEMENT FUNCTIONS (File Upload Integrated) ---
+
+        const eventForm = document.getElementById('event-form');
+        const eventsTableBody = document.getElementById('events-table-body');
+        const eventCancelBtn = document.getElementById('event-cancel-btn');
+        const eventSubmitBtn = document.getElementById('event-submit-btn');
+        const eventFormTitle = document.getElementById('event-form-title');
+
+        async function loadAllEvents() {
+            const { data, error } = await db.from('events').select('*').order('date', { ascending: true });
+            if (error) { console.error('Error fetching events:', error); showMessageBox('Error fetching events: ' + error.message); return; }
+            allEvents = data;
+            renderEventsList(data);
+            loadDashboardStats();
+        }
+
+        function renderEventsList(events) {
+            eventsTableBody.innerHTML = '';
+            if (events.length === 0) {
+                eventsTableBody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--gray-500);">No events created yet.</td></tr>';
+                return;
+            }
+
+            events.forEach(event => {
+                const tr = document.createElement('tr');
+                const eventDate = new Date(event.date);
+                const formattedDate = eventDate.toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
+
+                tr.innerHTML = `
+                <td>${event.title}</td>
+                <td>${formattedDate}</td>
+                <td>${event.location || (event.join_link ? 'Online' : 'N/A')}</td>
+                <td class="action-cell">
+                    <button class="btn-edit edit-event-btn" data-event-id="${event.id}">Edit</button>
+                    <button class="btn-delete delete-event-btn" data-event-id="${event.id}" data-event-title="${event.title}">Delete</button>
+                </td>
+            `;
+                eventsTableBody.appendChild(tr);
+            });
+        }
+
+        function setFormForEdit(event) {
+            document.getElementById('event-id').value = event.id;
+            document.getElementById('event-title').value = event.title;
+            const localDate = new Date(event.date).toISOString().slice(0, 16);
+            document.getElementById('event-date').value = localDate;
+            document.getElementById('event-description').value = event.description;
+
+            // Set the hidden URL field (used if no new file is uploaded)
+            document.getElementById('event-media-url').value = event.media_url || '';
+
+            // Handle image preview visibility
+            const preview = document.getElementById('image-preview');
+            const previewContainer = document.getElementById('current-image-preview');
+
+            if (event.media_url) {
+                preview.src = event.media_url;
+                previewContainer.style.display = 'block';
+            } else {
+                previewContainer.style.display = 'none';
+            }
+
+            document.getElementById('event-join-link').value = event.join_link || '';
+            document.getElementById('event-location').value = event.location || '';
+
+            eventFormTitle.textContent = `Edit Event: ${event.title}`;
+            eventSubmitBtn.textContent = 'Update Event';
+            eventCancelBtn.style.display = 'inline-block';
+
+            // Crucial: Clear the file input when switching to edit mode
+            document.getElementById('event-image-upload').value = null;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function resetEventForm() {
+            eventForm.reset();
+            document.getElementById('event-id').value = '';
+            document.getElementById('event-media-url').value = '';
+            document.getElementById('event-image-upload').value = null;
+            document.getElementById('current-image-preview').style.display = 'none';
+
+            eventFormTitle.textContent = 'Add New Event';
+            eventSubmitBtn.textContent = 'Add Event';
+            eventCancelBtn.style.display = 'none';
+        }
+
+        async function handleEventSubmit(e) {
+            e.preventDefault();
+            const eventIdInput = document.getElementById('event-id');
+            const imageFileInput = document.getElementById('event-image-upload');
+            const isEditing = eventIdInput.value;
+            const imageFile = imageFileInput.files[0];
+            let imageUrl = document.getElementById('event-media-url').value;
+
+            eventSubmitBtn.disabled = true;
+            eventSubmitBtn.textContent = isEditing ? 'Updating...' : 'Adding...';
+
+            try {
+                let tempId = isEditing;
+                // 1. If NEW event, generate a temporary ID for file naming
+                if (!isEditing) {
+                    tempId = crypto.randomUUID();
+                }
+
+                // 2. Handle Image Upload if a new file was selected
+                if (imageFile) {
+                    imageUrl = await uploadImage(imageFile, tempId);
+                    if (!imageUrl) {
+                        eventSubmitBtn.disabled = false;
+                        eventSubmitBtn.textContent = isEditing ? 'Update Event' : 'Add Event';
+                        return;
+                    }
+                }
+
+                const eventData = {
+                    title: document.getElementById('event-title').value,
+                    date: document.getElementById('event-date').value,
+                    description: document.getElementById('event-description').value,
+                    media_url: imageUrl,
+                    join_link: document.getElementById('event-join-link').value || null,
+                    location: document.getElementById('event-location').value || null,
+                    ...(!isEditing && { id: tempId })
+                };
+
+                let response;
+                if (isEditing) {
+                    // 3a. UPDATE existing record
+                    response = await db.from('events').update(eventData).eq('id', isEditing);
+                } else {
+                    // 3b. INSERT new record
+                    response = await db.from('events').insert(eventData);
+                }
+
+                if (response.error) {
+                    showMessageBox(`Error ${isEditing ? 'updating' : 'adding'} event: ${response.error.message}`);
+                } else {
+                    showMessageBox(`Event ${isEditing ? 'updated' : 'added'} successfully!`);
+                    resetEventForm();
+                    loadAllEvents();
+                }
+            } catch (error) {
+                showMessageBox('Critical error during submission: ' + error.message);
+                console.error('Submission Catch Error:', error);
+            } finally {
+                eventSubmitBtn.disabled = false;
+                eventSubmitBtn.textContent = isEditing ? 'Update Event' : 'Add Event';
+            }
+        }
+
+
+        // --- Event Listeners ---
+        eventForm.addEventListener('submit', handleEventSubmit);
+        eventCancelBtn.addEventListener('click', resetEventForm);
+
+        eventsTableBody.addEventListener('click', (e) => {
+            const eventId = e.target.dataset.eventId;
+            if (!eventId) return;
+
+            if (e.target.classList.contains('edit-event-btn')) {
+                const eventToEdit = allEvents.find(event => event.id === eventId);
+                if (eventToEdit) {
+                    switchView('events');
+                    setFormForEdit(eventToEdit);
+                }
+            } else if (e.target.classList.contains('delete-event-btn')) {
+                const eventTitle = e.target.dataset.eventTitle;
+                showConfirmBox(
+                    'Delete Event',
+                    `Are you sure you want to delete the event "${eventTitle}"? This action cannot be undone.`,
+                    async () => {
+                        const { error } = await db.from('events').delete().eq('id', eventId);
+                        if (error) {
+                            showMessageBox('Failed to delete event: ' + error.message);
+                        } else {
+                            showMessageBox('Event deleted successfully.');
+                            loadAllEvents();
+                        }
+                    }
+                );
+            }
+        });
+
+        document.getElementById('search-users').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredUsers = allUsers.filter(user => user.full_name?.toLowerCase().includes(searchTerm) || user.email?.toLowerCase().includes(searchTerm));
+            renderUsersTable(filteredUsers);
+        });
+
+        document.getElementById('users-table-body').addEventListener('change', async (e) => {
+            if (e.target.classList.contains('role-selector')) {
+                const userId = e.target.dataset.userId;
+                const newRole = e.target.value;
+                showConfirmBox(
+                    'Change User Role',
+                    `Are you sure you want to change this user's role to ${newRole}?`,
+                    async () => {
+                        const { error } = await db.functions.invoke('update-user-role', { body: { user_id: userId, role: newRole } });
+                        if (error) { showMessageBox('Failed to update role: ' + error.message); }
+                        else { showMessageBox('User role updated successfully.'); loadAllUsers(); }
+                    }
+                );
+            }
+        });
+
+        document.getElementById('users-table-body').addEventListener('click', async (e) => {
+            if (e.target.classList.contains('btn-delete')) {
+                const userId = e.target.dataset.userId;
+                const userName = e.target.dataset.userName;
+                showConfirmBox(
+                    'PERMANENT DELETION',
+                    `Are you sure you want to PERMANENTLY DELETE ${userName}? This action cannot be undone.`,
+                    async () => {
+                        const { error } = await db.functions.invoke('delete-user', { body: { user_id: userId } });
+                        if (error) { showMessageBox('Failed to delete user: ' + error.message); }
+                        else { showMessageBox('User deleted successfully.'); loadAllUsers(); }
+                    }
+                );
+            }
+        });
+
+        document.getElementById('add-skill-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const skillInput = document.getElementById('new-skill-input');
+            const skillName = skillInput.value.trim();
+            if (skillName && !allSkills.includes(skillName)) {
+                showMessageBox('This is a demo. In a real application, you would add this skill to a master table and reload the list.');
+                skillInput.value = '';
+            } else {
+                showMessageBox('Skill already exists or is empty.');
+            }
+        });
+
+        document.getElementById('skills-list').addEventListener('click', async (e) => {
+            if (e.target.classList.contains('delete-skill-btn')) {
+                const skillName = e.target.dataset.skillName;
+                showConfirmBox(
+                    'Delete Skill',
+                    `Are you sure you want to delete the skill "${skillName}" for ALL users? This is a permanent action.`,
+                    async () => {
+                        const { error } = await db.from('user_skills').delete().eq('skill_name', skillName);
+                        if (error) { showMessageBox('Failed to delete skill: ' + error.message); }
+                        else { showMessageBox('Skill deleted successfully from all user profiles.'); loadAllSkills(); }
+                    }
+                );
+            }
+        });
+
+        document.getElementById('logout-button').addEventListener('click', async () => {
+            await db.auth.signOut();
+            window.location.href = 'shiva_login.html';
+        });
+
+        main();
+    </script>
+</body>
+
+</html>

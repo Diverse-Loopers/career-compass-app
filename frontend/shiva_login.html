@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Diverse Loopers</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --indigo-600: #4f46e5;
+            --indigo-700: #4338ca;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-500: #6b7280;
+            --gray-800: #1f2937;
+            --white: #ffffff;
+            --red-500: #ef4444;
+            --red-600: #dc2626;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--gray-100);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--gray-800);
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 2rem;
+            background-color: var(--white);
+            border-radius: 1rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-header p {
+            color: var(--gray-500);
+            font-size: 0.875rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--gray-200);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--indigo-600);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .input-group button {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--gray-500);
+            padding: 0.25rem;
+            transition: color 0.2s;
+        }
+
+        .input-group button:hover {
+            color: var(--indigo-600);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--indigo-600);
+            color: var(--white);
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--indigo-700);
+        }
+
+        .message-box {
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            font-weight: 600;
+            display: none;
+            /* Hidden by default */
+        }
+
+        .message-box.error {
+            background-color: #fee2e2;
+            color: var(--red-600);
+            border: 1px solid var(--red-500);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1 style="color: var(--indigo-600);">Admin Access</h1>
+            <p>Sign in using your authorized administrator credentials.</p>
+        </div>
+        <form id="admin-login-form">
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <div class="input-group">
+                    <input type="email" id="email" required placeholder="admin@diverseloopers.com">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-group">
+                    <input type="password" id="password" required placeholder="••••••••">
+                    <button type="button" id="toggle-password" aria-label="Toggle password visibility">
+                        <svg id="eye-open" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                            <circle cx="12" cy="12" r="3" />
+                        </svg>
+                        <svg id="eye-closed" style="display: none;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9.88 9.88a3 3 0 1 0 4.24 4.24" />
+                            <path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68" />
+                            <path d="M6.61 6.61A13.52 13.52 0 0 0 2 12s3 7 10 7a9.7 9.7 0 0 0 5.48-1.65" />
+                            <line x1="2" x2="22" y1="2" y2="22" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary" id="login-btn">Log In</button>
+        </form>
+        <div id="message-area" class="message-box error"></div>
+    </div>
+
+    <script type="module">
+        const SUPABASE_URL = 'https://tjqsmkaiajdpotmafqvw.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqcXNta2FpYWpkcG90bWFmcXZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU5ODA3NDIsImV4cCI6MjA3MTU1Njc0Mn0.9710q9W5EFfCagj340AizUSKiOXYApy0xkTFszFjO8o';
+        const { createClient } = supabase;
+        const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        const loginForm = document.getElementById('admin-login-form');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const messageArea = document.getElementById('message-area');
+        const loginButton = document.getElementById('login-btn');
+
+        function displayMessage(message, isError = true) {
+            messageArea.textContent = message;
+            messageArea.style.display = 'block';
+            if (isError) {
+                messageArea.classList.add('error');
+            } else {
+                messageArea.classList.remove('error');
+            }
+        }
+
+        function toggleLoading(isLoading) {
+            loginButton.disabled = isLoading;
+            loginButton.textContent = isLoading ? 'Verifying...' : 'Log In';
+        }
+
+        // --- Password Toggle Logic ---
+        document.getElementById('toggle-password').addEventListener('click', () => {
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            document.getElementById('eye-open').style.display = isPassword ? 'none' : 'block';
+            document.getElementById('eye-closed').style.display = isPassword ? 'block' : 'none';
+        });
+
+
+        // --- Login Logic ---
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            messageArea.style.display = 'none';
+            toggleLoading(true);
+
+            const email = emailInput.value.trim();
+            const password = passwordInput.value;
+
+            // Step 1: Authenticate Email and Password via Supabase Auth
+            const { data, error } = await db.auth.signInWithPassword({ email, password });
+
+            if (error) {
+                // Handle authentication failure (e.g., bad credentials)
+                console.error('Authentication Error:', error);
+                displayMessage('Login failed: Invalid email or password.');
+                toggleLoading(false);
+                return;
+            }
+
+            const user = data.user;
+
+            // Step 2: Authorization Check - Verify if the user's UUID is in the admin_list table
+            try {
+                // Check if the authenticated user's ID exists in the admin_list table
+                const { data: adminCheck, error: adminError } = await db
+                    .from('admin_list')
+                    .select('user_id')
+                    .eq('user_id', user.id)
+                    .single();
+
+                if (adminError && adminError.code === 'PGRST116') {
+                    // PGRST116 means "No rows found" - The ID is NOT in the admin_list
+                    console.warn(`Authorization failed for UUID ${user.id}: User not in admin_list.`);
+                    await db.auth.signOut(); // Immediately sign out the unauthorized user
+                    displayMessage('Access denied: User is not an authorized administrator.', true);
+                } else if (adminError) {
+                    // Handle other database errors
+                    console.error('Database Error during Admin Check:', adminError);
+                    displayMessage('An unexpected database error occurred during verification.', true);
+                } else if (adminCheck) {
+                    // Success: User is authenticated AND authorized!
+                    console.log(`Admin access granted for UUID: ${user.id}`);
+                    window.location.href = 'shiva.html'; // Redirect to the dashboard
+                } else {
+                    // Should not happen, but safe fallback
+                    await db.auth.signOut();
+                    displayMessage('Authorization failed. Please contact support.', true);
+                }
+
+            } catch (error) {
+                console.error('Unexpected check error:', error);
+                displayMessage('A critical error occurred. Check console for details.', true);
+                await db.auth.signOut();
+            } finally {
+                toggleLoading(false);
+            }
+        });
+    </script>
+</body>
+
+</html>

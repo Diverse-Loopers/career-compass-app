@@ -958,6 +958,220 @@
             color: white;
             transform: rotateY(180deg);
         }
+
+        /* --- NEW: Events Section Styles --- */
+        #events {
+            background-color: #ffffff;
+            padding: 6rem 0;
+        }
+
+        /* --- NEW CAROUSEL STYLES (ADD THIS TO YOUR <style> BLOCK) --- */
+
+        /* Wrapper for buttons and scroll area */
+        .carousel-wrapper {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* The actual scrolling container */
+        .events-grid-container {
+            overflow-x: hidden;
+            overflow-y: hidden;
+            /* <--- NEW: Explicitly prevents vertical scrollbar */
+            scroll-behavior: smooth;
+            padding: 0 1.5rem;
+        }
+
+        /* The horizontal tracks that holds all cards */
+        /* The horizontal tracks that holds all cards */
+        .events-grid {
+            --gap: 2rem;
+            --card-count: 3;
+            display: grid;
+            /* Forces the layout to fit 3 items per view exactly. The JS sets --total-events. */
+            grid-template-columns: repeat(var(--total-events, 4), minmax(calc((100% / var(--card-count)) - var(--gap) * (var(--card-count) - 1) / var(--card-count)), 1fr));
+            grid-auto-flow: column;
+            gap: var(--gap);
+            width: fit-content;
+            padding-bottom: 1.5rem;
+        }
+
+        /* Style for individual cards (ensures they match grid sizing) */
+        .event-card {
+            /* Base styles */
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid #e2e8f0;
+
+            /* FIX 1: Ensures card uses its full vertical space and grows naturally */
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: auto;
+            min-height: 100%;
+        }
+
+        /* Scroll buttons (control layout and state) */
+        .scroll-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--color-primary);
+            border-radius: 50%;
+            box-shadow: var(--shadow-md);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.3s, background-color 0.3s;
+            color: var(--color-primary);
+            opacity: 1;
+        }
+
+        .scroll-btn:hover {
+            background-color: var(--color-primary);
+            color: white;
+        }
+
+        #scroll-left-btn {
+            left: 0.5rem;
+            padding-right: 0.25rem;
+        }
+
+        #scroll-right-btn {
+            right: 0.5rem;
+            padding-left: 0.25rem;
+        }
+
+        .scroll-btn.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .event-media {
+            width: 100%;
+            height: 200px;
+            background-color: var(--color-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .event-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .event-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .event-content h3 {
+            font-size: 1.5rem;
+            color: var(--color-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .event-date {
+            font-size: 0.9rem;
+            color: var(--color-primary);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .event-content p {
+            color: var(--color-subtle);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .event-join-btn {
+            display: block;
+            width: 100%;
+            text-align: center;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        /* --- FIX: Mobile Event Layout Override --- */
+        @media (max-width: 767px) {
+
+            /* 1. Ensure the container takes up its full horizontal space */
+            .events-grid-container {
+                padding: 0 0;
+                /* Remove inner padding to use full width */
+                overflow-x: scroll;
+                /* Allow horizontal scrolling on mobile */
+            }
+
+            /* 2. Redefine the main grid for mobile */
+            .events-grid {
+                --gap: 1rem;
+                /* Smaller gap on mobile */
+                --card-count: 1;
+                /* Only show 1 card in the viewport */
+                /* Use a custom calculation for 1 item view (100% - gap) */
+                grid-template-columns: repeat(var(--total-events, 2), calc(100% - var(--gap) * 2));
+                padding: 0 1rem 1.5rem;
+                /* Add side padding for a peeking effect */
+                scroll-snap-type: x mandatory;
+                /* Optional: Snap to cards on scroll */
+            }
+
+            /* 3. Ensure cards scroll-snap correctly and take full width minus padding */
+            .event-card {
+                scroll-snap-align: start;
+                min-width: 100%;
+                /* Ensure card takes the full calculated width of its grid column */
+                margin-left: 0.5rem;
+                /* Pushes the card inward to allow the left snap-padding */
+            }
+
+            /* 4. Hide scroll buttons on mobile, as users will swipe */
+            .scroll-btn {
+                display: none !important;
+            }
+
+            /* 5. Center the section header text on mobile container */
+            #events .container {
+                padding: 0;
+            }
+
+            #events .container .section-header {
+                padding: 0 1.5rem;
+            }
+        }
+
+        /* FIX 2: General grid cleanup (Make sure this exists in your general .events-grid style) */
+        .events-grid {
+            /* ... existing styles ... */
+            padding-bottom: 1.5rem;
+            /* Ensure no wrapping happens. This forces the scroll. */
+            grid-auto-flow: column;
+        }
     </style>
 </head>
 
@@ -975,7 +1189,11 @@
                 <!-- Desktop Menu -->
                 <div class="nav-links">
                     <a href="#about">About Us</a>
+
                     <a href="#contact">Contact Us</a>
+
+                    <a href="#events">Events</a>
+
                 </div>
                 <div class="nav-actions">
                     <!-- Login button - shown when user is logged out -->
@@ -1004,6 +1222,9 @@
             <div id="mobile-menu" class="hidden">
                 <div class="mobile-menu-inner">
                     <a href="#about" class="mobile-link">About Us</a>
+                    <a href="#contact" class="mobile-link">Contact Us</a>
+                    <a href="#events" class="mobile-link">Events</a>
+                    
 
                     <a href="home_bus.html" class="mobile-link">For Businesses</a>
                     <a href="home_uni.html" class="mobile-link">For Universities</a>
@@ -1215,7 +1436,43 @@
                 </div>
             </div>
         </section>
+        <!-- NEW SECTION ADDED HERE -->
+        <section id="events">
+            <div class="container">
+                <div class="section-header" style="text-align: center; margin-bottom: 4rem;">
+                    <h2 style="color: var(--color-dark);">Join & Participate in Our Events</h2>
+                    <p style="font-size: 1.1rem; color: var(--color-subtle);">Connect, learn, and grow with the Diverse
+                        Loopers community.</p>
+                </div>
 
+                <div class="carousel-wrapper">
+
+                    <!-- Scroll Buttons -->
+                    <button id="scroll-left-btn" class="scroll-btn hidden" aria-label="Scroll left">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m15 18-6-6 6-6" />
+                        </svg>
+                    </button>
+                    <button id="scroll-right-btn" class="scroll-btn" aria-label="Scroll right">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m9 18 6-6-6-6" />
+                        </svg>
+                    </button>
+
+                    <!-- Scrolling Container -->
+                    <div id="events-grid-container" class="events-grid-container">
+                        <div id="events-grid" class="events-grid">
+                            <!-- Placeholder filled by JavaScript -->
+                            <div style="grid-column: 1 / -1; text-align: center; color: #6b7280; padding: 2rem;">Loading
+                                events from database...</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
         <section id="contact">
             <div class="container">
                 <div class="section-header" style="text-align: center;">
@@ -1272,6 +1529,59 @@
     </footer>
 
     <script>
+
+
+        // --- CAROUSEL CONTROL ELEMENTS ---
+        const scrollContainer = document.getElementById('events-grid-container');
+        const scrollGrid = document.getElementById('events-grid');
+        const scrollLeftBtn = document.getElementById('scroll-left-btn');
+        const scrollRightBtn = document.getElementById('scroll-right-btn');
+        const CARD_SCROLL_COUNT = 3; // Number of cards to move per click
+
+        // --- CAROUSEL CONTROL FUNCTIONS ---
+
+        // function updateScrollButtons() {
+        //     if (!scrollContainer || !scrollLeftBtn || !scrollRightBtn) return;
+
+        //     // Hide left button if scrolled fully left
+        //     scrollLeftBtn.classList.toggle('hidden', scrollContainer.scrollLeft === 0);
+
+        //     // Hide right button if scrolled fully right
+        //     const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+        //     // Use a small tolerance (1px) because of floating point inaccuracies
+        //     scrollRightBtn.classList.toggle('hidden', scrollContainer.scrollLeft >= maxScroll - 1);
+        // }
+
+        // function scrollEvents(direction) {
+        //     if (!scrollGrid || !scrollContainer) return;
+
+        //     // Get the computed style of the grid (to read the gap size)
+        //     const gridStyle = window.getComputedStyle(scrollGrid);
+        //     // Read the actual gap value defined in CSS (default to 2rem = 32px)
+        //     const gap = parseFloat(gridStyle.getPropertyValue('gap') || '32');
+
+        //     // Calculate the width of one card (container width / number of visible cards)
+        //     const cardWidth = scrollContainer.clientWidth / CARD_SCROLL_COUNT;
+
+        //     // The scroll distance is the width of the cards plus the space (gap) between them
+        //     const scrollDistance = (cardWidth + (gap / CARD_SCROLL_COUNT)) * CARD_SCROLL_COUNT;
+
+        //     // Perform the scroll
+        //     scrollContainer.scrollBy({
+        //         left: direction * scrollDistance,
+        //         behavior: 'smooth'
+        //     });
+
+        //     // Wait for the scroll animation to finish before updating buttons
+        //     setTimeout(updateScrollButtons, 500);
+        // }
+
+        // // Add listeners for the new buttons (Check if elements exist before adding listeners)
+        // if (scrollRightBtn) scrollRightBtn.addEventListener('click', () => scrollEvents(1));
+        // if (scrollLeftBtn) scrollLeftBtn.addEventListener('click', () => scrollEvents(-1));
+        // if (scrollContainer) scrollContainer.addEventListener('scroll', updateScrollButtons);
+
+
         // --- Supabase Session Management ---
         const SUPABASE_URL = 'https://tjqsmkaiajdpotmafqvw.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqcXNta2FpYWpkcG90bWFmcXZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU5ODA3NDIsImV4cCI6MjA3MTU1Njc0Mn0.9710q9W5EFfCagj340AizUSKiOXYApy0xkTFszFjO8o';
@@ -1491,6 +1801,98 @@
 
         const fadeElements = document.querySelectorAll('.fade-in');
         fadeElements.forEach(el => observer.observe(el));
+        /**
+ * Converts ISO date string to a human-readable format.
+ */
+        function formatEventDate(isoString) {
+            const date = new Date(isoString);
+            return date.toLocaleString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        function createEventCard(event) {
+            const isPast = new Date(event.date) < new Date();
+            const tagText = isPast ? 'Past Event' : 'Upcoming';
+            const btnText = isPast ? 'View Details' : 'Register Now';
+
+            return `
+        <div class="event-card fade-in">
+            <div class="event-media">
+                <img src="${event.media_url || 'https://placehold.co/400x200/3b82f6/ffffff?text=Event'}" 
+                    alt="${event.title}" onerror="this.onerror=null;this.src='https://placehold.co/400x200/3b82f6/ffffff?text=Event'">
+            </div>
+            <div class="event-content">
+                <span class="program-tag" style="background-color: ${isPast ? '#f3f4f6' : '#dbeafe'}; color: ${isPast ? '#6b7280' : '#3b82f6'};">
+                    ${tagText}
+                </span>
+                <span class="event-date">${formatEventDate(event.date)} | ${event.location || 'Online'}</span>
+                <h3>${event.title}</h3>
+                <p>${event.description}</p>
+                <a href="${event.join_link || '#contact'}" 
+                   class="btn btn-primary event-join-btn" 
+                   style="background: ${isPast ? '#6b7280' : 'linear-gradient(90deg, var(--color-primary), var(--color-secondary))'};" 
+                   target="_blank">
+                    ${btnText}
+                </a>
+            </div>
+        </div>
+    `;
+        }
+        /**
+         * Fetches events from Supabase and renders them to the page.
+         */
+        async function fetchAndRenderEvents() {
+            const container = document.getElementById('events-grid');
+            if (!container) return;
+
+            // Fetch data from Supabase
+            const { data: events, error } = await _supabase
+                .from('events')
+                .select('*')
+                .order('date', { ascending: true });
+
+            if (error) {
+                console.error('Supabase Error fetching events for index page:', error);
+                container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: #ef4444; padding: 2rem;">Error loading events. Please check RLS policies.</div>';
+                return;
+            }
+
+            if (events.length === 0) {
+                container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: #6b7280; padding: 2rem;">Stay tuned! New events will be announced soon.</div>';
+
+                // Hide buttons if there are no events
+                if (scrollLeftBtn) scrollLeftBtn.classList.add('hidden');
+                if (scrollRightBtn) scrollRightBtn.classList.add('hidden');
+                return;
+            }
+
+            // Set the CSS variable for total event count (Crucial for the Grid layout)
+            scrollGrid.style.setProperty('--total-events', events.length);
+
+            // Generate HTML for all events
+            container.innerHTML = events.map(createEventCard).join('');
+
+            // Re-initialize scroll observer for the newly created elements (Fade-in effect)
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.2 });
+
+            document.querySelectorAll('.event-card').forEach(el => observer.observe(el));
+
+            // Initial button state check
+            updateScrollButtons();
+        }
+        // FINAL STEP: Execute the loading function when the page script block finishes loading.
+        fetchAndRenderEvents();
     </script>
 </body>
 
