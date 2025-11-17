@@ -518,8 +518,9 @@
             display: block;
         }
 
-        .form-group input,
-        .form-group textarea {
+.form-group input,
+        .form-group textarea,
+        .form-group select { /* ADDED select HERE */
             width: 100%;
             padding: 0.8rem;
             border: 1px solid #cbd5e1;
@@ -530,17 +531,12 @@
         }
 
         .form-group input:focus,
-        .form-group textarea:focus {
+        .form-group textarea:focus,
+        .form-group select:focus { /* ADDED select HERE */
             outline: none;
             border-color: var(--color-primary);
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
         }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 120px;
-        }
-
         .footer {
             background-color: var(--color-dark);
             color: var(--color-light);
@@ -1172,7 +1168,96 @@
             /* Ensure no wrapping happens. This forces the scroll. */
             grid-auto-flow: column;
         }
-    </style>
+/* --- NEW: Hybrid Hustler Section Styles --- */
+        #hybrid-hustler {
+            /* Full-width container setup */
+            background-color: var(--color-dark); /* Use dark color as fallback */
+            padding: 0; /* Remove vertical padding from section level */
+            position: relative;
+            min-height: 70vh; /* Give it a decent height on all screens */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .hustler-content-grid {
+            /* Use container properties only for content, not layout */
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 6rem 1.5rem; /* Add padding here to push content off the edges */
+            position: relative;
+            z-index: 10; /* Ensure content is above the video */
+            display: flex;
+            justify-content: flex-end; /* Push content (the form) to the right edge */
+        }
+
+        /* The visual container is no longer needed to limit the video width */
+        .hustler-visual {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1; /* Keep it below content */
+            background-color: var(--color-dark);
+            overflow: hidden;
+            border-radius: 0; /* Remove border-radius here as it's full screen */
+            box-shadow: none; /* Remove shadow */
+        }
+
+        /* STYLES FOR VIDEO BACKGROUND */
+        .video-container,
+        .hustler-video {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .hustler-video {
+            object-fit: cover; /* Ensures the video covers the entire screen space */
+            display: block;
+        }
+        
+        /* The Form Card must now only occupy one side, floating over the background */
+        .hustler-form-card {
+               background-color: rgb(255 255 255 / 0%);
+    padding: 2.5rem;
+    border-radius: 12px;
+    /* box-shadow: var(--shadow-lg); */
+    max-width: 1000px;
+    width: 100%;
+    border: none;
+        }
+        
+        /* Overlay removed/redefined for the card itself */
+        .hustler-form-card::before {
+            content: none; /* Remove previous overlay from the card */
+        }
+
+        @media (max-width: 991px) {
+            .hustler-content-grid {
+                /* On tablets/mobile, center the form */
+                justify-content: center; 
+                padding: 4rem 1.5rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .hustler-form-card {
+                /* Allow card to fill more space on smaller mobiles */
+                max-width: 100%;
+            }
+            #hybrid-hustler {
+                min-height: 100vh; /* Use full height on mobile */
+            }
+        }  
+        
+        
+        </style>
 </head>
 
 <body>
@@ -1274,6 +1359,90 @@
                 <div class="about-image fade-in"></div>
             </div>
         </section>
+
+<!-- NEW SECTION: Hybrid Hustler Registration with FULL-SCREEN Video Background -->
+        <section id="hybrid-hustler">
+            
+            <!-- Video Background Visual (Full Screen) -->
+            <div class="hustler-visual">
+                <div class="video-container">
+                    <!-- IMPORTANT: REPLACE THE SRC VALUE BELOW WITH YOUR ACTUAL VIDEO LINK -->
+                    <video autoplay muted loop playsinline class="hustler-video">
+                        <source src="hh bg.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <!-- Optional: Add a subtle overlay here if text needs more contrast -->
+                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2); z-index: 5;"></div>
+                </div>
+            </div>
+
+            <div class="hustler-content-grid">
+                <!-- Registration Form (Floating over the video background) -->
+                <div class="hustler-form-card fade-in">
+                    <div class="section-header" style="text-align: center;">
+                        <h2 style="position: relative; z-index: 2;">Become a Hybrid Hustler</h2>
+                        <p style="position: relative; z-index: 2;">Join our exclusive network and fast-track your path to tech mastery.</p>
+                    </div>
+                    <form id="hustler-form">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="hustler-name">Full Name</label>
+                                <input type="text" id="hustler-name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="hustler-college">College Name</label>
+                                <input type="text" id="hustler-college" name="college" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="hustler-email">Email ID</label>
+                                <input type="email" id="hustler-email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="hustler-contact">Contact Number</label>
+                                <input type="tel" id="hustler-contact" name="contact" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="hustler-tech">Core Technology</label>
+                                <select id="hustler-tech" name="tech" required>
+                                    <option value="">Select Technology</option>
+                                    <option value="AI/ML">AI/ML</option>
+                                    <option value="WebDev">Web Development (Full Stack)</option>
+                                    <option value="GameDev">Game Development </option>
+                                    <option value="AndroidDev">Android Development</option>
+                                    <option value="DataScience">Data Science</option>
+                                    <option value="CyberSecurity">Cyber Security</option>
+                                    <option value="Cloud">Cloud Engineering</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="hustler-year">Course Year</label>
+                                <select id="hustler-year" name="year" required>
+                                    <option value="">Select Year</option>
+                                    <option value="1">1st Year</option>
+                                    <option value="2">2nd Year</option>
+                                    <option value="3">3rd Year</option>
+                                    <option value="4">4th Year</option>
+                                    <option value="Graduate">Graduate</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="hustler-semester">Semester</label>
+                                <input type="number" id="hustler-semester" name="semester" min="1" max="8" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="hustler-roll">Roll No.</label>
+                                <input type="text" id="hustler-roll" name="roll" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 2rem;">
+                            Enroll in the Hustle!
+                        </button>
+                        <p id="hustler-message" style="margin-top: 1rem; text-align: center; color: var(--color-primary);" class="hidden"></p>
+                    </form>
+                </div>
+            </div>
+        </section>
+        <!-- END NEW SECTION -->
 
         <section id="programs">
             <div class="container">
@@ -1530,7 +1699,146 @@
 
     <script>
 
+// --- FORM SUBMISSION HANDLER (Supabase Integration) ---
+        const hustlerForm = document.getElementById('hustler-form');
+        const hustlerMessage = document.getElementById('hustler-message');
 
+        if (hustlerForm) {
+            hustlerForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                hustlerMessage.classList.add('hidden'); // Hide previous message
+                
+                // Basic client-side validation check
+                if (!e.target.checkValidity()) {
+                    hustlerMessage.textContent = 'Please fill out all required fields correctly.';
+                    hustlerMessage.style.color = '#ef4444';
+                    hustlerMessage.classList.remove('hidden');
+                    return;
+                }
+
+                // Collect form data
+                const formData = new FormData(hustlerForm);
+                const data = {
+                    full_name: formData.get('name'),
+                    college_name: formData.get('college'),
+                    email_id: formData.get('email'),
+                    contact_number: formData.get('contact'),
+                    core_technology: formData.get('tech'),
+                    course_year: formData.get('year'),
+                    // Convert semester to integer as per your SQL schema
+                    semester: parseInt(formData.get('semester'), 10), 
+                    roll_no: formData.get('roll'),
+                };
+                
+                // Get the current user ID for linking registration (if logged in)
+                const { data: { user } } = await _supabase.auth.getUser();
+                if (user) {
+                    data.user_id = user.id;
+                }
+
+                try {
+                    // Show loading state 
+                    hustlerMessage.textContent = 'Registering...';
+                    hustlerMessage.style.color = 'var(--color-primary)';
+                    hustlerMessage.classList.remove('hidden');
+                    
+                    // Attempt to insert data into Supabase
+                    const { error } = await _supabase
+                        .from('hybrid_hustler_registrations')
+                        .insert([data]);
+
+                    if (error) {
+                        console.error('Supabase Insert Error:', error);
+                        // Handle unique constraint error specifically for email_id (SQL error code '23505')
+                        if (error.code === '23505' && error.details.includes('email_id')) {
+                             hustlerMessage.textContent = 'Registration failed: This email address is already registered.';
+                        } else {
+                             hustlerMessage.textContent = `Registration failed: An error occurred.`;
+                        }
+                        hustlerMessage.style.color = '#ef4444';
+                    } else {
+                        // Success message
+                        const firstName = data.full_name.split(' ')[0];
+                        hustlerMessage.textContent = `Success! Thank you, ${firstName}! Your registration has been saved to the database.`;
+                        hustlerMessage.style.color = 'var(--color-primary)';
+                        
+                        // Clear form after successful submission
+                        hustlerForm.reset();
+                    }
+                } catch (e) {
+                    console.error('Unexpected Registration Error:', e);
+                    hustlerMessage.textContent = 'An unexpected network error occurred during registration.';
+                    hustlerMessage.style.color = '#ef4444';
+                }
+            });
+        }
+
+
+        // --- CONTACT FORM HANDLER (Supabase Integration) ---
+        const contactForm = document.querySelector('.contact-form');
+        const contactMessageDiv = document.createElement('p'); // Create a temporary message element for feedback
+        contactMessageDiv.style.marginTop = '1rem';
+        contactMessageDiv.style.textAlign = 'center';
+        contactForm.appendChild(contactMessageDiv);
+
+        if (contactForm) {
+            contactForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                contactMessageDiv.textContent = ''; // Clear previous message
+                
+                if (!e.target.checkValidity()) {
+                    contactMessageDiv.textContent = 'Please fill out all required fields.';
+                    contactMessageDiv.style.color = '#ef4444';
+                    return;
+                }
+
+                // Collect form data using input IDs
+                const data = {
+                    full_name: document.getElementById('name').value,
+                    email_id: document.getElementById('email').value,
+                    message_content: document.getElementById('message').value,
+                };
+                
+                // Get the current user ID for linking registration (if logged in)
+                const { data: { user } } = await _supabase.auth.getUser();
+                if (user) {
+                    data.user_id = user.id;
+                }
+
+                contactMessageDiv.textContent = 'Sending message...';
+                contactMessageDiv.style.color = 'var(--color-primary)';
+                contactForm.querySelector('button[type="submit"]').disabled = true;
+
+                try {
+                    // Attempt to insert data into Supabase
+                    const { error } = await _supabase
+                        .from('contact_inquiries')
+                        .insert([data]);
+
+                    if (error) {
+                        console.error('Supabase Contact Insert Error:', error);
+                        contactMessageDiv.textContent = `Message failed to send: An error occurred.`;
+                        contactMessageDiv.style.color = '#ef4444';
+                    } else {
+                        // Success message
+                        contactMessageDiv.textContent = `Thank you, ${data.full_name.split(' ')[0]}! Your message has been sent successfully.`;
+                        contactMessageDiv.style.color = 'var(--color-primary)';
+                        
+                        // Clear form after successful submission
+                        contactForm.reset();
+                    }
+                } catch (e) {
+                    console.error('Unexpected Contact Error:', e);
+                    contactMessageDiv.textContent = 'An unexpected network error occurred.';
+                    contactMessageDiv.style.color = '#ef4444';
+                } finally {
+                    contactForm.querySelector('button[type="submit"]').disabled = false;
+                }
+            });
+        }
+        // --- END CONTACT FORM HANDLER ---
+
+        
         // --- CAROUSEL CONTROL ELEMENTS ---
         const scrollContainer = document.getElementById('events-grid-container');
         const scrollGrid = document.getElementById('events-grid');
