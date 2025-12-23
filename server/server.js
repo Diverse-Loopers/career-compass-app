@@ -185,17 +185,60 @@ const knowledgeBase = {
       }
     },
     // --- Artificial Intelligence & Machine Learning ---
-    "AI/ML Engineer": {
-      critical_skills: ["Python for Data Science", "Machine Learning Frameworks (TensorFlow/PyTorch)", "Mathematics for Computing", "Data Structures and Algorithms", "Big Data Technologies"],
-      resources: {
-        "Python for Data Science": { reason: "The primary language for AI/ML, with libraries like NumPy, Pandas, and Scikit-learn.", youtube: "https://www.youtube.com/watch?v=r-uOLxNrNk8", article: "https://www.geeksforgeeks.org/python-for-data-science/" },
-        "Machine Learning Frameworks (TensorFlow/PyTorch)": { reason: "Essential for building and training deep learning models.", youtube: "https://www.youtube.com/watch?v=Jy4wM2X21u0", article: "https://pytorch.org/tutorials/" },
-        "Mathematics for Computing": { reason: "Linear algebra, calculus, and probability are the foundations of ML algorithms.", youtube: "https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t57w", article: "https://www.deeplearningbook.org/contents/part_basics.html" },
-        "Data Structures and Algorithms": { reason: "Crucial for handling large datasets and optimizing model performance.", youtube: "https://www.youtube.com/playlist?list=PLDN4rrl48XKpZkf03iYFl-O29szjTrs_O", article: "https://www.geeksforgeeks.org/learn-data-structures-and-algorithms-dsa-tutorial/" },
-        "Big Data Technologies": { reason: "Experience with tools like Spark or Hadoop for processing massive datasets.", youtube: "https://www.youtube.com/watch?v=t_a-Q6-6y-s", article: "https://spark.apache.org/docs/latest/quick-start.html" }
-      }
+"AI/ML Engineer": {
+  critical_skills: [
+    "Python Programming & Data Science Libraries",
+    "Mathematics & Statistics for Machine Learning",
+    "Classical Machine Learning (Scikit-Learn)",
+    "Deep Learning & Neural Networks (PyTorch)",
+    "Computer Vision Fundamentals",
+    "Natural Language Processing Basics",
+    "End-to-End ML Project Development",
+    "MLOps, Model Deployment & Serving"
+  ],
+resource: {
+    "Python Programming & Data Science Libraries": {
+      reason: "Strong Python foundation with NumPy, Pandas, Matplotlib, and file/CSV handling is required for all data manipulation and preprocessing in ML.",
+      youtube: "https://www.youtube.com/playlist?list=PL-osiE80TeTsWmV9i9c58mdDCSskIFdDS",
+      article: "https://www.kaggle.com/learn/python"
     },
-    "Data Scientist": {
+    "Mathematics & Statistics for Machine Learning": {
+      reason: "Understanding mean/median/variance, probability basics, vectors, matrices, and dot products is essential to grasp how ML algorithms work internally.",
+      youtube: "https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi",
+    article: "https://www.kaggle.com/learn/intro-to-machine-learning (stats section) + https://hadrienj.github.io/posts/Deep-Learning-Book-Series-Introduction/"
+    },
+    "Classical Machine Learning (Scikit-Learn)": {
+      reason: "Master supervised/unsupervised algorithms (Regression, Trees, KNN, KMeans, PCA) and evaluation metrics before moving to deep learning.",
+      youtube: "https://www.youtube.com/playlist?list=PLblh5JKOoLUICTaG2hRgwIjOPtHv0mWkX",
+      article: "https://scikit-learn.org/stable/tutorial/index.html + https://www.kaggle.com/learn/intermediate-machine-learning"
+    },
+    "Deep Learning & Neural Networks (PyTorch)": {
+      reason: "PyTorch is the industry-leading framework for building custom neural networks, understanding neurons, activation/loss functions, and optimizers.",
+      youtube: "https://www.youtube.com/playlist?list=PLhhyoLH6IjfxeoooqP9rhU3HJIAVAJ3Vz",
+      article: "https://pytorch.org/tutorials/beginner/deep_learning_60min_blitz.html"
+    },
+    "Computer Vision Fundamentals": {
+      reason: "CNNs, transfer learning, and data augmentation are core skills for image-related AI products (used in 70%+ of real-world DL applications).",
+      youtube: "https://www.youtube.com/playlist?list=PLkDaE6sCZn6Ec-XTbcX1uRg2_u4xOE-p0",
+      article: "https://www.kaggle.com/learn/computer-vision + Fast.ai Lesson 1-4"
+    },
+    "Natural Language Processing Basics": {
+      reason: "Tokenization, embeddings, and fine-tuning transformer models (like DistilBERT) are required for text-based AI applications.",
+      youtube: "https://www.youtube.com/playlist?list=PLoROMvodv4rOSH5f-aOQcnjgn6jKkyB4b",
+      article: "https://huggingface.co/learn/nlp-course/chapter1/1"
+    },
+    "End-to-End ML Project Development": {
+      reason: "Ability to take a Kaggle dataset from raw → clean → model → evaluate → document → GitHub is the #1 thing employers look for in junior ML resumes.",
+      youtube: "https://www.youtube.com/watch?v=M3qpIzy4MQs",
+      article: "https://www.kaggle.com/learn (complete Python + ML paths) + https://course.fast.ai/"
+    },
+    "MLOps, Model Deployment & Serving": {
+      reason: "Modern AI/ML engineers must ship models to production using FastAPI, Docker, Cloud platforms, and basic monitoring (MLflow).",
+      youtube: "https://www.youtube.com/playlist?list=PLBoQzFTr4H5_xsbfL7W4mGgg8bXJ0h1qO",
+      article: "https://www.mlflow.org/docs/latest/index.html + https://fastapi.tiangolo.com/tutorial/"
+    }
+  }
+},    "Data Scientist": {
       critical_skills: ["Python for Data Science", "Statistics & Probability", "Data Visualization", "Machine Learning Concepts", "DBMS"],
       resources: {
         "Python for Data Science": { reason: "The core language for data manipulation, analysis, and modeling.", youtube: "https://www.youtube.com/watch?v=r-uOLxNrNk8", article: "https://www.geeksforgeeks.org/python-for-data-science/" },
