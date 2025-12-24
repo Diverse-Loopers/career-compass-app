@@ -1,608 +1,1206 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Career Analyzer | Diverse Loopers</title>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Explore Careers - Diverse Loopers</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Font Awesome for Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
     <style>
-        :root {
-            --color-primary: #3b82f6;
-            --color-secondary: #8b5cf6;
-            --color-dark: #1e293b;
-            --color-light: #f1f5f9;
-            --color-text: #334155;
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
         }
-
-        /* --- Global & Page Setup --- */
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8fafc; /* Slightly lighter bg */
-            color: var(--color-text);
-            margin: 0;
-            overflow-x: hidden;
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
-
-        .explore-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            padding: 8rem 1rem 4rem;
-            text-align: center;
-            overflow: hidden;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: fadeInPage 1s ease-out forwards;
-        }
-
-        @keyframes fadeInPage {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        /* --- Navigation Bar --- */
-        .header {
-            background-color: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid #e2e8f0;
-            padding: 0.75rem 1.5rem;
-            box-shadow: var(--shadow-md);
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            z-index: 1000;
-            transition: transform 0.3s ease-out;
-        }
-
-        .navbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            text-decoration: none;
-        }
-
-        .logo img {
-            height: 40px;
-        }
-
-        .logo-text {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--color-dark);
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: opacity 0.4s ease, transform 0.4s ease;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--color-text);
-            font-weight: 500;
-            padding: 0.5rem 1rem;
-            border-radius: 9999px;
-            transition: color 0.3s, background-color 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: var(--color-primary);
-            background-color: var(--color-light);
-        }
-        
-        .profile-icon-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: var(--color-light);
-            color: var(--color-text);
-        }
-         .profile-icon-btn:hover {
-            background-color: #e2e8f0;
-        }
-
-        .header.scrolled .nav-links {
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-        }
-
-        /* --- Section Header --- */
-        .section-header {
-            margin-bottom: 4rem;
-        }
-
-        .section-header h1 {
-            font-size: clamp(2.5rem, 5vw, 3.5rem);
-            font-weight: 700;
-            color: var(--color-dark);
-            margin-bottom: 0.5rem;
-        }
-
-        .section-header p {
-            font-size: 1.125rem;
-            color: #64748b;
-            max-width: 600px;
-        }
-
-        /* --- 3D Carousel Core --- */
-        .carousel-wrapper {
-            position: relative;
-            width: 320px;
-            height: 480px; /* Taller for more content */
-            perspective: 1500px;
-        }
-
-        .carousel {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            transform-style: preserve-3d;
-            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
-        }
-
-        /* --- Career Card (Front & Back) --- */
-        .career-card {
-            position: absolute;
-            width: 320px;
-            height: 480px;
-            border-radius: 16px;
-            overflow: hidden;
-            cursor: pointer;
-            transform-style: preserve-3d;
-            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .career-card.flipped {
-            transform: rotateY(180deg) !important;
-        }
-
-        .card-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 2rem;
-            box-sizing: border-box;
-        }
-
-        .card-front {
-            background: linear-gradient(135deg, var(--color-dark), #334155);
-            color: #fff;
-            justify-content: center;
-        }
-
-        .card-icon {
-            font-size: 4.5rem;
-            margin-bottom: 1.5rem;
-            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
-        }
-
-        .card-front h2 {
-            font-size: 1.75rem;
-            margin: 0 0 0.5rem 0;
-        }
-
-        .card-front p {
-            font-size: 0.9rem;
-            opacity: 0.7;
-            font-weight: 500;
-        }
-
-        .card-back {
-            background-color: #fff;
-            color: var(--color-text);
-            transform: rotateY(180deg);
-            box-shadow: var(--shadow-lg);
-            border: 1px solid #e2e8f0;
-            justify-content: flex-start;
-            text-align: left;
-        }
-
-        .card-back h3 {
-            font-size: 1.5rem;
-            color: var(--color-dark);
-            width: 100%;
-            text-align: center;
-            margin-top: 0;
-        }
-        
-        /* --- Card Back Details --- */
-        .card-intro {
-            font-size: 0.85rem;
-            text-align: center;
-            color: #64748b;
-            margin: 0.75rem 0 1.25rem;
-            line-height: 1.6;
-        }
-
-        .details-grid {
-            width: 100%;
-            margin-bottom: 1.25rem;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            text-align: center;
-        }
-
-        .detail-item p {
-            font-size: 0.8rem;
-            color: #64748b;
-            font-weight: 500;
-            margin-bottom: 0.25rem;
-        }
-
-        .detail-item .value {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--color-dark);
-        }
-
-        .skills-section {
-            width: 100%;
-        }
-
-        .skills-section h4 {
-            font-size: 0.9rem;
-            text-align: center;
-            margin-bottom: 0.75rem;
-            color: #64748b;
-        }
-
-        .skills-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            justify-content: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .skill-tag {
-            background-color: #e0e7ff;
-            color: #4338ca;
-            font-size: 0.8rem;
-            font-weight: 500;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-        }
-
-        .card-back .learn-more-btn {
-            margin-top: auto;
-            background: var(--color-primary);
-            color: #fff;
-            text-decoration: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .card-back .learn-more-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.3);
-        }
-
-        /* --- Carousel Navigation --- */
-        .carousel-nav {
-            margin-top: 2rem;
-            display: flex;
-            gap: 1.5rem;
-        }
-
-        .nav-btn {
-            background: #fff;
-            border: 1px solid #cbd5e1;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
-            box-shadow: var(--shadow-lg);
-        }
-
-        .nav-btn:hover {
-            background-color: var(--color-primary);
-            color: #fff;
-            transform: scale(1.1);
-        }
-
-        .nav-btn svg {
-            width: 24px;
-            height: 24px;
-            stroke-width: 2.5;
-        }
-
-        /* --- NEW: More Content Section --- */
-        .more-content-section {
-            width: 100%;
-            padding: 6rem 1rem;
-            background-color: #0c0d19;
-        }
-        
-        .info-grid {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-        }
-
-        .info-card {
-            background-color: var(--color-light);
-            padding: 2rem;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-        }
-        
-        .info-card.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .info-card .icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .info-card h3 {
-            font-size: 1.25rem;
-            color: var(--color-dark);
-            margin-bottom: 0.5rem;
-        }
-        .more-content-para{
-            color: #fafbfd;
-        }
-
+      }
+      .hidden {
+        display: none !important;
+      }
+      /* Dropdown hover logic */
+      .group:hover .group-hover\:block {
+        display: block;
+      }
+      /* Add this inside your <style> tag in the <head> */
+      .group:hover .group-hover\:block {
+        display: block;
+      }
     </style>
-</head>
+  </head>
+  <body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
+    <!-- Navigation -->
+    <!-- Navigation -->
+    <nav
+      class="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-50 shadow-sm"
+    >
+      <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <!-- Logo -->
+        <a href="index.html" class="flex items-center space-x-3 group">
+          <img
+            src="DIVERSE LOOPERS (1) bg.png"
+            onerror="this.src='https://via.placeholder.com/40?text=DL'"
+            alt="Diverse Loopers Logo"
+            class="h-14 w-auto"
+          />
+          <!-- <span class="font-bold text-xl tracking-tight text-gray-900 group-hover:text-indigo-700 transition-colors">Diverse Loopers</span> -->
+        </a>
 
-<body>
+        <!-- Desktop Menu (Hidden on mobile) -->
+        <div class="flex items-center space-x-8">
+          <a
+            href="index.html"
+            class="text-gray-600 hover:text-indigo-600 font-medium transition-colors"
+            >Home</a
+          >
 
-    <header class="header">
-        <nav class="navbar">
-            <a href="index.html" class="logo">
-                <img src="https://placehold.co/100x100/3b82f6/FFFFFF?text=DL" alt="Diverse Loopers Logo">
-                <span class="logo-text">Diverse Loopers</span>
-            </a>
-            <div class="nav-links">
-                <a href="#" id="go-back-btn">Go Back</a>
-                <a href="index.html">Home</a>
-                <a href="profile.html" class="profile-icon-btn" title="Go to Profile">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                </a>
-            </div>
-        </nav>
-    </header>
+          <!-- Desktop Tools Dropdown (Hover) -->
+          <div class="relative">
+            <button
+              id="tools-btn"
+              class="flex items-center text-gray-600 hover:text-indigo-600 font-medium focus:outline-none transition-colors"
+            >
+              Tools
+              <i class="fa-solid fa-chevron-down ml-1 text-xs"></i>
+            </button>
 
-    <main>
-        <section class="explore-section">
-            <div class="section-header">
-                <h1>Explore Career Paths</h1>
-                <p>Discover your future. Rotate the carousel and click a card to flip it over and learn more about each exciting career path.</p>
+            <!-- Dropdown Menu -->
+            <div
+              id="tools-dropdown"
+              class="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg hidden z-50"
+            >
+              <a
+                href="careers.html"
+                class="block px-4 py-2 text-sm text-indigo-600 bg-indigo-50 font-medium border-l-4 border-indigo-600"
+                >Career Analyzer</a
+              >
+              <a
+                href="analyzer.html"
+                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
+                >Path Analyzer</a
+              >
             </div>
+          </div>
 
-            <div class="carousel-wrapper">
-                <div class="carousel" id="career-carousel">
-                    <!-- Cards inserted here -->
-                </div>
-            </div>
-            
-            <div class="carousel-nav">
-                <button class="nav-btn" id="prev-btn" aria-label="Previous Career">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 18l-6-6 6-6"/></svg>
-                </button>
-                <button class="nav-btn" id="next-btn" aria-label="Next Career">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 18l6-6-6-6"/></svg>
-                </button>
-            </div>
-        </section>
+          <a
+            href="profile.html"
+            class="text-gray-600 hover:text-indigo-600 font-medium transition-colors"
+            >Profile</a
+          >
+          <a
+            href="login.html"
+            class="text-gray-600 hover:text-indigo-600 font-medium transition-colors"
+            >Login</a
+          >
+        </div>
 
-        <!-- NEW: "Find Your Fit" Section -->
-        <section class="more-content-section">
-           
-                <div class="more-content-para"><h1>Find Your Fit: What to Consider...</h1>
-                <p>Choosing a career is a big decision. Here are a few key factors to think about as you explore your options.</p>
-            </div>
-        
-            <div class="info-grid">
-                <div class="info-card">
-                    <div class="icon">💡</div>
-                    <h3>Passion vs. Practicality</h3>
-                    <p>Find a balance between what you love to do and what the market demands. The most fulfilling careers often lie at the intersection of both.</p>
-                </div>
-                 <div class="info-card">
-                    <div class="icon">🏢</div>
-                    <h3>Company Culture</h3>
-                    <p>Think about the environment where you'll thrive. Do you prefer a fast-paced startup, a large corporation, or something in between?</p>
-                </div>
-                 <div class="info-card">
-                    <div class="icon">📈</div>
-                    <h3>Long-Term Growth</h3>
-                    <p>Look for fields with strong future potential and clear opportunities for advancement. Continuous learning is key in the tech industry.</p>
-                </div>
-                 <div class="info-card">
-                    <div class="icon">⚖️</div>
-                    <h3>Work-Life Balance</h3>
-                    <p>Consider the typical demands of a role. A healthy balance is crucial for long-term happiness and avoiding burnout.</p>
-                </div>
-            </div>
-        </section>
+        <!-- Mobile Menu Button -->
+        <button
+          id="mobile-menu-btn"
+          class="md:hidden text-gray-600 focus:outline-none p-2 rounded hover:bg-gray-100"
+        >
+          <i class="fa-solid fa-bars text-xl"></i>
+        </button>
+      </div>
+
+      <!-- Mobile Menu (Hidden by default, shown via JS) -->
+      <div
+        id="mobile-menu"
+        class="hidden md:hidden bg-white border-t border-gray-100 mt-4 py-4 space-y-4"
+      >
+        <a
+          href="index.html"
+          class="block px-4 py-2 text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 font-medium"
+          >Home</a
+        >
+
+        <!-- Mobile Tools Section -->
+        <div class="px-4">
+          <div class="font-medium text-gray-600 mb-2">Tools</div>
+          <div class="pl-4 border-l-2 border-indigo-100 space-y-2">
+            <a
+              href="analyzer.html"
+              class="block py-2 text-sm text-indigo-600 font-semibold"
+              >Career Analyzer</a
+            >
+            <a
+              href="#"
+              class="block py-2 text-sm text-gray-600 hover:text-indigo-600"
+              >Path Analyzer</a
+            >
+          </div>
+        </div>
+
+        <a
+          href="profile.html"
+          class="block px-4 py-2 text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 font-medium"
+          >Profile</a
+        >
+        <a
+          href="login.html"
+          class="block px-4 py-2 text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 font-medium"
+          >Login</a
+        >
+      </div>
+    </nav>
+    <!-- Main App Container -->
+    <main id="app-container" class="flex-grow flex flex-col relative">
+      <!-- Views will be injected here via JavaScript -->
+      <div class="flex items-center justify-center h-64">
+        <div
+          class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"
+        ></div>
+      </div>
     </main>
 
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 py-8 mt-auto">
+      <div class="max-w-7xl mx-auto px-4 text-center">
+        <p class="text-gray-500 text-sm">
+          &copy; 2024 Diverse Loopers. All rights reserved.
+        </p>
+      </div>
+    </footer>
+
+    <!-- Supabase and Application Logic -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+      // --- SUPABASE CONFIGURATION ---
+      // TODO: Replace these with your actual Supabase Project URL and Anon Key
+      const SUPABASE_URL = "https://tjqsmkaiajdpotmafqvw.supabase.co";
+      const SUPABASE_KEY =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqcXNta2FpYWpkcG90bWFmcXZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU5ODA3NDIsImV4cCI6MjA3MTU1Njc0Mn0.9710q9W5EFfCagj340AizUSKiOXYApy0xkTFszFjO8o";
 
-            // --- Career Data with Detailed Intros ---
-            const careerData = [
-                {
-                    title: "AI & Machine Learning", icon: "🧠", intro: "As an AI/ML Engineer, you'll be at the forefront of innovation, teaching machines to learn from data to make predictions and decisions.",
-                    averageSalary: "$120k - $180k", demand: "Very High",
-                    keySkills: ["Python", "TensorFlow", "PyTorch", "NLP", "Computer Vision"],
-                    learnMoreLink: "#"
-                },
-                {
-                    title: "Software Development", icon: "💻", intro: "Become the architect of the digital world. Software Developers design, build, and maintain the applications that millions use daily.",
-                    averageSalary: "$100k - $160k", demand: "Very High",
-                    keySkills: ["JavaScript", "React", "Node.js", "Databases", "APIs"],
-                    learnMoreLink: "#"
-                },
-                {
-                    title: "Cloud & DevOps", icon: "☁️", intro: "Ensure that software runs smoothly and scales effortlessly. This role is the bridge between development and operations.",
-                    averageSalary: "$110k - $170k", demand: "High",
-                    keySkills: ["AWS/GCP/Azure", "Docker", "Kubernetes", "CI/CD", "Terraform"],
-                    learnMoreLink: "#"
-                },
-                {
-                    title: "Cybersecurity", icon: "🛡️", intro: "Become a digital guardian. Cybersecurity experts protect systems and data from an ever-evolving landscape of digital threats.",
-                    averageSalary: "$105k - $155k", demand: "High",
-                    keySkills: ["Network Security", "Pen Testing", "Cryptography", "SIEM Tools"],
-                    learnMoreLink: "#"
-                },
-                {
-                    title: "Game Development", icon: "🎮", intro: "Merge artistry with technology to create immersive, interactive worlds that captivate and entertain players globally.",
-                    averageSalary: "$90k - $140k", demand: "Medium",
-                    keySkills: ["C++", "Unity", "Unreal Engine", "3D Math", "Physics"],
-                    learnMoreLink: "#"
-                },
-                {
-                    title: "Embedded Systems", icon: "💡", intro: "Program the 'brains' inside physical products, from smart home devices and wearables to critical medical equipment.",
-                    averageSalary: "$95k - $150k", demand: "Medium",
-                    keySkills: ["C/C++", "Microcontrollers", "RTOS", "IoT Protocols"],
-                    learnMoreLink: "#"
-                }
-            ];
+      let supabaseClient = null;
+      let isLocalMode = false;
 
-            const carousel = document.getElementById('career-carousel');
-            const nextBtn = document.getElementById('next-btn');
-            const prevBtn = document.getElementById('prev-btn');
+      try {
+        if (SUPABASE_URL && SUPABASE_KEY) {
+          // Initialize Supabase using the global variable from the CDN script
+          supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+          console.log("Supabase initialized.");
+        } else {
+          isLocalMode = true;
+          console.log(
+            "Supabase keys missing. Running in Local Demo Mode (No Database Connection)."
+          );
+        }
+      } catch (e) {
+        console.warn(
+          "Error initializing Supabase, falling back to local mode:",
+          e
+        );
+        isLocalMode = true;
+      }
 
-            const cardCount = careerData.length;
-            const theta = 360 / cardCount;
-            let currentAngle = 0;
-            
-            function createCards() {
-                const radius = (320 / 2) / Math.tan(Math.PI / cardCount);
+      // --- DATA & CONTENT ---
+      const CAREER_DETAILS = {
+        backend: {
+          id: "backend",
+          title: "Backend Developer",
+          icon: "fa-terminal",
+          description:
+            "You build the logic, databases, and APIs that power applications. You prefer efficiency and logic over visual design.",
+          roadmap: [
+            {
+              month: "1-2",
+              topic: "Core Language",
+              desc: "Master Python, Java, or Node.js logic and syntax.",
+            },
+            {
+              month: "3-4",
+              topic: "Databases",
+              desc: "Learn SQL (PostgreSQL) and NoSQL (MongoDB) basics.",
+            },
+            {
+              month: "5-6",
+              topic: "APIs & Servers",
+              desc: "Build RESTful APIs using Express or Django.",
+            },
+            {
+              month: "7+",
+              topic: "Deployment",
+              desc: "Learn Docker, AWS basics, and CI/CD pipelines.",
+            },
+          ],
+        },
+        fullstack: {
+          id: "fullstack",
+          title: "Full Stack Developer",
+          icon: "fa-globe",
+          description:
+            "The jack-of-all-trades. You enjoy building the entire product, from the user interface to the server logic.",
+          roadmap: [
+            {
+              month: "1-2",
+              topic: "Frontend Basics",
+              desc: "HTML, CSS, JavaScript, and React.",
+            },
+            {
+              month: "3-4",
+              topic: "Backend Basics",
+              desc: "Node.js, Express, and connecting to databases.",
+            },
+            {
+              month: "5-6",
+              topic: "Integration",
+              desc: "Building full CRUD apps and handling state management.",
+            },
+            {
+              month: "7+",
+              topic: "Advanced",
+              desc: "Next.js, Authentication, and scalable architecture.",
+            },
+          ],
+        },
+        data: {
+          id: "data",
+          title: "Data Analyst",
+          icon: "fa-chart-line",
+          description:
+            "You find stories in numbers. You prefer patterns, statistics, and insights over writing software code.",
+          roadmap: [
+            {
+              month: "1-2",
+              topic: "Excel & SQL",
+              desc: "Master advanced Excel and SQL querying.",
+            },
+            {
+              month: "3-4",
+              topic: "Visualization",
+              desc: "Learn PowerBI or Tableau to tell stories with data.",
+            },
+            {
+              month: "5-6",
+              topic: "Python for Data",
+              desc: "Pandas, NumPy, and basic data cleaning.",
+            },
+            {
+              month: "7+",
+              topic: "Statistics",
+              desc: "Basic statistical modeling and A/B testing.",
+            },
+          ],
+        },
+        cybersecurity: {
+          id: "cybersecurity",
+          title: "Cybersecurity Analyst",
+          icon: "fa-shield-halved",
+          description:
+            "The digital guardian. You enjoy finding vulnerabilities, protecting systems, and understanding how networks work.",
+          roadmap: [
+            {
+              month: "1-2",
+              topic: "Networking",
+              desc: "CompTIA Network+ concepts, OSI model, TCP/IP.",
+            },
+            {
+              month: "3-4",
+              topic: "OS & Linux",
+              desc: "Master Linux command line and Windows administration.",
+            },
+            {
+              month: "5-6",
+              topic: "Security Basics",
+              desc: "CompTIA Security+, threat analysis, firewalls.",
+            },
+            {
+              month: "7+",
+              topic: "Tools",
+              desc: "Wireshark, Nmap, and basic penetration testing tools.",
+            },
+          ],
+        },
+        qa: {
+          id: "qa",
+          title: "QA Automation Engineer",
+          icon: "fa-check-circle",
+          description:
+            "The quality gatekeeper. You love breaking things to ensure they are fixed before reaching the user.",
+          roadmap: [
+            {
+              month: "1-2",
+              topic: "Testing Basics",
+              desc: "Manual testing, writing test cases, Jira.",
+            },
+            {
+              month: "3-4",
+              topic: "Coding for QA",
+              desc: "Java or Python basics specifically for scripting.",
+            },
+            {
+              month: "5-6",
+              topic: "Automation",
+              desc: "Selenium, Cypress, or Playwright.",
+            },
+            {
+              month: "7+",
+              topic: "CI Integration",
+              desc: "Running tests in Jenkins or GitHub Actions.",
+            },
+          ],
+        },
+      };
 
-                careerData.forEach((career, index) => {
-                    const angle = theta * index;
-                    const card = document.createElement('div');
-                    card.className = 'career-card';
-                    
-                    card.innerHTML = `
-                        <div class="card-face card-front">
-                            <div class="card-icon">${career.icon}</div>
-                            <h2>${career.title}</h2>
-                            <p>Click to Learn More</p>
+      const QUESTIONS = [
+        {
+          id: "interest",
+          text: "What part of technology excites you the most?",
+          options: [
+            {
+              text: "Building visual interfaces users interact with",
+              scores: {
+                fullstack: 5,
+                backend: 1,
+                qa: 1,
+                data: 0,
+                cybersecurity: 0,
+              },
+            },
+            {
+              text: "Designing the hidden logic and data flow",
+              scores: {
+                backend: 5,
+                fullstack: 3,
+                data: 2,
+                cybersecurity: 1,
+                qa: 0,
+              },
+            },
+            {
+              text: "Finding patterns and predicting trends",
+              scores: {
+                data: 5,
+                backend: 1,
+                fullstack: 0,
+                cybersecurity: 1,
+                qa: 1,
+              },
+            },
+            {
+              text: "Breaking systems to make them stronger",
+              scores: {
+                cybersecurity: 4,
+                qa: 5,
+                backend: 1,
+                data: 0,
+                fullstack: 0,
+              },
+            },
+          ],
+        },
+        {
+          id: "activity",
+          text: "If you were working on a team project, which task would you volunteer for?",
+          options: [
+            {
+              text: "Creating the dashboard and buttons",
+              scores: {
+                fullstack: 5,
+                backend: 0,
+                qa: 1,
+                data: 1,
+                cybersecurity: 0,
+              },
+            },
+            {
+              text: "Setting up the database and API",
+              scores: {
+                backend: 5,
+                fullstack: 3,
+                data: 2,
+                cybersecurity: 1,
+                qa: 0,
+              },
+            },
+            {
+              text: "Analyzing user behavior data",
+              scores: {
+                data: 5,
+                backend: 1,
+                fullstack: 0,
+                cybersecurity: 0,
+                qa: 1,
+              },
+            },
+            {
+              text: "Checking for bugs and security holes",
+              scores: {
+                qa: 5,
+                cybersecurity: 5,
+                backend: 1,
+                data: 0,
+                fullstack: 0,
+              },
+            },
+          ],
+        },
+        {
+          id: "mindset",
+          text: "How do you approach a difficult problem?",
+          options: [
+            {
+              text: "I construct a solution step-by-step from scratch",
+              scores: {
+                backend: 4,
+                fullstack: 4,
+                data: 1,
+                cybersecurity: 1,
+                qa: 1,
+              },
+            },
+            {
+              text: "I look for anomalies and potential points of failure",
+              scores: {
+                cybersecurity: 5,
+                qa: 5,
+                data: 2,
+                backend: 1,
+                fullstack: 0,
+              },
+            },
+            {
+              text: "I gather data to see what worked before",
+              scores: {
+                data: 5,
+                backend: 2,
+                fullstack: 1,
+                cybersecurity: 1,
+                qa: 1,
+              },
+            },
+          ],
+        },
+        {
+          id: "environment",
+          text: "Which work environment sounds best?",
+          options: [
+            {
+              text: "Fast-paced, building new features daily",
+              scores: {
+                fullstack: 5,
+                backend: 4,
+                data: 1,
+                cybersecurity: 0,
+                qa: 1,
+              },
+            },
+            {
+              text: "Stable, ensuring reliability and security",
+              scores: {
+                cybersecurity: 5,
+                qa: 5,
+                backend: 3,
+                data: 2,
+                fullstack: 1,
+              },
+            },
+            {
+              text: "Research-heavy, creating reports and insights",
+              scores: {
+                data: 5,
+                backend: 1,
+                cybersecurity: 2,
+                fullstack: 0,
+                qa: 1,
+              },
+            },
+          ],
+        },
+      ];
+
+      let state = {
+        view: "landing",
+        step: 0,
+        formData: {
+          name: "",
+          email: "",
+          branch: "",
+          year: "1st",
+          skillLevel: "Beginner",
+          answers: {},
+        },
+        results: null,
+      };
+
+      const appContainer = document.getElementById("app-container");
+
+      // --- RENDER FUNCTIONS ---
+      function render() {
+        appContainer.innerHTML = "";
+        if (state.view === "landing") renderLanding();
+        else if (state.view === "form") renderForm();
+        else if (state.view === "calculating") renderCalculating();
+        else if (state.view === "results") renderResults();
+      }
+
+      function renderLanding() {
+        // Updated Landing Page Content
+        appContainer.innerHTML = `
+                <div class="fade-in">
+                    <!-- Hero Section -->
+                    <section class="bg-gradient-to-b from-indigo-50 to-white pt-20 pb-16 px-4 text-center">
+                        <div class="max-w-4xl mx-auto">
+                            <span class="inline-block px-4 py-1.5 bg-indigo-100 text-indigo-700 rounded-full text-sm font-semibold mb-6">Career Fit Tool for BTech Students</span>
+                            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 mb-6 tracking-tight leading-tight">
+                                Find the Tech Career That <span class="text-indigo-600">Actually Fits You</span>
+                            </h1>
+                            <p class="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto mb-8 leading-relaxed">
+                                Not what is trending. Not what others say. But what matches your skills, interests, and learning style.
+                                A 5-7 minute assessment that gives you a clear career direction and next steps.
+                            </p>
+                            <button id="start-btn-hero" class="inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-white transition-all duration-200 bg-indigo-600 rounded-full hover:bg-indigo-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+                                Start Free Career Fit Test
+                            </button>
                         </div>
-                        <div class="card-face card-back">
-                            <h3>${career.title}</h3>
-                            <p class="card-intro">${career.intro}</p>
-                            <div class="details-grid">
-                                <div class="detail-item">
-                                    <p>Avg. Salary (USD)</p>
-                                    <span class="value">${career.averageSalary}</span>
+                    </section>
+
+                    <!-- Problem Section -->
+                    <section class="py-16 px-4 bg-white">
+                        <div class="max-w-5xl mx-auto text-center">
+                            <h2 class="text-3xl font-bold text-gray-900 mb-4">Confused about your tech career?</h2>
+                            <p class="text-lg text-gray-600 mb-12">You are not alone. Most BTech students struggle with:</p>
+                            <div class="grid md:grid-cols-3 gap-8">
+                                <div class="p-6 bg-gray-50 rounded-xl border border-gray-100">
+                                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <i class="fa-solid fa-list-ul text-red-600 text-xl"></i>
+                                    </div>
+                                    <h3 class="font-semibold text-lg mb-2">Too Many Options</h3>
+                                    <p class="text-gray-500 text-sm">Backend, Data, Cyber, AI, etc. It is overwhelming.</p>
                                 </div>
-                                <div class="detail-item">
-                                    <p>Job Demand</p>
-                                    <span class="value">${career.demand}</span>
+                                <div class="p-6 bg-gray-50 rounded-xl border border-gray-100">
+                                    <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <i class="fa-solid fa-comments text-orange-600 text-xl"></i>
+                                    </div>
+                                    <h3 class="font-semibold text-lg mb-2">Conflicting Advice</h3>
+                                    <p class="text-gray-500 text-sm">Advice from seniors, YouTube, and social media often clashes.</p>
+                                </div>
+                                <div class="p-6 bg-gray-50 rounded-xl border border-gray-100">
+                                    <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <i class="fa-solid fa-triangle-exclamation text-yellow-600 text-xl"></i>
+                                    </div>
+                                    <h3 class="font-semibold text-lg mb-2">Fear of Wrong Choice</h3>
+                                    <p class="text-gray-500 text-sm">Wasting years on a path that leads to burnout and confusion.</p>
                                 </div>
                             </div>
-                            <div class="skills-section">
-                                <h4>Key Skills</h4>
-                                <div class="skills-list">
-                                    ${career.keySkills.map(skill => `<span class="skill-tag">${skill}</span>`).join('')}
+                        </div>
+                    </section>
+
+                    <!-- Solution Section -->
+                    <section class="py-16 px-4 bg-indigo-900 text-white">
+                        <div class="max-w-4xl mx-auto text-center">
+                            <h2 class="text-3xl font-bold mb-6">This tool helps you choose smartly — with data.</h2>
+                            <p class="text-lg text-indigo-100 mb-10">
+                                Our Career Fit Tool analyzes your interests, aptitude, learning behavior, and current skill level. 
+                                We match you with real tech careers that suit you, not everyone.
+                            </p>
+                            <div class="flex flex-wrap justify-center gap-4 text-sm font-semibold">
+                                <span class="px-4 py-2 bg-indigo-800 rounded-lg border border-indigo-700">No generic advice</span>
+                                <span class="px-4 py-2 bg-indigo-800 rounded-lg border border-indigo-700">No random personality tests</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- How It Works -->
+                    <section class="py-16 px-4 bg-white">
+                        <div class="max-w-5xl mx-auto">
+                            <h2 class="text-3xl font-bold text-gray-900 text-center mb-12">How It Works</h2>
+                            <div class="grid md:grid-cols-3 gap-8 text-center">
+                                <div>
+                                    <div class="text-5xl font-black text-indigo-100 mb-4">01</div>
+                                    <h3 class="text-xl font-bold mb-2">Answer smart questions</h3>
+                                    <p class="text-gray-600">Takes only 5-7 minutes of your time.</p>
+                                </div>
+                                <div>
+                                    <div class="text-5xl font-black text-indigo-100 mb-4">02</div>
+                                    <h3 class="text-xl font-bold mb-2">Get Fit Scores</h3>
+                                    <p class="text-gray-600">See how well different tech careers match you.</p>
+                                </div>
+                                <div>
+                                    <div class="text-5xl font-black text-indigo-100 mb-4">03</div>
+                                    <h3 class="text-xl font-bold mb-2">Get a clear roadmap</h3>
+                                    <p class="text-gray-600">Know what to learn next and where to focus.</p>
                                 </div>
                             </div>
-                            <a href="${career.learnMoreLink}" class="learn-more-btn">Learn More</a>
                         </div>
-                    `;
-                    
-                    card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
-                    card.addEventListener('click', () => card.classList.toggle('flipped'));
-                    carousel.appendChild(card);
-                });
+                    </section>
+
+                    <!-- What You Get & Careers -->
+                    <section class="py-16 px-4 bg-gray-50">
+                        <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12">
+                            <div>
+                                <h3 class="text-2xl font-bold text-gray-900 mb-6">What You Will Get</h3>
+                                <ul class="space-y-4">
+                                    <li class="flex items-center text-gray-700"><i class="fa-solid fa-check text-green-500 w-8"></i> Your best-fit tech career</li>
+                                    <li class="flex items-center text-gray-700"><i class="fa-solid fa-check text-green-500 w-8"></i> A backup career option</li>
+                                    <li class="flex items-center text-gray-700"><i class="fa-solid fa-check text-green-500 w-8"></i> Careers you should avoid for now</li>
+                                    <li class="flex items-center text-gray-700"><i class="fa-solid fa-check text-green-500 w-8"></i> A clear learning roadmap</li>
+                                    <li class="flex items-center text-gray-700"><i class="fa-solid fa-check text-green-500 w-8"></i> Confidence in your decision</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h3 class="text-2xl font-bold text-gray-900 mb-6">Careers We Cover</h3>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-3 py-1 bg-white border border-gray-200 rounded text-gray-700">Backend Developer</span>
+                                    <span class="px-3 py-1 bg-white border border-gray-200 rounded text-gray-700">Full Stack Developer</span>
+                                    <span class="px-3 py-1 bg-white border border-gray-200 rounded text-gray-700">Data Analyst</span>
+                                    <span class="px-3 py-1 bg-white border border-gray-200 rounded text-gray-700">Cybersecurity Analyst</span>
+                                    <span class="px-3 py-1 bg-white border border-gray-200 rounded text-gray-700">QA Automation Engineer</span>
+                                    <span class="px-3 py-1 bg-gray-100 border border-gray-200 rounded text-gray-500 italic">More coming soon</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Trust Section -->
+                    <section class="py-12 px-4 bg-white border-t border-gray-100">
+                        <div class="max-w-4xl mx-auto text-center">
+                            <h3 class="text-xl font-bold text-gray-900 mb-4">Honest & Student-First</h3>
+                            <div class="flex flex-wrap justify-center gap-6 text-sm text-gray-600">
+                                <span class="flex items-center"><i class="fa-solid fa-lock text-gray-400 mr-2"></i> No forced sign-ups</span>
+                                <span class="flex items-center"><i class="fa-solid fa-ban text-gray-400 mr-2"></i> No fake promises</span>
+                                <span class="flex items-center"><i class="fa-solid fa-check-double text-gray-400 mr-2"></i> Clear, practical guidance</span>
+                            </div>
+                            <p class="mt-4 text-gray-500 text-sm">This tool is built to help you decide, not to sell you something.</p>
+                        </div>
+                    </section>
+
+                    <!-- Final CTA -->
+                    <section class="py-20 px-4 bg-gray-900 text-center">
+                        <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Find Your Path?</h2>
+                        <p class="text-gray-400 mb-8 text-lg">Stop guessing. Start choosing with clarity.</p>
+                        <button id="start-btn-footer" class="inline-flex items-center justify-center px-8 py-4 text-lg font-bold text-gray-900 transition-all duration-200 bg-white rounded-full hover:bg-gray-100 shadow-xl">
+                            Start Your Free Career Fit Test
+                        </button>
+                    </section>
+                </div>
+            `;
+
+        const startHandler = () => {
+          state.view = "form";
+          render();
+          window.scrollTo(0, 0);
+        };
+
+        document
+          .getElementById("start-btn-hero")
+          .addEventListener("click", startHandler);
+        document
+          .getElementById("start-btn-footer")
+          .addEventListener("click", startHandler);
+      }
+
+      function renderForm() {
+        const totalSteps = 4 + QUESTIONS.length;
+        const progress = ((state.step + 1) / totalSteps) * 100;
+
+        let content = "";
+
+        // Step 0: Basic Info
+        if (state.step === 0) {
+          content = `
+            <div class="space-y-6 fade-in">
+                <h2 class="text-2xl font-bold text-gray-900">Let us get to know you</h2>
+                <div class="space-y-4">
+                    <!-- Inputs -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                        <input type="text" id="input-name" value="${
+                          state.formData.name
+                        }" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500" placeholder="John Doe" />
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                        <input type="email" id="input-email" value="${
+                          state.formData.email
+                        }" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500" placeholder="john@college.edu" />
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Branch</label>
+                            <select id="input-branch" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="">Select</option>
+                                <option value="CSE" ${
+                                  state.formData.branch === "CSE"
+                                    ? "selected"
+                                    : ""
+                                }>CSE</option>
+                                <option value="IT" ${
+                                  state.formData.branch === "IT"
+                                    ? "selected"
+                                    : ""
+                                }>IT</option>
+                                <option value="ECE" ${
+                                  state.formData.branch === "ECE"
+                                    ? "selected"
+                                    : ""
+                                }>ECE</option>
+                                <option value="Other" ${
+                                  state.formData.branch === "Other"
+                                    ? "selected"
+                                    : ""
+                                }>Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Year</label>
+                            <select id="input-year" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500">
+                                <option value="1st" ${
+                                  state.formData.year === "1st"
+                                    ? "selected"
+                                    : ""
+                                }>1st Year</option>
+                                <option value="2nd" ${
+                                  state.formData.year === "2nd"
+                                    ? "selected"
+                                    : ""
+                                }>2nd Year</option>
+                                <option value="3rd" ${
+                                  state.formData.year === "3rd"
+                                    ? "selected"
+                                    : ""
+                                }>3rd Year</option>
+                                <option value="4th" ${
+                                  state.formData.year === "4th"
+                                    ? "selected"
+                                    : ""
+                                }>4th Year</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Current Tech Skill Level</label>
+                        <div class="flex space-x-4">
+                            ${["Beginner", "Intermediate", "Advanced"]
+                              .map(
+                                (lvl) => `
+                                <button class="skill-btn flex-1 py-2 px-3 rounded-lg text-sm border ${
+                                  state.formData.skillLevel === lvl
+                                    ? "bg-indigo-50 border-indigo-500 text-indigo-700 font-bold"
+                                    : "border-gray-300 hover:bg-gray-50"
+                                }" data-value="${lvl}">
+                                    ${lvl}
+                                </button>
+                            `
+                              )
+                              .join("")}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NAVIGATION BUTTONS (Updated) -->
+                <div class="flex justify-between items-center pt-6 mt-4 border-t border-gray-100">
+                    <button id="back-btn" class="px-4 py-2 text-gray-500 hover:text-gray-900 font-medium transition-colors flex items-center">
+                        <i class="fa-solid fa-arrow-left mr-2"></i> Back
+                    </button>
+                    <button id="next-btn" class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center shadow-md transition-colors">
+                        Next <i class="fa-solid fa-chevron-right ml-1"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+        }
+        // Questions Steps
+        else if (state.step > 0 && state.step <= QUESTIONS.length) {
+          const q = QUESTIONS[state.step - 1];
+          content = `
+            <div class="space-y-6 fade-in">
+                <span class="uppercase tracking-wide text-xs font-bold text-indigo-500 mb-2 block">Question ${
+                  state.step
+                } of ${QUESTIONS.length}</span>
+                <h2 class="text-2xl font-bold text-gray-900 mb-6">${q.text}</h2>
+                <div class="space-y-3">
+                    ${q.options
+                      .map(
+                        (opt, idx) => `
+                        <button class="option-btn w-full text-left p-4 rounded-xl border-2 border-gray-100 hover:border-indigo-500 hover:bg-indigo-50 transition-all duration-200 group flex items-center justify-between" data-idx="${idx}">
+                            <span class="font-medium text-gray-700 group-hover:text-indigo-900">${opt.text}</span>
+                            <div class="w-4 h-4 rounded-full border border-gray-300 group-hover:border-indigo-500 group-hover:bg-indigo-500"></div>
+                        </button>
+                    `
+                      )
+                      .join("")}
+                </div>
+                
+                <!-- Back Button for Questions -->
+                <div class="pt-6 mt-4 border-t border-gray-100">
+                    <button id="back-btn" class="px-4 py-2 text-gray-500 hover:text-gray-900 font-medium transition-colors flex items-center">
+                        <i class="fa-solid fa-arrow-left mr-2"></i> Previous
+                    </button>
+                </div>
+            </div>
+        `;
+        }
+        // Final Confirm Step
+        else {
+          content = `
+            <div class="text-center py-10 space-y-6 fade-in">
+                <div class="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fa-solid fa-circle-check text-4xl text-indigo-600"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-900">All Set!</h2>
+                <p class="text-gray-600">We have analyzed your inputs. Ready to see your future?</p>
+                
+                <div class="flex flex-col gap-3">
+                    <button id="submit-btn" class="w-full md:w-auto px-8 py-3 bg-indigo-600 text-white font-bold rounded-lg shadow-lg hover:bg-indigo-700 transition-colors">
+                        Reveal My Career Path
+                    </button>
+                    <button id="back-btn" class="text-gray-500 hover:text-gray-800 text-sm font-medium mt-2">
+                        Go Back
+                    </button>
+                </div>
+            </div>
+        `;
+        }
+
+        appContainer.innerHTML = `
+        <div class="min-h-screen bg-gray-50 flex flex-col items-center py-12 px-4 w-full">
+            <div class="w-full max-w-2xl bg-gray-200 rounded-full h-2.5 mb-8">
+                <div class="bg-indigo-600 h-2.5 rounded-full transition-all duration-500" style="width: ${progress}%"></div>
+            </div>
+            <div class="w-full max-w-2xl bg-white rounded-2xl shadow-xl p-6 md:p-10 border border-gray-100">
+                ${content}
+            </div>
+        </div>
+    `;
+
+        attachFormListeners();
+      }
+
+      function attachFormListeners() {
+        // --- NEW BACK BUTTON LOGIC ---
+        const backBtn = document.getElementById("back-btn");
+        if (backBtn) {
+          backBtn.addEventListener("click", () => {
+            if (state.step === 0) {
+              // If on Step 0, go back to Landing Page
+              state.view = "landing";
+            } else {
+              // Otherwise, go back one step
+              state.step--;
             }
+            render();
+          });
+        }
 
-            function rotateCarousel(direction) {
-                currentAngle += theta * direction;
-                carousel.style.transform = `rotateY(${currentAngle}deg)`;
-                document.querySelectorAll('.career-card.flipped').forEach(card => {
-                    card.classList.remove('flipped');
+        if (state.step === 0) {
+          // Input Listeners
+          ["input-name", "input-email", "input-branch", "input-year"].forEach(
+            (id) => {
+              const el = document.getElementById(id);
+              if (el) {
+                el.addEventListener("change", (e) => {
+                  const key = id.replace("input-", "");
+                  state.formData[key] = e.target.value;
+                  // Check validation for button
+                  const btn = document.getElementById("next-btn");
+                  if (state.formData.name && state.formData.branch)
+                    btn.disabled = false;
+                  else btn.disabled = true;
                 });
+                // Basic validation init
+                if (id === "input-name" || id === "input-branch")
+                  el.dispatchEvent(new Event("change"));
+              }
             }
+          );
 
-            nextBtn.addEventListener('click', () => rotateCarousel(-1));
-            prevBtn.addEventListener('click', () => rotateCarousel(1));
-
-            document.getElementById('go-back-btn').addEventListener('click', (e) => {
-                e.preventDefault();
-                history.back();
+          // Skill Buttons
+          document.querySelectorAll(".skill-btn").forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+              state.formData.skillLevel = btn.dataset.value;
+              render(); // Re-render to show active state
             });
+          });
 
-            let lastScrollTop = 0;
-            const header = document.querySelector('.header');
-            window.addEventListener('scroll', () => {
-                let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                if (scrollTop > lastScrollTop && scrollTop > 80) {
-                    header.classList.add('scrolled');
-                } else {
-                    header.classList.remove('scrolled');
-                }
-                lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+          // Next Button
+          document.getElementById("next-btn").addEventListener("click", () => {
+            state.step++;
+            render();
+          });
+        } else if (state.step > 0 && state.step <= QUESTIONS.length) {
+          // Option Buttons
+          document.querySelectorAll(".option-btn").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              const qId = QUESTIONS[state.step - 1].id;
+              const optIdx = parseInt(btn.dataset.idx);
+              const scores = QUESTIONS[state.step - 1].options[optIdx].scores;
+
+              state.formData.answers[qId] = scores;
+
+              // Delay for visual feedback
+              setTimeout(() => {
+                state.step++;
+                render();
+              }, 250);
             });
+          });
+        } else {
+          // Submit Button
+          document
+            .getElementById("submit-btn")
+            .addEventListener("click", calculateResults);
+        }
+      }
 
-            // --- NEW: Intersection Observer for animating content on scroll ---
-            const infoCards = document.querySelectorAll('.info-card');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
-                });
-            }, {
-                threshold: 0.2 // Trigger when 20% of the card is visible
-            });
+      function renderCalculating() {
+        appContainer.innerHTML = `
+                <div class="min-h-screen flex flex-col items-center justify-center bg-white w-full">
+                    <div class="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-indigo-600 mb-4"></div>
+                    <h2 class="text-xl font-semibold text-gray-700">Analyzing your responses...</h2>
+                    <p class="text-sm text-gray-500 mt-2">Computing fit scores</p>
+                </div>
+            `;
+      }
 
-            infoCards.forEach(card => {
-                observer.observe(card);
-            });
+      function renderResults() {
+        const { top, secondary, low } = state.results;
 
-            createCards();
+        appContainer.innerHTML = `
+                <div class="bg-gray-50 py-12 px-4 w-full">
+                    <div class="max-w-4xl mx-auto space-y-8 fade-in">
+                        
+                        <div class="text-center mb-8">
+                            <h1 class="text-3xl font-bold text-gray-900">Your Career Analysis Results</h1>
+                            <p class="text-gray-600 mt-2">Based on your interests, logic style, and patience levels.</p>
+                        </div>
+
+                        <!-- Top Result -->
+                        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border-t-8 border-indigo-600 transform hover:scale-[1.01] transition-transform">
+                            <div class="p-8">
+                                <div class="flex flex-col md:flex-row md:items-center justify-between mb-6">
+                                    <div>
+                                        <span class="inline-block px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-bold tracking-wide uppercase mb-2">Best Fit • ${
+                                          top.score
+                                        }% Match</span>
+                                        <div class="flex items-center space-x-3">
+                                            <div class="p-3 bg-indigo-100 rounded-lg text-indigo-600 text-2xl">
+                                                <i class="fa-solid ${
+                                                  top.icon
+                                                }"></i>
+                                            </div>
+                                            <h2 class="text-3xl font-bold text-gray-900">${
+                                              top.title
+                                            }</h2>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4 md:mt-0 text-right hidden md:block">
+                                        <div class="text-5xl font-extrabold text-indigo-600">${
+                                          top.score
+                                        }%</div>
+                                        <div class="text-sm text-gray-400">Match Score</div>
+                                    </div>
+                                </div>
+                                
+                                <p class="text-lg text-gray-700 leading-relaxed border-l-4 border-indigo-200 pl-4 mb-8">
+                                    ${top.description} <br/>
+                                    <span class="text-sm text-gray-500 mt-2 block">Why? Your answers indicate a preference for this work style.</span>
+                                </p>
+
+                                <div class="bg-slate-50 rounded-xl p-6 border border-slate-100">
+                                    <h3 class="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                                        <i class="fa-solid fa-layer-group mr-2 text-indigo-600"></i>
+                                        Your 6-Month Roadmap
+                                    </h3>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        ${top.roadmap
+                                          .map(
+                                            (step) => `
+                                            <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-100 relative">
+                                                <div class="absolute top-0 right-0 bg-indigo-600 text-white text-xs font-bold px-2 py-1 rounded-bl-lg rounded-tr-lg">
+                                                    Month ${step.month}
+                                                </div>
+                                                <h4 class="font-bold text-indigo-900 mt-2">${step.topic}</h4>
+                                                <p class="text-sm text-gray-600 mt-1">${step.desc}</p>
+                                            </div>
+                                        `
+                                          )
+                                          .join("")}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Secondary -->
+                        <div class="bg-white rounded-xl shadow p-6 border-l-4 border-blue-400">
+                            <h3 class="text-lg font-bold text-gray-900 mb-1">Strong Alternative</h3>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center space-x-3 mt-2">
+                                    <div class="p-2 bg-blue-50 rounded text-blue-500 text-xl"><i class="fa-solid ${
+                                      secondary.icon
+                                    }"></i></div>
+                                    <div>
+                                        <h4 class="font-bold text-gray-800">${
+                                          secondary.title
+                                        }</h4>
+                                        <p class="text-sm text-gray-500">${
+                                          secondary.score
+                                        }% Match</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- CTA -->
+                        <div class="text-center pt-8 pb-12">
+                            <h3 class="text-xl font-bold text-gray-800 mb-4">Ready to start?</h3>
+                            <div class="flex flex-col md:flex-row justify-center space-y-3 md:space-y-0 md:space-x-4">
+                                <button class="px-6 py-3 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition shadow-lg">
+                                    Find Mentors
+                                </button>
+                                <button id="retake-btn" class="px-6 py-3 bg-white text-gray-900 border border-gray-300 rounded-lg font-medium hover:bg-gray-50 transition">
+                                    Retake Test
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            `;
+
+        document.getElementById("retake-btn").addEventListener("click", () => {
+          state.step = 0;
+          state.view = "landing";
+          state.results = null;
+          state.formData.answers = {};
+          render();
         });
+      }
+
+      // --- LOGIC ---
+      async function calculateResults() {
+        state.view = "calculating";
+        render();
+
+        let finalScores = {
+          backend: 0,
+          fullstack: 0,
+          data: 0,
+          cybersecurity: 0,
+          qa: 0,
+        };
+
+        Object.values(state.formData.answers).forEach((scoreSet) => {
+          Object.keys(scoreSet).forEach((career) => {
+            finalScores[career] += scoreSet[career];
+          });
+        });
+
+        if (state.formData.branch === "CSE" || state.formData.branch === "IT") {
+          finalScores.backend += 2;
+          finalScores.fullstack += 2;
+        }
+        if (state.formData.skillLevel === "Beginner") {
+          finalScores.qa += 3;
+          finalScores.data += 1;
+        }
+        if (state.formData.skillLevel === "Advanced") {
+          finalScores.backend += 3;
+          finalScores.cybersecurity += 3;
+        }
+
+        const maxPossible = 30;
+        const sortedCareers = Object.entries(finalScores)
+          .map(([key, value]) => ({
+            key,
+            score: Math.min(Math.round((value / maxPossible) * 100), 98),
+            ...CAREER_DETAILS[key],
+          }))
+          .sort((a, b) => b.score - a.score);
+
+        // Save to Supabase
+        try {
+          if (supabaseClient) {
+            const { data, error } = await supabaseClient
+              .from("career_analysis")
+              .insert([
+                {
+                  student_info: {
+                    name: state.formData.name,
+                    branch: state.formData.branch,
+                    year: state.formData.year,
+                  },
+                  answers: state.formData.answers,
+                  scores: finalScores,
+                  created_at: new Date().toISOString(),
+                },
+              ]);
+            if (error) throw error;
+            console.log("Data saved to Supabase");
+          } else {
+            console.log(
+              "Supabase not configured. Skipping data save (Demo Mode)."
+            );
+          }
+        } catch (error) {
+          console.error("Error saving data:", error);
+        }
+
+        state.results = {
+          top: sortedCareers[0],
+          secondary: sortedCareers[1],
+          low: sortedCareers[sortedCareers.length - 1],
+        };
+
+        state.view = "results";
+        render();
+      }
+
+      render();
+      // Toggle Mobile Menu
+      const mobileBtn = document.getElementById("mobile-menu-btn");
+      const mobileMenu = document.getElementById("mobile-menu");
+
+      if (mobileBtn && mobileMenu) {
+        mobileBtn.addEventListener("click", () => {
+          mobileMenu.classList.toggle("hidden");
+        });
+      }
+      // Tools Dropdown Logic
+      const toolsBtn = document.getElementById("tools-btn");
+      const toolsDropdown = document.getElementById("tools-dropdown");
+
+      if (toolsBtn && toolsDropdown) {
+        // Toggle on click
+        toolsBtn.addEventListener("click", (e) => {
+          e.stopPropagation(); // Stops the click from immediately closing the menu
+          toolsDropdown.classList.toggle("hidden");
+        });
+
+        // Close when clicking anywhere else on the page
+        document.addEventListener("click", (e) => {
+          if (
+            !toolsDropdown.contains(e.target) &&
+            !toolsBtn.contains(e.target)
+          ) {
+            toolsDropdown.classList.add("hidden");
+          }
+        });
+      }
     </script>
-
-</body>
+  </body>
 </html>
-
