@@ -24,149 +24,103 @@
     />
 
     <style>
-      body {
-        font-family: "Inter", sans-serif;
-      }
-      .fade-in {
-        animation: fadeIn 0.5s ease-in-out;
-      }
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(10px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      .hidden {
-        display: none !important;
-      }
-      /* Dropdown hover logic */
-      .group:hover .group-hover\:block {
-        display: block;
-      }
-      /* Add this inside your <style> tag in the <head> */
-      .group:hover .group-hover\:block {
-        display: block;
-      }
+      body { font-family: 'Inter', sans-serif; }
+    .fade-in { animation: fadeIn 0.5s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .hidden { display: none !important; }
+
+    /* Professional Nav Link Underline Effect */
+    .nav-link { position: relative; }
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        transform: scaleX(0);
+        height: 2px;
+        bottom: -2px;
+        left: 0;
+        background-color: #4f46e5; /* Indigo-600 */
+        transform-origin: bottom right;
+        transition: transform 0.25s ease-out;
+    }
+    .nav-link:hover::after {
+        transform: scaleX(1);
+        transform-origin: bottom left;
+    }
     </style>
   </head>
   <body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col">
     <!-- Navigation -->
-    <!-- Navigation -->
+    
     <nav
       class="bg-white border-b border-gray-200 px-6 py-4 sticky top-0 z-50 shadow-sm"
     >
       <div class="max-w-7xl mx-auto flex justify-between items-center">
         <!-- Logo -->
         <a href="index.html" class="flex items-center space-x-3 group">
-          <img
-            src="DIVERSE LOOPERS (1) bg.png"
-            onerror="this.src='https://via.placeholder.com/40?text=DL'"
-            alt="Diverse Loopers Logo"
-            class="h-14 w-auto"
-          />
+          <img src="DIVERSE LOOPERS (1) bg.png" onerror="this.src='https://via.placeholder.com/40?text=DL'" alt="Diverse Loopers Logo" class="h-14 w-auto transform transition-transform duration-300 group-hover:rotate-6">
           <!-- <span class="font-bold text-xl tracking-tight text-gray-900 group-hover:text-indigo-700 transition-colors">Diverse Loopers</span> -->
         </a>
 
-        <!-- Desktop Menu (Hidden on mobile) -->
-        <div class="flex items-center space-x-8">
-          <a
-            href="index.html"
-            class="text-gray-600 hover:text-indigo-600 font-medium transition-colors"
-            >Home</a
-          >
+        <!-- Desktop Menu -->
+<div class="flex items-center space-x-8">
+    <a href="index.html" class="nav-link text-gray-600 hover:text-indigo-600 font-medium transition-colors">Home</a>
+    <div class="flex items-center space-x-8">
+    <a href="index.html#contact" class="nav-link text-gray-600 hover:text-indigo-600 font-medium transition-colors">Contact Us</a>
+<div class="flex items-center space-x-8">
+    <a href="aboutUs_std.html" class="nav-link text-gray-600 hover:text-indigo-600 font-medium transition-colors">About Us</a>
 
-          <!-- Desktop Tools Dropdown (Hover) -->
-          <div class="relative">
-            <button
-              id="tools-btn"
-              class="flex items-center text-gray-600 hover:text-indigo-600 font-medium focus:outline-none transition-colors"
-            >
-              Tools
-              <i class="fa-solid fa-chevron-down ml-1 text-xs"></i>
-            </button>
-
-            <!-- Dropdown Menu -->
-            <div
-              id="tools-dropdown"
-              class="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg hidden z-50"
-            >
-              <a
-                href="careers.html"
-                class="block px-4 py-2 text-sm text-indigo-600 bg-indigo-50 font-medium border-l-4 border-indigo-600"
-                >Career Analyzer</a
-              >
-              <a
-                href="analyzer.html"
-                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-indigo-600"
-                >Path Analyzer</a
-              >
-            </div>
-          </div>
-
-          <a
-            href="profile.html"
-            class="text-gray-600 hover:text-indigo-600 font-medium transition-colors"
-            >Profile</a
-          >
-          <a
-            href="login.html"
-            class="text-gray-600 hover:text-indigo-600 font-medium transition-colors"
-            >Login</a
-          >
-        </div>
-
-        <!-- Mobile Menu Button -->
-        <button
-          id="mobile-menu-btn"
-          class="md:hidden text-gray-600 focus:outline-none p-2 rounded hover:bg-gray-100"
-        >
-          <i class="fa-solid fa-bars text-xl"></i>
+    <!-- Tools Dropdown -->
+    <div class="relative">
+        <button id="desktop-tools-btn" class="flex items-center text-gray-600 hover:text-indigo-600 font-medium focus:outline-none transition-colors group">
+            Tools
+            <i class="fa-solid fa-chevron-down ml-1 text-xs transition-transform duration-300 group-hover:rotate-180"></i>
         </button>
-      </div>
+        <div id="desktop-tools-menu" class="absolute left-0 mt-2 w-56 bg-white border border-gray-100 rounded-xl shadow-xl hidden z-50 overflow-hidden transform origin-top transition-all duration-200">
+            <a href="career_analyzer.html" class="block px-4 py-3 text-sm text-indigo-700 bg-indigo-50 font-semibold border-l-4 border-indigo-600 hover:bg-indigo-100 transition-colors">
+                <i class="fa-solid fa-bullseye mr-2"></i> Career Analyzer
+            </a>
+            <a href="analyzer.html" class="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 hover:text-indigo-600 transition-colors">
+                <i class="fa-solid fa-road mr-2 text-gray-400"></i> Path Analyzer
+            </a>
+        </div>
+    </div>
+
+    <!-- Auth Links (Toggled via JS) -->
+    <!-- Profile Link (Hidden by default) -->
+    <a href="profile.html" id="nav-profile" class="nav-link text-gray-600 hover:text-indigo-600 font-medium transition-colors hidden">
+        <i class="fa-regular fa-user mr-1"></i> Profile
+    </a>
+    
+    <!-- Login Button -->
+    <a href="login.html" id="nav-login" class="px-5 py-2 text-white bg-indigo-600 rounded-full font-medium shadow-md hover:bg-indigo-700 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+        Login
+    </a>
+</div>
+
+<!-- Mobile Menu Button -->
+<button id="mobile-menu-btn" class="md:hidden text-gray-600 focus:outline-none p-2 rounded-lg hover:bg-indigo-50 hover:text-indigo-600 transition-colors">
+    <i class="fa-solid fa-bars text-xl"></i>
+</button>
 
       <!-- Mobile Menu (Hidden by default, shown via JS) -->
-      <div
-        id="mobile-menu"
-        class="hidden md:hidden bg-white border-t border-gray-100 mt-4 py-4 space-y-4"
-      >
-        <a
-          href="index.html"
-          class="block px-4 py-2 text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 font-medium"
-          >Home</a
-        >
-
-        <!-- Mobile Tools Section -->
-        <div class="px-4">
-          <div class="font-medium text-gray-600 mb-2">Tools</div>
-          <div class="pl-4 border-l-2 border-indigo-100 space-y-2">
-            <a
-              href="analyzer.html"
-              class="block py-2 text-sm text-indigo-600 font-semibold"
-              >Career Analyzer</a
-            >
-            <a
-              href="#"
-              class="block py-2 text-sm text-gray-600 hover:text-indigo-600"
-              >Path Analyzer</a
-            >
-          </div>
+      <!-- Mobile Menu -->
+<div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100 mt-4 py-4 space-y-2 animate-fadeIn">
+    <a href="index.html" class="block px-4 py-3 rounded-lg mx-2 text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 font-medium transition-colors">Home</a>
+    
+    <!-- Tools -->
+    <div class="px-4">
+        <div class="font-medium text-gray-600 mb-2">Tools</div>
+        <div class="pl-4 border-l-2 border-indigo-100 space-y-1">
+            <a href="analyzer.html" class="block py-2 px-2 rounded text-sm text-indigo-700 bg-indigo-50 font-semibold">Career Analyzer</a>
+            <a href="#" class="block py-2 px-2 rounded text-sm text-gray-600 hover:text-indigo-600 hover:bg-gray-50 transition-colors">Path Analyzer</a>
         </div>
+    </div>
 
-        <a
-          href="profile.html"
-          class="block px-4 py-2 text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 font-medium"
-          >Profile</a
-        >
-        <a
-          href="login.html"
-          class="block px-4 py-2 text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 font-medium"
-          >Login</a
-        >
-      </div>
+    <!-- Mobile Auth Links -->
+    <a href="profile.html" id="mobile-nav-profile" class="block px-4 py-3 rounded-lg mx-2 text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 font-medium transition-colors hidden">Profile</a>
+    <a href="login.html" id="mobile-nav-login" class="block px-4 py-3 rounded-lg mx-2 text-gray-600 hover:bg-indigo-50 hover:text-indigo-600 font-medium transition-colors">Login</a>
+</div>
     </nav>
     <!-- Main App Container -->
     <main id="app-container" class="flex-grow flex flex-col relative">
@@ -178,13 +132,69 @@
       </div>
     </main>
 
+   
     <!-- Footer -->
-    <footer class="bg-white border-t border-gray-200 py-8 mt-auto">
-      <div class="max-w-7xl mx-auto px-4 text-center">
-        <p class="text-gray-500 text-sm">
-          &copy; 2024 Diverse Loopers. All rights reserved.
-        </p>
-      </div>
+    <footer class="bg-white/80 backdrop-blur-sm border-t border-gray-200 py-12 mt-auto z-10">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <!-- Brand & Contact -->
+                <div class="space-y-4">
+                    <div class="flex items-center space-x-2">
+                        <img src="DIVERSE LOOPERS (1) bg.png" onerror="this.src='https://via.placeholder.com/40?text=DL'" alt="Logo" class="h-8 w-auto">
+                        <!-- <span class="font-bold text-lg text-gray-900">Diverse Loopers</span> -->
+                    </div>
+                    <p class="text-sm text-gray-500">Guiding Talents to their perfect career path.</p>
+                    <div class="space-y-2">
+                        <a href="mailto:support@diverseloopers.com" class="flex items-center text-sm text-gray-600 hover:text-indigo-600 transition-colors">
+                            <i class="fa-solid fa-envelope mr-2"></i> contact@diverseloopers.com
+                        </a>
+                        <a href="mailto:contact@diverseloopers.com" class="flex items-center text-sm text-gray-600 hover:text-indigo-600 transition-colors">
+                            <i class="fa-solid fa-phone mr-2"></i> Contact Us
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h3 class="font-semibold text-gray-900 mb-4">Quick Links</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="index.html" class="text-gray-600 hover:text-indigo-600 transition-colors">Home</a></li>
+                        <li><a href="home_uni.html" class="text-gray-600 hover:text-indigo-600 transition-colors">For Universities</a></li>
+                        <li><a href="home_bus.html" class="text-gray-600 hover:text-indigo-600 transition-colors">For Businesses</a></li>
+                        <li><a href="careers.html" class="text-gray-600 hover:text-indigo-600 transition-colors">Careers</a></li>
+                    </ul>
+                </div>
+
+                <!-- Tools -->
+                <div>
+                    <h3 class="font-semibold text-gray-900 mb-4">Tools</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="career_analyzer.html" class="text-gray-600 hover:text-indigo-600 transition-colors">Career Analyzer</a></li>
+                        <li><a href="analyzer.html" class="text-gray-600 hover:text-indigo-600 transition-colors">Path Analyzer</a></li>
+                    </ul>
+                </div>
+
+                <!-- Social -->
+                <div>
+                    <h3 class="font-semibold text-gray-900 mb-4">Follow Us</h3>
+                    <div class="flex space-x-4">
+                        <a href="https://www.linkedin.com/company/105277450" class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 hover:bg-indigo-100 hover:text-indigo-600 transition-all duration-300">
+                            <i class="fa-brands fa-linkedin-in"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 hover:bg-indigo-100 hover:text-indigo-600 transition-all duration-300">
+                            <i class="fa-brands fa-twitter"></i>
+                        </a>
+                        <a href="https://www.instagram.com/diverseloopers/" class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-600 hover:bg-indigo-100 hover:text-indigo-600 transition-all duration-300">
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="pt-8 border-t border-gray-200 text-center">
+                <p class="text-gray-500 text-sm">&copy; 2024 Diverse Loopers. All rights reserved.</p>
+            </div>
+        </div>
     </footer>
 
     <!-- Supabase and Application Logic -->
@@ -197,7 +207,63 @@
 
       let supabaseClient = null;
       let isLocalMode = false;
+      
+        // --- AUTH STATE LOGIC (Fixed) ---
+        async function checkUserSession() {
+            if (!supabaseClient) {
+                console.warn("Supabase client not ready, cannot check session.");
+                return;
+            }
 
+            try {
+                // 1. Get current session immediately
+                const { data, error } = await supabaseClient.auth.getSession();
+                
+                if (error) {
+                    console.error("Error checking session:", error);
+                    updateNavUI(null); // Force guest UI on error
+                } else {
+                    console.log("Session check complete. User:", data.session ? data.session.user.email : "Guest");
+                    updateNavUI(data.session);
+                }
+
+                // 2. Listen for future changes (Login/Logout)
+                supabaseClient.auth.onAuthStateChange((_event, session) => {
+                    console.log("Auth state changed:", _event);
+                    updateNavUI(session);
+                });
+
+            } catch (err) {
+                console.error("Unexpected auth error:", err);
+            }
+        }
+
+        function updateNavUI(session) {
+            const navProfile = document.getElementById('nav-profile');
+            const navLogin = document.getElementById('nav-login');
+            
+            // Mobile elements
+            const mobileProfile = document.getElementById('mobile-nav-profile'); 
+            const mobileLogin = document.getElementById('mobile-nav-login');
+
+            if (session) {
+                // User is LOGGED IN: Show Profile, Hide Login
+                if(navProfile) navProfile.classList.remove('hidden');
+                if(navLogin) navLogin.classList.add('hidden');
+                
+                if(mobileProfile) mobileProfile.classList.remove('hidden');
+                if(mobileLogin) mobileLogin.classList.add('hidden');
+            } else {
+                // User is GUEST: Hide Profile, Show Login
+                if(navProfile) navProfile.classList.add('hidden');
+                if(navLogin) navLogin.classList.remove('hidden');
+                
+                if(mobileProfile) mobileProfile.classList.add('hidden');
+                if(mobileLogin) mobileLogin.classList.remove('hidden');
+            }
+        }
+        // Run the check
+        checkUserSession();
       try {
         if (SUPABASE_URL && SUPABASE_KEY) {
           // Initialize Supabase using the global variable from the CDN script
@@ -585,28 +651,34 @@
                             <h2 class="text-3xl font-bold text-gray-900 mb-4">Confused about your tech career?</h2>
                             <p class="text-lg text-gray-600 mb-12">You are not alone. Most BTech students struggle with:</p>
                             <div class="grid md:grid-cols-3 gap-8">
-                                <div class="p-6 bg-gray-50 rounded-xl border border-gray-100">
-                                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                        <i class="fa-solid fa-list-ul text-red-600 text-xl"></i>
-                                    </div>
-                                    <h3 class="font-semibold text-lg mb-2">Too Many Options</h3>
-                                    <p class="text-gray-500 text-sm">Backend, Data, Cyber, AI, etc. It is overwhelming.</p>
-                                </div>
-                                <div class="p-6 bg-gray-50 rounded-xl border border-gray-100">
-                                    <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                        <i class="fa-solid fa-comments text-orange-600 text-xl"></i>
-                                    </div>
-                                    <h3 class="font-semibold text-lg mb-2">Conflicting Advice</h3>
-                                    <p class="text-gray-500 text-sm">Advice from seniors, YouTube, and social media often clashes.</p>
-                                </div>
-                                <div class="p-6 bg-gray-50 rounded-xl border border-gray-100">
-                                    <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                                        <i class="fa-solid fa-triangle-exclamation text-yellow-600 text-xl"></i>
-                                    </div>
-                                    <h3 class="font-semibold text-lg mb-2">Fear of Wrong Choice</h3>
-                                    <p class="text-gray-500 text-sm">Wasting years on a path that leads to burnout and confusion.</p>
-                                </div>
-                            </div>
+    <!-- Card 1 -->
+    <div class="p-8 bg-gray-50 rounded-2xl border border-gray-100 hover:-translate-y-2 hover:shadow-xl transition-all duration-300 group cursor-default">
+        <div class="w-14 h-14 bg-white rounded-xl shadow-sm flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+            <i class="fa-solid fa-list-ul text-red-500 text-2xl"></i>
+        </div>
+        <h3 class="font-bold text-lg mb-2 text-gray-900">Overwhelmed?</h3>
+        <p class="text-gray-500 text-sm">Too many options like AI, Web3, Data... we filter the noise.</p>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="p-8 bg-gray-50 rounded-2xl border border-gray-100 hover:-translate-y-2 hover:shadow-xl transition-all duration-300 group cursor-default">
+        <div class="w-14 h-14 bg-white rounded-xl shadow-sm flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+            <i class="fa-solid fa-comments text-orange-500 text-2xl"></i>
+        </div>
+        <h3 class="font-bold text-lg mb-2 text-gray-900">Confused?</h3>
+        <p class="text-gray-500 text-sm">Stop relying on generic advice. Get data-backed direction.</p>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="p-8 bg-gray-50 rounded-2xl border border-gray-100 hover:-translate-y-2 hover:shadow-xl transition-all duration-300 group cursor-default">
+        <div class="w-14 h-14 bg-white rounded-xl shadow-sm flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
+            <i class="fa-solid fa-check text-green-500 text-2xl"></i>
+        </div>
+        <h3 class="font-bold text-lg mb-2 text-gray-900">Get Clarity</h3>
+        <p class="text-gray-500 text-sm">A personalized roadmap to your first job.</p>
+    </div>
+</div>
+                            
                         </div>
                     </section>
 
@@ -729,10 +801,7 @@
                     <!-- Inputs -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
-                        <input type="text" id="input-name" value="${
-                          state.formData.name
-                        }" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500" placeholder="John Doe" />
-                    </div>
+<input type="text" id="input-name" value="${state.formData.name}" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all shadow-sm outline-none" placeholder="John Doe" />                    </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
                         <input type="email" id="input-email" value="${
@@ -817,9 +886,9 @@
                     <button id="back-btn" class="px-4 py-2 text-gray-500 hover:text-gray-900 font-medium transition-colors flex items-center">
                         <i class="fa-solid fa-arrow-left mr-2"></i> Back
                     </button>
-                    <button id="next-btn" class="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center shadow-md transition-colors">
-                        Next <i class="fa-solid fa-chevron-right ml-1"></i>
-                    </button>
+                    <button id="next-btn" class="px-8 py-2.5 bg-indigo-600 text-white font-bold rounded-xl shadow-lg hover:bg-indigo-700 hover:-translate-y-0.5 disabled:opacity-50 disabled:translate-y-0 disabled:shadow-none transition-all flex items-center">
+    Next Step <i class="fa-solid fa-arrow-right ml-2"></i>
+</button>
                 </div>
             </div>
         `;
@@ -1171,36 +1240,47 @@
       }
 
       render();
-      // Toggle Mobile Menu
-      const mobileBtn = document.getElementById("mobile-menu-btn");
-      const mobileMenu = document.getElementById("mobile-menu");
+      document.addEventListener('DOMContentLoaded', () => {
+            // 1. Mobile Menu Toggle
+            const mobileBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if(mobileBtn && mobileMenu) {
+                mobileBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
 
-      if (mobileBtn && mobileMenu) {
-        mobileBtn.addEventListener("click", () => {
-          mobileMenu.classList.toggle("hidden");
-        });
-      }
-      // Tools Dropdown Logic
-      const toolsBtn = document.getElementById("tools-btn");
-      const toolsDropdown = document.getElementById("tools-dropdown");
+            // 2. Desktop Tools Dropdown Toggle (Fixed Logic)
+            const toolsBtn = document.getElementById('desktop-tools-btn');
+            const toolsMenu = document.getElementById('desktop-tools-menu');
+            
+            if(toolsBtn && toolsMenu) {
+                toolsBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    // Toggle the hidden class
+                    const isHidden = toolsMenu.classList.contains('hidden');
+                    if (isHidden) {
+                        toolsMenu.classList.remove('hidden');
+                    } else {
+                        toolsMenu.classList.add('hidden');
+                    }
+                });
+            }
 
-      if (toolsBtn && toolsDropdown) {
-        // Toggle on click
-        toolsBtn.addEventListener("click", (e) => {
-          e.stopPropagation(); // Stops the click from immediately closing the menu
-          toolsDropdown.classList.toggle("hidden");
+            // 3. Close menus when clicking outside
+            document.addEventListener('click', (e) => {
+                // Close Tools Menu
+                if (toolsMenu && !toolsMenu.contains(e.target) && !toolsBtn.contains(e.target)) {
+                    toolsMenu.classList.add('hidden');
+                }
+                // Close Mobile Menu
+                if (mobileMenu && !mobileMenu.contains(e.target) && !mobileBtn.contains(e.target)) {
+                    mobileMenu.classList.add('hidden');
+                }
+            });
         });
-
-        // Close when clicking anywhere else on the page
-        document.addEventListener("click", (e) => {
-          if (
-            !toolsDropdown.contains(e.target) &&
-            !toolsBtn.contains(e.target)
-          ) {
-            toolsDropdown.classList.add("hidden");
-          }
-        });
-      }
     </script>
   </body>
 </html>

@@ -104,8 +104,8 @@
         }
 
         .logo img {
-            height: 50px;
-            width: 50px;
+            height: 60px;
+            width: 200px;
         }
 
         .logo-text {
@@ -518,9 +518,10 @@
             display: block;
         }
 
-.form-group input,
+        .form-group input,
         .form-group textarea,
-        .form-group select { /* ADDED select HERE */
+        .form-group select {
+            /* ADDED select HERE */
             width: 100%;
             padding: 0.8rem;
             border: 1px solid #cbd5e1;
@@ -532,11 +533,13 @@
 
         .form-group input:focus,
         .form-group textarea:focus,
-        .form-group select:focus { /* ADDED select HERE */
+        .form-group select:focus {
+            /* ADDED select HERE */
             outline: none;
             border-color: var(--color-primary);
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
         }
+
         .footer {
             background-color: var(--color-dark);
             color: var(--color-light);
@@ -1168,13 +1171,17 @@
             /* Ensure no wrapping happens. This forces the scroll. */
             grid-auto-flow: column;
         }
-/* --- NEW: Hybrid Hustler Section Styles --- */
+
+        /* --- NEW: Hybrid Hustler Section Styles --- */
         #hybrid-hustler {
             /* Full-width container setup */
-            background-color: var(--color-dark); /* Use dark color as fallback */
-            padding: 0; /* Remove vertical padding from section level */
+            background-color: var(--color-dark);
+            /* Use dark color as fallback */
+            padding: 0;
+            /* Remove vertical padding from section level */
             position: relative;
-            min-height: 70vh; /* Give it a decent height on all screens */
+            min-height: 70vh;
+            /* Give it a decent height on all screens */
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1186,11 +1193,14 @@
             max-width: 1200px;
             width: 100%;
             margin: 0 auto;
-            padding: 6rem 1.5rem; /* Add padding here to push content off the edges */
+            padding: 6rem 1.5rem;
+            /* Add padding here to push content off the edges */
             position: relative;
-            z-index: 10; /* Ensure content is above the video */
+            z-index: 10;
+            /* Ensure content is above the video */
             display: flex;
-            justify-content: flex-end; /* Push content (the form) to the right edge */
+            justify-content: flex-end;
+            /* Push content (the form) to the right edge */
         }
 
         /* The visual container is no longer needed to limit the video width */
@@ -1200,11 +1210,14 @@
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1; /* Keep it below content */
+            z-index: 1;
+            /* Keep it below content */
             background-color: var(--color-dark);
             overflow: hidden;
-            border-radius: 0; /* Remove border-radius here as it's full screen */
-            box-shadow: none; /* Remove shadow */
+            border-radius: 0;
+            /* Remove border-radius here as it's full screen */
+            box-shadow: none;
+            /* Remove shadow */
         }
 
         /* STYLES FOR VIDEO BACKGROUND */
@@ -1218,30 +1231,32 @@
         }
 
         .hustler-video {
-            object-fit: cover; /* Ensures the video covers the entire screen space */
+            object-fit: cover;
+            /* Ensures the video covers the entire screen space */
             display: block;
         }
-        
+
         /* The Form Card must now only occupy one side, floating over the background */
         .hustler-form-card {
-               background-color: rgb(255 255 255 / 0%);
-    padding: 2.5rem;
-    border-radius: 12px;
-    /* box-shadow: var(--shadow-lg); */
-    max-width: 1000px;
-    width: 100%;
-    border: none;
+            background-color: rgb(255 255 255 / 0%);
+            padding: 2.5rem;
+            border-radius: 12px;
+            /* box-shadow: var(--shadow-lg); */
+            max-width: 1000px;
+            width: 100%;
+            border: none;
         }
-        
+
         /* Overlay removed/redefined for the card itself */
         .hustler-form-card::before {
-            content: none; /* Remove previous overlay from the card */
+            content: none;
+            /* Remove previous overlay from the card */
         }
 
         @media (max-width: 991px) {
             .hustler-content-grid {
                 /* On tablets/mobile, center the form */
-                justify-content: center; 
+                justify-content: center;
                 padding: 4rem 1.5rem;
             }
         }
@@ -1251,13 +1266,86 @@
                 /* Allow card to fill more space on smaller mobiles */
                 max-width: 100%;
             }
+
             #hybrid-hustler {
-                min-height: 100vh; /* Use full height on mobile */
+                min-height: 100vh;
+                /* Use full height on mobile */
             }
-        }  
-        
-        
-        </style>
+        }
+
+        /* --- Tools Dropdown Styles --- */
+        .dropdown-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* The Menu (Hidden by default) */
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background-color: #fff;
+            min-width: 200px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            z-index: 1000;
+            overflow: visible;
+            /* Changed from hidden to allow the bridge to work */
+            margin-top: 0.5rem;
+            /* This creates the gap visually */
+            animation: fadeIn 0.3s ease-out;
+            /* Made animation slightly slower (0.2s -> 0.3s) */
+        }
+
+        /* Show menu on hover */
+        .dropdown-container:hover .dropdown-menu {
+            display: block;
+        }
+
+        /* Links inside the dropdown */
+        .dropdown-item {
+            color: var(--color-text);
+            padding: 12px 20px;
+            text-decoration: none;
+            display: block;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.5s;
+            text-align: left;
+            border-left: 3px solid transparent;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--color-light);
+            color: var(--color-primary);
+            border-left: 3px solid var(--color-primary);
+        }
+
+        /* Icon rotation on hover */
+        .dropdown-container:hover .fa-chevron-down {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-btn-icon {
+            transition: transform 0.5s ease;
+            margin-left: 8px;
+            font-size: 0.8em;
+        }
+
+        .dropdown-menu::before {
+            content: "";
+            position: absolute;
+            top: -20px;
+            /* Reaches up towards the button */
+            left: 0;
+            width: 100%;
+            height: 20px;
+            /* Height of the invisible bridge */
+            background: transparent;
+        }
+    </style>
 </head>
 
 <body>
@@ -1267,8 +1355,8 @@
         <div class="container">
             <nav class="navbar">
                 <a href="index.html" class="logo">
-                    <img src="logo2.png" alt="Diverse Loopers Logo">
-                    <span class="logo-text">Diverse Loopers</span>
+                    <img src="DIVERSE LOOPERS (1) bg.png" alt="Diverse Loopers Logo">
+
                 </a>
 
                 <!-- Desktop Menu -->
@@ -1287,7 +1375,20 @@
                     <!-- Profile button - shown when user is logged in -->
                     <a href="profile.html" id="profile-btn" class="btn btn-secondary hidden">Profile</a>
 
-                    <a href="analyzer.html" class="btn btn-primary">Path Analyzer</a>
+                    <!-- Tools Dropdown -->
+                    <div class="dropdown-container">
+    <button class="btn btn-primary" style="display: flex; align-items: center; cursor: pointer; font-size: 1rem; font-family: inherit;">
+        Tools <i class="fa-solid fa-chevron-down dropdown-btn-icon"></i>
+    </button>
+    <div class="dropdown-menu">
+        <a href="career_analyzer.html" class="dropdown-item">
+            <i class="fa-solid fa-bullseye" style="margin-right: 8px; color: var(--color-primary);"></i> Career Analyzer
+        </a>
+        <a href="analyzer.html" class="dropdown-item">
+            <i class="fa-solid fa-road" style="margin-right: 8px; color: var(--color-secondary);"></i> Path Analyzer
+        </a>
+    </div>
+</div>
                 </div>
 
                 <!-- Mobile Menu Button (Hamburger) -->
@@ -1306,10 +1407,10 @@
             <!-- Mobile Menu Panel -->
             <div id="mobile-menu" class="hidden">
                 <div class="mobile-menu-inner">
-                    <a href="#about" class="mobile-link">About Us</a>
+                    <a href="aboutUs_std.html" class="mobile-link">About Us</a>
                     <a href="#contact" class="mobile-link">Contact Us</a>
                     <a href="#events" class="mobile-link">Events</a>
-                    
+
 
                     <a href="home_bus.html" class="mobile-link">For Businesses</a>
                     <a href="home_uni.html" class="mobile-link">For Universities</a>
@@ -1318,7 +1419,17 @@
                     <a href="login.html" class="mobile-link hidden" id="mobile-login-btn">Login</a>
                     <!-- Mobile profile button -->
                     <a href="profile.html" class="mobile-link hidden" id="mobile-profile-btn">Profile</a>
-                    <a href="analyzer.html" class="btn btn-primary w-full text-center mt-4">Path Analyzer</a>
+                    <div style="margin-top: 1rem; border-top: 1px solid #e2e8f0; padding-top: 1rem;">
+                        <p style="font-weight: 600; color: var(--color-subtle); margin-bottom: 0.5rem;">Tools</p>
+                        <a href="career_analyzer.html" class="mobile-link"
+                            style="display: block; text-align: left; padding: 0.5rem 0; color: var(--color-primary); font-size: 1rem;">
+                            <i class="fa-solid fa-bullseye"></i> Career Analyzer
+                        </a>
+                        <a href="analyzer.html" class="mobile-link"
+                            style="display: block; text-align: left; padding: 0.5rem 0; color: var(--color-secondary); font-size: 1rem;">
+                            <i class="fa-solid fa-road"></i> Path Analyzer
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1360,9 +1471,9 @@
             </div>
         </section>
 
-<!-- NEW SECTION: Hybrid Hustler Registration with FULL-SCREEN Video Background -->
+        <!-- NEW SECTION: Hybrid Hustler Registration with FULL-SCREEN Video Background -->
         <section id="hybrid-hustler">
-            
+
             <!-- Video Background Visual (Full Screen) -->
             <div class="hustler-visual">
                 <div class="video-container">
@@ -1372,7 +1483,9 @@
                         Your browser does not support the video tag.
                     </video>
                     <!-- Optional: Add a subtle overlay here if text needs more contrast -->
-                    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2); z-index: 5;"></div>
+                    <div
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2); z-index: 5;">
+                    </div>
                 </div>
             </div>
 
@@ -1381,7 +1494,8 @@
                 <div class="hustler-form-card fade-in">
                     <div class="section-header" style="text-align: center;">
                         <h2 style="position: relative; z-index: 2;">Become a Hybrid Hustler</h2>
-                        <p style="position: relative; z-index: 2;">Join our exclusive network and fast-track your path to tech mastery.</p>
+                        <p style="position: relative; z-index: 2;">Join our exclusive network and fast-track your path
+                            to tech mastery.</p>
                     </div>
                     <form id="hustler-form">
                         <div class="form-grid">
@@ -1437,7 +1551,9 @@
                         <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 2rem;">
                             Enroll in the Hustle!
                         </button>
-                        <p id="hustler-message" style="margin-top: 1rem; text-align: center; color: var(--color-primary);" class="hidden"></p>
+                        <p id="hustler-message"
+                            style="margin-top: 1rem; text-align: center; color: var(--color-primary);" class="hidden">
+                        </p>
                     </form>
                 </div>
             </div>
@@ -1666,8 +1782,7 @@
 
     <footer class="footer">
         <div class="container">
-            <a href="index.html" class="logo"><img src="logo2.png" alt="Diverse Loopers Logo"><span
-                    class="logo-text">Diverse Loopers</span></a>
+            <a href="index.html" class="logo"><img src="DIVERSE LOOPERS (1) bg.png" alt="Diverse Loopers Logo"></a>
             <p class="tagline">Empowering talents for tomorrow</p>
 
             <!-- User section - only visible when logged in -->
@@ -1685,29 +1800,31 @@
             </div>
 
             <div class="footer-links">
-                <a href="#about">About Us</a>
+                <a href="aboutUs_std.html">About Us</a>
                 <a href="#contact">Contact Us</a>
                 <a href="analyzer.html">Path Analyzer</a>
+                <a href="career_analyzer.html">Career Analyzer</a>
             </div>
             <div class="contact-details">
                 <p>Email: <a href="mailto:contact@diverseloopers.com">contact@diverseloopers.com</a></p>
                 <p>Phone: <a href="tel:+9839350961">+91 98393 50961</a></p>
             </div>
+
             <p class="copyright">&copy; 2024 Diverse Loopers. All Rights Reserved.</p>
         </div>
     </footer>
 
     <script>
 
-// --- FORM SUBMISSION HANDLER (Supabase Integration) ---
+        // --- FORM SUBMISSION HANDLER (Supabase Integration) ---
         const hustlerForm = document.getElementById('hustler-form');
         const hustlerMessage = document.getElementById('hustler-message');
 
         if (hustlerForm) {
-            hustlerForm.addEventListener('submit', async function(e) {
+            hustlerForm.addEventListener('submit', async function (e) {
                 e.preventDefault();
                 hustlerMessage.classList.add('hidden'); // Hide previous message
-                
+
                 // Basic client-side validation check
                 if (!e.target.checkValidity()) {
                     hustlerMessage.textContent = 'Please fill out all required fields correctly.';
@@ -1726,10 +1843,10 @@
                     core_technology: formData.get('tech'),
                     course_year: formData.get('year'),
                     // Convert semester to integer as per your SQL schema
-                    semester: parseInt(formData.get('semester'), 10), 
+                    semester: parseInt(formData.get('semester'), 10),
                     roll_no: formData.get('roll'),
                 };
-                
+
                 // Get the current user ID for linking registration (if logged in)
                 const { data: { user } } = await _supabase.auth.getUser();
                 if (user) {
@@ -1741,7 +1858,7 @@
                     hustlerMessage.textContent = 'Registering...';
                     hustlerMessage.style.color = 'var(--color-primary)';
                     hustlerMessage.classList.remove('hidden');
-                    
+
                     // Attempt to insert data into Supabase
                     const { error } = await _supabase
                         .from('hybrid_hustler_registrations')
@@ -1751,9 +1868,9 @@
                         console.error('Supabase Insert Error:', error);
                         // Handle unique constraint error specifically for email_id (SQL error code '23505')
                         if (error.code === '23505' && error.details.includes('email_id')) {
-                             hustlerMessage.textContent = 'Registration failed: This email address is already registered.';
+                            hustlerMessage.textContent = 'Registration failed: This email address is already registered.';
                         } else {
-                             hustlerMessage.textContent = `Registration failed: An error occurred.`;
+                            hustlerMessage.textContent = `Registration failed: An error occurred.`;
                         }
                         hustlerMessage.style.color = '#ef4444';
                     } else {
@@ -1761,7 +1878,7 @@
                         const firstName = data.full_name.split(' ')[0];
                         hustlerMessage.textContent = `Success! Thank you, ${firstName}! Your registration has been saved to the database.`;
                         hustlerMessage.style.color = 'var(--color-primary)';
-                        
+
                         // Clear form after successful submission
                         hustlerForm.reset();
                     }
@@ -1782,10 +1899,10 @@
         contactForm.appendChild(contactMessageDiv);
 
         if (contactForm) {
-            contactForm.addEventListener('submit', async function(e) {
+            contactForm.addEventListener('submit', async function (e) {
                 e.preventDefault();
                 contactMessageDiv.textContent = ''; // Clear previous message
-                
+
                 if (!e.target.checkValidity()) {
                     contactMessageDiv.textContent = 'Please fill out all required fields.';
                     contactMessageDiv.style.color = '#ef4444';
@@ -1798,7 +1915,7 @@
                     email_id: document.getElementById('email').value,
                     message_content: document.getElementById('message').value,
                 };
-                
+
                 // Get the current user ID for linking registration (if logged in)
                 const { data: { user } } = await _supabase.auth.getUser();
                 if (user) {
@@ -1823,7 +1940,7 @@
                         // Success message
                         contactMessageDiv.textContent = `Thank you, ${data.full_name.split(' ')[0]}! Your message has been sent successfully.`;
                         contactMessageDiv.style.color = 'var(--color-primary)';
-                        
+
                         // Clear form after successful submission
                         contactForm.reset();
                     }
@@ -1838,7 +1955,7 @@
         }
         // --- END CONTACT FORM HANDLER ---
 
-        
+
         // --- CAROUSEL CONTROL ELEMENTS ---
         const scrollContainer = document.getElementById('events-grid-container');
         const scrollGrid = document.getElementById('events-grid');
