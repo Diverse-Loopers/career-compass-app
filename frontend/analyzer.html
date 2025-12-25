@@ -15,7 +15,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Supabase Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -601,45 +601,154 @@
         }
 
         /* --- Footer --- */
-        .footer {
-            background-color: var(--color-dark);
-            color: var(--color-light);
-            padding: 4rem 0;
-            text-align: center;
-        }
+/* --- Updated Footer Styles --- */
+.footer {
+    background-color: var(--color-dark);
+    color: #9ca3af; /* Light gray text */
+    padding: 4rem 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+}
 
-        .footer .logo {
-            justify-content: center;
-        }
+.footer .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
-        .footer .logo-text {
-            color: #fff;
-        }
+.footer .logo {
+    margin-bottom: 1rem;
+    justify-content: center;
+}
 
-        .footer .tagline {
-            margin: 1rem 0 2rem;
-            color: var(--color-subtle);
-        }
+.footer .logo-text {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #fff;
+    margin-left: 0.5rem;
+}
 
-        .contact-details p {
-            margin-bottom: 0.5rem;
-        }
+.footer .tagline {
+    color: #9ca3af;
+    margin-bottom: 3rem;
+    font-size: 0.9rem;
+}
 
-        .contact-details a {
-            color: #fff;
-            text-decoration: none;
-        }
+/* Footer Grid Layout */
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 2rem;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 2rem;
+}
 
-        .contact-details a:hover {
-            text-decoration: underline;
-        }
+@media (min-width: 768px) {
+    .footer-grid {
+        grid-template-columns: repeat(4, 1fr); /* 4 columns on desktop */
+        text-align: left;
+    }
+}
 
-        .copyright {
-            margin-top: 3rem;
-            font-size: 0.9rem;
-            color: var(--color-subtle);
-        }
+.footer-col h3 {
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
 
+.footer-col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-col ul li {
+    margin-bottom: 0.8rem;
+}
+
+.footer a {
+    color: #9ca3af;
+    text-decoration: none;
+    transition: color 0.2s;
+    font-size: 0.9rem;
+}
+
+.footer a:hover {
+    color: var(--color-primary);
+}
+
+.text-sm {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center; /* Center on mobile */
+}
+
+@media (min-width: 768px) {
+    .text-sm {
+        justify-content: flex-start; /* Left align on desktop */
+    }
+}
+
+/* Social Icons */
+.social-icons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+@media (min-width: 768px) {
+    .social-icons {
+        justify-content: flex-start;
+    }
+}
+
+.social-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    transition: all 0.3s;
+}
+
+.social-icon:hover {
+    background-color: var(--color-primary);
+    color: #fff;
+    transform: translateY(-3px);
+}
+
+/* User Section in Footer */
+.footer-user-section {
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 1rem 1.5rem;
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-user-section.hidden {
+    display: none;
+}
+
+.footer .user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-align: left;
+}
         /* --- Tools Dropdown Styles --- */
         .dropdown-container {
             position: relative;
@@ -983,18 +1092,79 @@
     </main>
 
     <footer class="footer">
-        <div class="container">
-            <a href="index.html" class="logo">
-                <img src="DIVERSE LOOPERS (1) bg.png" alt="Diverse Loopers Logo">
-            </a>
-            <p class="tagline">Empowering talents for tomorrow</p>
-            <div class="contact-details">
-                <p>Email: <a href="mailto:contact@diverseloopers.com">contact@diverseloopers.com</a></p>
-                <p>Phone: <a href="tel:+919839350961">+91 98393 50961</a></p>
+    <div class="container">
+        <!-- Logo -->
+        <a href="index.html" class="logo">
+            <img src="Diverse Loopers Black BG (2).png" alt="Diverse Loopers Logo">
+            
+        </a>
+        <p class="tagline">Empowering talents for tomorrow</p>
+
+        <!-- User Section (Preserved for JS Logic) -->
+        <div class="footer-user-section hidden" id="footer-user-section">
+            <div class="user-info">
+                <div class="user-avatar" id="user-avatar">U</div>
+                <div class="user-details">
+                    <h4 id="user-name">Welcome back!</h4>
+                    <p id="user-email">user@example.com</p>
+                </div>
             </div>
-            <p class="copyright">&copy; 2024 Diverse Loopers. All Rights Reserved.</p>
+            <button class="logout-btn-footer" id="logout-btn">
+                <span>Sign Out</span>
+            </button>
         </div>
-    </footer>
+
+        <!-- Links Grid -->
+        <div class="footer-grid">
+            <!-- Column 1: Contact -->
+            <div class="footer-col">
+                <a href="index.html#contact">
+                <h3>Contact Us</h3></a>
+                <p class="text-sm">
+                    <i class="fa-solid fa-envelope"></i> 
+                    <a href="mailto:contact@diverseloopers.com">contact@diverseloopers.com</a>
+                </p>
+                <p class="text-sm">
+                    <i class="fa-solid fa-phone"></i> 
+                    <a href="tel:+919839350961">+91 98393 50961</a>
+                </p>
+            </div>
+
+            <!-- Column 2: Quick Links -->
+            <div class="footer-col">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="aboutUs_std.html">About Us</a></li>
+                    <li><a href="home_uni.html">For Universities</a></li>
+                    <li><a href="home_bus.html">For Businesses</a></li>
+                    <li><a href="careers.html">Careers</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 3: Tools -->
+            <div class="footer-col">
+                <h3>Tools</h3>
+                <ul>
+                    <li><a href="career_analyzer.html">Career Analyzer</a></li>
+                    <li><a href="analyzer.html">Path Analyzer</a></li>
+                </ul>
+            </div>
+
+            <!-- Column 4: Follow Us -->
+            <div class="footer-col">
+                <h3>Follow Us</h3>
+                <div class="social-icons">
+                    <a href="https://www.linkedin.com/company/105277450" class="social-icon"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="#" class="social-icon"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/diverseloopers/" class="social-icon"><i class="fa-brands fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <p class="copyright">&copy; 2024 Diverse Loopers. All Rights Reserved.</p>
+    </div>
+</footer>
 
     <script type="module">
         // --- Supabase Client Setup ---
