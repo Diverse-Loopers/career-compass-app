@@ -5,10 +5,11 @@
 
 let employeesCache = [];
 
+// Initial Load
 document.addEventListener('DOMContentLoaded', () => {
-    // Initial Load
     showSection('employees');
     loadEmployees(); // Pre-load for selections
+    loadFaceModels(); // Load AI Models
 
     // Mobile Menu Logic
     const menuBtn = document.getElementById('mobile-menu-btn');
@@ -145,6 +146,24 @@ async function loadAdminStats() {
 }
 
 // ==========================
+// FACE API SETUP
+// ==========================
+async function loadFaceModels() {
+    try {
+        // Load models from a public CDN or local assets
+        // Using GitHub Pages for reliability
+        const MODEL_URL = 'https://justadudewhohacks.github.io/face-api.js/models';
+        await faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL);
+        await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL);
+        await faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL);
+        console.log("FaceAPI Models Loaded");
+    } catch (e) {
+        console.error("Error loading models:", e);
+        showToast("Error loading Face Recognition models", "error");
+    }
+}
+
+// ==========================
 // EMPLOYEES
 // ==========================
 async function loadEmployees() {
@@ -167,6 +186,7 @@ async function loadEmployees() {
             <td>${emp.role}</td>
             <td>${emp.email || '-'}</td>
             <td>
+                <button class="btn-primary" style="font-size: 0.8rem; padding: 0.25rem 0.5rem; background: #f59e0b;" onclick="openResetPassword('${emp.id}')">Reset Pass</button>
                 <button class="btn-secondary" style="font-size: 0.8rem; padding: 0.25rem 0.5rem;" onclick="deleteEmployee('${emp.id}')">Delete</button>
             </td>
         `;
@@ -192,64 +212,81 @@ async function handleAddEmployee(e) {
     e.preventDefault();
     const name = document.getElementById('new-emp-name').value;
     const dept = document.getElementById('new-emp-dept').value;
-    const email = document.getElementById('new-emp-email').value; // New Field
-    const designation = document.getElementById('new-emp-designation').value; // New Field
+    const email = document.getElementById('new-emp-email').value;
+    const designation = document.getElementById('new-emp-designation').value;
+    const password = document.getElementById('new-emp-password').value;
+    const photoFile = document.getElementById('new-emp-photo').files[0];
 
-    const empId = generateEmployeeID();
+    // CHECK IF EMAIL EXISTS
+    const { data: existingEmp } = await supabaseClient
+        .from('employees')
+        .select('id')
+        .eq('email', email)
+        .single();
 
-    // Use the provided email for login instead of magic email
-    // Or if user wants ID login, we map ID to this email in backend?
-    // User said: "Employee login using ONLY Employee ID".
-    // Strategy: We still use {ID}@hrms.local for Auth, but store real email for contact.
+    if (existingEmp) {
+        return showToast(`The email ${email} is already registered!`, "error");
+    }
 
-    // Construct email for Supabase Auth
-    const magicEmail = `${empId}@hrms.local`.toLowerCase();
+    if (!photoFile) return showToast("Please upload a face photo.", "error");
 
-    // READ THE PASSWORD INPUT CORRECTLY
-    const passwordInput = document.getElementById('new-emp-password');
-    const password = passwordInput ? passwordInput.value : '';
+    showToast("Processing Face Data... This may take a moment.", "info");
 
-    if (!password || password.length < 6) return showToast('Password must be at least 6 characters', 'error');
+    try {
+        // 1. Detect Face & Extract Descriptor
+        // Use face-api helper to read file into HTMLImageElement
+        const image = await faceapi.bufferToImage(photoFile);
+        const detection = await faceapi.detectSingleFace(image).withFaceLandmarks().withFaceDescriptor();
 
-    // 1. Create Auth User
-    const { data: authData, error: authError } = await supabaseClient.auth.signUp({
-        email: magicEmail,
-        password: password,
-        options: {
-            data: {
-                full_name: name,
-                employee_id: empId,
-                department: dept,
-                designation: designation, // New Field
-                role: 'employee',
-                contact_email: email // Store real email in metadata
-            }
+        if (!detection) {
+            return showToast("No face detected! Please use a clear, front-facing photo.", "error");
         }
-    });
 
-    if (authError) return showToast(authError.message, 'error');
+        const descriptorArray = Array.from(detection.descriptor); // Convert to regular array for JSON
 
-    // 2. Insert into 'employees' table
-    const { error: dbError } = await supabaseClient.from('employees').insert([
-        {
+        // 2. Generate ID
+        const empId = generateEmployeeID();
+
+        // 3. Create Auth User
+        const { data: authData, error: authError } = await supabaseClient.auth.signUp({
+            email: email,
+            password: password,
+            options: { data: { full_name: name, role: 'employee', employee_id: empId } }
+        });
+
+        if (authError) throw authError;
+
+        // 4. Insert into Employees Table
+        const { error: dbError } = await supabaseClient.from('employees').insert([{
             employee_id: empId,
             full_name: name,
-            email: email, // SAVE THE REAL CONTACT EMAIL
-            role: 'employee',
+            email: email,
             department: dept,
-            designation: designation // New Field
-        }
-    ]);
+            designation: designation,
+            role: 'employee'
+        }]);
 
-    if (dbError) {
-        showToast('Auth created but DB failed: ' + dbError.message, 'error');
-    } else {
-        showToast(`Employee Created! ID: ${empId}, Default Password: ${password}`, 'success');
+        if (dbError) throw dbError;
+
+        // 5. Insert Facial Data
+        const { error: faceError } = await supabaseClient.from('facial_data').insert([{
+            employee_id: empId,
+            descriptor: descriptorArray
+        }]);
+
+        if (faceError) throw faceError;
+
+        showToast("Employee Created & Face Data Saved!", "success");
         closeModal('add-employee-modal');
         loadEmployees();
-        document.getElementById('add-employee-form').reset();
+        e.target.reset();
+
+    } catch (err) {
+        console.error(err);
+        showToast(err.message || "Error creating employee", "error");
     }
 }
+
 
 async function deleteEmployee(uuid) {
     if (!confirm('Are you sure? This will delete the employee record.')) return;
@@ -259,6 +296,86 @@ async function deleteEmployee(uuid) {
     const { error } = await supabaseClient.from('employees').delete().eq('id', uuid);
     if (error) showToast(error.message, 'error');
     else loadEmployees();
+}
+
+let currentResetUserId = null;
+function openResetPassword(userId) {
+    currentResetUserId = userId;
+    document.getElementById('reset-password-modal').classList.remove('hidden');
+}
+
+async function handleResetPassword(e) {
+    e.preventDefault();
+    if (!window.supabaseAdmin) {
+        alert("CRITICAL: You must set SUPABASE_SERVICE_ROLE_KEY in assets/js/supabase-config.js to perform password resets.");
+        return;
+    }
+
+    const newPass = document.getElementById('reset-new-pass').value;
+    if (!newPass || newPass.length < 6) return showToast("Password must be at least 6 characters", "error");
+
+    showToast("Locating user...", "info");
+
+    try {
+        // 1. Get Employee Details (Employee ID is needed to construct magic email)
+        // We also fetch 'email' (contact email) to support legacy users who login with personal email
+        const { data: emp, error: empError } = await supabaseClient
+            .from('employees')
+            .select('employee_id, email')
+            .eq('id', currentResetUserId)
+            .single();
+
+        if (empError || !emp) throw new Error("Could not find employee record.");
+
+        // 2. Construct Potential Emails
+        const magicEmail = `${emp.employee_id}@hrms.local`.toLowerCase();
+        const contactEmail = emp.email ? emp.email.toLowerCase() : null;
+
+        // 3. Find Auth User ID (Robust Search)
+        let targetAuthId = null;
+
+        // Strategy A: Check if Table ID matches Auth ID (Gen 3 Users)
+        const { data: checkUser } = await window.supabaseAdmin.auth.admin.getUserById(currentResetUserId);
+        if (checkUser && checkUser.user) {
+            targetAuthId = checkUser.user.id;
+        } else {
+            // Strategy B & C: Search by Email (Gen 1 & Gen 2 Users)
+            console.log("ID mismatch, searching by emails...");
+            const { data: userList, error: listError } = await window.supabaseAdmin.auth.admin.listUsers();
+            if (listError) throw listError;
+
+            // Try Magic Email first (Gen 2)
+            let foundUser = userList.users.find(u => u.email && u.email.toLowerCase() === magicEmail);
+
+            // If not found, try Contact Email (Gen 1 - Legacy)
+            if (!foundUser && contactEmail) {
+                foundUser = userList.users.find(u => u.email && u.email.toLowerCase() === contactEmail);
+            }
+
+            if (!foundUser) {
+                // Formatting error message for clarity
+                const checked = [magicEmail, contactEmail].filter(Boolean).join(' or ');
+                throw new Error(`Auth User not found. Checked: ${checked}`);
+            }
+            targetAuthId = foundUser.id;
+        }
+
+        // 4. Update Password
+        const { error: updateError } = await window.supabaseAdmin.auth.admin.updateUserById(
+            targetAuthId,
+            { password: newPass }
+        );
+
+        if (updateError) throw updateError;
+
+        showToast("Password Reset Successfully!", "success");
+        closeModal('reset-password-modal');
+        document.getElementById('reset-password-form').reset();
+
+    } catch (err) {
+        console.error(err);
+        showToast(err.message || "Error resetting password", "error");
+    }
 }
 
 

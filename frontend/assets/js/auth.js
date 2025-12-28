@@ -77,17 +77,45 @@ if (empLoginBtn) {
 
         if (!empId || !password) return (empError.textContent = 'Please enter ID and Password');
 
-        // Construct the magic email used for Auth
+        // 1. Try Login with Magic Email (Standard for New Users)
         const magicEmail = `${empId}@hrms.local`.toLowerCase();
 
-        const { data, error } = await supabaseClient.auth.signInWithPassword({
+        let { data, error } = await supabaseClient.auth.signInWithPassword({
             email: magicEmail,
             password: password
         });
 
         if (error) {
+            console.log("Magic Email Login failed, checking for legacy contact email...");
+
+            // 2. Fallback: Check for Legacy Contact Email
+            // Fetch the registered email for this ID from the public table
+            const { data: empData, error: dbError } = await supabaseClient
+                .from('employees')
+                .select('email')
+                .eq('employee_id', empId)
+                .single();
+
+            if (empData && empData.email && empData.email.toLowerCase() !== magicEmail) {
+                console.log("Found legacy email:", empData.email);
+                // Try Login with Contact Email
+                const { data: legacyData, error: legacyError } = await supabaseClient.auth.signInWithPassword({
+                    email: empData.email,
+                    password: password
+                });
+
+                if (!legacyError) {
+                    error = null; // Clear error if legacy login works
+                    data = legacyData;
+                } else {
+                    console.error("Legacy login also failed:", legacyError);
+                }
+            }
+        }
+
+        if (error) {
             console.error(error);
-            empError.textContent = 'Login Failed: ' + error.message;
+            empError.textContent = 'Login Failed: Invalid Credentials';
         } else {
             // Check if they are actually an employee (optional extra check)
             window.location.href = 'employee-dashboard.html';
@@ -222,4 +250,4 @@ if (verifyFaceBtn) {
             stream.getTracks().forEach(track => track.stop());
         }
     });
-     };
+};

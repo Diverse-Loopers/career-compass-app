@@ -18,16 +18,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     const magicEmail = session.user.email;
     const derivedEmpId = magicEmail.split('@')[0].toUpperCase();
 
-    // 3. Fetch Profile using the Derived Employee ID
+    // 3. Fetch Profile
+    // We must check if the session email matches the 'email' column (Legacy/Contact Login)
+    // OR if the derived ID matches 'employee_id' (Magic Login)
     const { data: empData, error: dbError } = await supabaseClient
         .from('employees')
         .select('*')
-        .eq('employee_id', derivedEmpId)
-        .single();
+        .or(`email.eq.${session.user.email},employee_id.eq.${derivedEmpId}`)
+        .maybeSingle(); // Use maybeSingle to avoid 406 if multiple (shouldn't happen) or 0
 
     if (dbError || !empData) {
         console.error("Fetch Error:", dbError);
-        alert('Employee profile not found for ID: ' + derivedEmpId);
+        alert(`Employee profile not found.\nSession Email: ${session.user.email}\nDerived ID: ${derivedEmpId}`);
         await supabaseClient.auth.signOut();
         window.location.href = 'index.html';
         return;
@@ -86,11 +88,59 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
+    // 8. Capture Button Listener
+    const captureBtn = document.getElementById('capture-btn');
+    if (captureBtn) {
+        captureBtn.addEventListener('click', verifyAndMarkAttendance);
+    }
+
+    // 9. Load AI Models
+    loadFaceModels();
+
 });
 
 // ==========================
-// NOTIFICATIONS
+// FACE API & CAMERA
 // ==========================
+async function loadFaceModels() {
+    const MODEL_URL = 'https://justadudewhohacks.github.io/face-api.js/models';
+    try {
+        await faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL);
+        await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL);
+        await faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL);
+        console.log("FaceAPI Models Loaded");
+    } catch (e) { console.error("Model Load Error", e); }
+}
+
+async function startCamera() {
+    const video = document.getElementById('video');
+    const msg = document.getElementById('status-msg');
+    const btn = document.getElementById('capture-btn');
+
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: {} });
+        video.srcObject = stream;
+        msg.textContent = "Please wait for video...";
+
+        video.onplay = () => {
+            msg.textContent = "Ensure your face is clearly visible.";
+            btn.disabled = false;
+            btn.classList.replace('btn-secondary', 'btn-primary');
+        };
+    } catch (err) {
+        console.error(err);
+        showToast("Camera access denied.", "error");
+        closeModal('camera-modal');
+    }
+}
+
+function stopCamera() {
+    const video = document.getElementById('video');
+    if (video.srcObject) {
+        video.srcObject.getTracks().forEach(track => track.stop());
+        video.srcObject = null;
+    }
+}
 async function fetchNotifications() {
     const list = document.getElementById('notif-list');
     const badge = document.getElementById('notif-count');
@@ -251,32 +301,104 @@ async function loadDashboardStats() {
 
 // Attendance Logic
 async function markAttendance() {
-    // ... (Simulation) ...
-    const confirmed = confirm("Simulating Face Verification...\n\nIs your face visible?");
-    if (!confirmed) return;
+    // 1. Check if already checked in today (Simulated check done in UI, but good to double check)
+    // ...
 
-    // Insert Attendance Record
+    // 2. Open Camera Modal
+    const modal = document.getElementById('camera-modal');
+    modal.classList.remove('hidden');
+
+    // 3. Start Camera
+    startCamera();
+}
+
+async function startCamera() {
+    const video = document.getElementById('video');
+    const captureBtn = document.getElementById('capture-btn');
+    const statusMsg = document.getElementById('status-msg');
+
+    navigator.mediaDevices.getUserMedia({ video: {} })
+        .then(stream => {
+            video.srcObject = stream;
+            statusMsg.textContent = "Camera started. Please align your face.";
+            captureBtn.disabled = false;
+        })
+        .catch(err => {
+            console.error(err);
+            statusMsg.textContent = "Camera access denied or error.";
+        });
+}
+
+
+async function verifyAndMarkAttendance() {
+    const video = document.getElementById('video');
+    const statusMsg = document.getElementById('status-msg');
+
+    statusMsg.textContent = "Analyzing face... Hold still.";
+
+    try {
+        // 1. Detect Face
+        const detection = await faceapi.detectSingleFace(video).withFaceLandmarks().withFaceDescriptor();
+
+        if (!detection) {
+            statusMsg.textContent = "No face detected. Please try again.";
+            return;
+        }
+
+        // 2. Fetch Stored Data
+        const { data: facialData, error } = await supabaseClient
+            .from('facial_data')
+            .select('descriptor')
+            .eq('employee_id', profile.employee_id)
+            .single();
+
+        if (error || !facialData) {
+            statusMsg.textContent = "No registered face data found. Contact HR.";
+            return;
+        }
+
+        // 3. Compare Descriptors
+        // Descriptor stored as JSON array, convert back to Float32Array
+        const storedDescriptor = new Float32Array(facialData.descriptor);
+        const distance = faceapi.euclideanDistance(detection.descriptor, storedDescriptor);
+
+        console.log("Face Distance:", distance);
+        // Threshold: 0.6 is standard for strictly same person
+        if (distance < 0.6) {
+            statusMsg.textContent = "✅ Verified! Marking attendance...";
+            await completeAttendanceMarking();
+            closeModal('camera-modal');
+        } else {
+            statusMsg.textContent = "❌ Face mismatch! Authentication failed.";
+        }
+
+    } catch (err) {
+        console.error(err);
+        statusMsg.textContent = "Error during verification: " + err.message;
+    }
+}
+
+async function completeAttendanceMarking() {
     const now = new Date();
-    // Fix: Use Local Date String for DB to match the "Today" check
+    // Use Local Date String for DB
     const localDateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 
     const { error } = await supabaseClient.from('attendance').insert([{
         employee_id: profile.employee_id,
         date: localDateStr,
-        check_in_time: now.toLocaleTimeString(), // Browser default local time string
+        check_in_time: now.toLocaleTimeString(),
         face_verified: true,
         status: 'Present'
     }]);
 
-    if (error) showToast(error.message, 'error');
-    else {
-        // TRIGGER NOTIFICATION: Attendance
-        // ... (Notification Insert) ...
+    if (error) {
+        showToast(error.message, 'error');
+    } else {
         await supabaseClient.from('notifications').insert([{
             recipient_role: 'admin',
-            recipient_id: null, // Broadcast to all admins
+            recipient_id: null,
             type: 'attendance',
-            message: `${profile.full_name} (${profile.employee_id}) marked attendance.`
+            message: `${profile.full_name} has marked attendance.`
         }]);
 
         showToast('Attendance Marked Successfully!', 'success');
@@ -431,4 +553,7 @@ function logoutUser() {
 
 function closeModal(id) {
     document.getElementById(id).classList.add('hidden');
+    if (id === 'camera-modal') {
+        stopCamera();
+    }
 }
