@@ -441,14 +441,90 @@ th {
 
 /* Or red/gray */
 
-/* Responsive */
+/* Mobile Menu Button - Base */
+#mobile-menu-btn {
+    display: none;
+}
+
+/* RESPONSIVE DESIGN */
 @media (max-width: 768px) {
-    .dashboard-container {
-        flex-direction: column;
+    body {
+        height: auto;
+        overflow: auto;
+        overflow-x: hidden;
     }
 
+    .dashboard-container {
+        position: relative;
+        display: block;
+        height: auto;
+        min-height: 100vh;
+    }
+
+    /* Mobile Menu Button */
+    #mobile-menu-btn {
+        display: block !important;
+        position: fixed;
+        top: 15px;
+        left: 15px;
+        z-index: 2000;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-size: 1.5rem;
+        cursor: pointer;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Sidebar - Hidden by default off-screen */
     .sidebar {
+        position: fixed;
+        top: 0;
+        left: -280px;
+        width: 260px;
+        height: 100vh;
+        z-index: 1999;
+        transition: left 0.3s ease-in-out;
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5);
+        display: flex;
+    }
+
+    /* Sidebar Active State (Slide in) */
+    .sidebar.active {
+        left: 0 !important;
+    }
+
+    /* Main Content */
+    .main-content {
+        padding: 1.5rem;
+        padding-top: 5rem;
         width: 100%;
+        overflow: visible;
+    }
+
+    /* Header Adjustments */
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    /* Cards */
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Tables */
+    .table-container {
         overflow-x: auto;
+    }
+
+    th,
+    td {
+        white-space: nowrap;
+        padding: 0.75rem;
+        font-size: 0.85rem;
     }
 }

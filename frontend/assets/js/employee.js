@@ -49,6 +49,43 @@ document.addEventListener('DOMContentLoaded', async () => {
     showSection('dashboard');
     fetchNotifications();
     setInterval(fetchNotifications, 30000);
+
+    // 6. Mobile Menu Logic (Robust Listener)
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const sidebar = document.getElementById('sidebar');
+
+    if (menuBtn && sidebar) {
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent bubbling
+            sidebar.classList.toggle('active');
+            console.log('Sidebar toggled:', sidebar.classList.contains('active'));
+        });
+
+        // Close when clicking outside (on main content)
+        document.querySelector('.main-content').addEventListener('click', () => {
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('active');
+            }
+        });
+    }
+
+    // 7. Notification Button Listener
+    const notifBtn = document.getElementById('notif-btn');
+    if (notifBtn) {
+        notifBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleNotifications();
+        });
+    }
+
+    // Close notifications when clicking elsewhere
+    document.addEventListener('click', (e) => {
+        const dropdown = document.getElementById('notif-dropdown');
+        if (!dropdown.classList.contains('hidden') && !e.target.closest('.notification-wrapper')) {
+            dropdown.classList.add('hidden');
+        }
+    });
+
 });
 
 // ==========================
@@ -135,8 +172,13 @@ async function loadDashboardStats() {
     const attBody = document.querySelector('#recent-attendance-table tbody');
     attBody.innerHTML = '';
 
-    // Check if marked today
-    const todayStr = new Date().toISOString().split('T')[0];
+    // Check if marked today (Local Time)
+    const now = new Date();
+    const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
+    // Debug
+    // console.log("Checking attendance for local date:", todayStr);
+
     const presentToday = attData?.find(a => a.date === todayStr);
 
     if (presentToday) {
@@ -161,33 +203,67 @@ async function loadDashboardStats() {
         });
     }
 
-    // Stats Counters (Approximation)
-    const { count: taskCount } = await supabaseClient.from('tasks').select('*', { count: 'exact', head: true }).eq('employee_id', profile.employee_id).eq('status', 'Pending');
-    document.getElementById('stat-pending-tasks').textContent = taskCount || 0;
+    // Stats: Pending Tasks
+    const { count: taskCount, error: taskError } = await supabaseClient
+        .from('tasks')
+        .select('*', { count: 'exact', head: true })
+        .eq('employee_id', profile.employee_id)
+        .eq('status', 'Pending');
+
+    if (!taskError) {
+        document.getElementById('stat-pending-tasks').textContent = taskCount || 0;
+    }
+
+    // Stats: Leaves Taken (Approved)
+    const { count: leaveCount, error: leaveError } = await supabaseClient
+        .from('leaves')
+        .select('*', { count: 'exact', head: true })
+        .eq('employee_id', profile.employee_id)
+        .eq('status', 'Approved');
+
+    if (!leaveError) {
+        // Calculate total days? Or just count of applications? 
+        // User asked for "one leave is approved", so count of applications is consistent with "1".
+        // Use count for now.
+        document.getElementById('stat-leaves').textContent = leaveCount || 0;
+    }
+
+    // Stats: Attendance % (Current Month)
+    // Fix: Use Local Time for "Start of Month" to avoid timezone shifts (e.g. 00:00 IST -> Prev Day UTC)
+    const todayDate = new Date();
+    const startOfMonth = new Date(todayDate.getFullYear(), todayDate.getMonth(), 1);
+    // Format to YYYY-MM-DD Local
+    const startOfMonthStr = `${startOfMonth.getFullYear()}-${String(startOfMonth.getMonth() + 1).padStart(2, '0')}-${String(startOfMonth.getDate()).padStart(2, '0')}`;
+
+    const { count: presentCount, error: attError } = await supabaseClient
+        .from('attendance')
+        .select('*', { count: 'exact', head: true })
+        .eq('employee_id', profile.employee_id)
+        .gte('date', startOfMonthStr)
+        .eq('status', 'Present');
+
+    if (!attError) {
+        const today = todayDate.getDate(); // Days passed including today
+        const percentage = today > 0 ? Math.round((presentCount / today) * 100) : 0;
+        document.getElementById('stat-attendance').textContent = `${percentage}%`;
+    }
 }
 
-// Attendance Logic is complex due to Face API. 
-// We will trigger a similar flow to Auth but just for Verification.
+// Attendance Logic
 async function markAttendance() {
-    // In a real implementation:
-    // 1. Load Face API models
-    // 2. Open Camera
-    // 3. Match face with stored descriptor
-    // 4. If match, Insert into DB
-
-    // For this prototype, we simulate the "Success" of face match for simplicity
-    // OR we can create a shared 'FaceAuth' class. 
-    // Let's assume we do a quick mock verification here to keep it reliable for the user demo:
-
+    // ... (Simulation) ...
     const confirmed = confirm("Simulating Face Verification...\n\nIs your face visible?");
     if (!confirmed) return;
 
     // Insert Attendance Record
     const now = new Date();
+    // Fix: Use Local Date String for DB to match the "Today" check
+    const localDateStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
     const { error } = await supabaseClient.from('attendance').insert([{
         employee_id: profile.employee_id,
-        date: now.toISOString().split('T')[0],
-        check_in_time: now.toLocaleTimeString(),
+        date: localDateStr,
+        check_in_time: now.toLocaleTimeString(), // Browser default local time string
         face_verified: true,
         status: 'Present'
     }]);
@@ -195,6 +271,7 @@ async function markAttendance() {
     if (error) showToast(error.message, 'error');
     else {
         // TRIGGER NOTIFICATION: Attendance
+        // ... (Notification Insert) ...
         await supabaseClient.from('notifications').insert([{
             recipient_role: 'admin',
             recipient_id: null, // Broadcast to all admins
@@ -233,6 +310,7 @@ async function loadMyTasks() {
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td>${task.title}</td>
+                <td style="max-width: 200px; white-space: normal;">${task.description || '-'}</td>
                 <td>${formatDate(task.assigned_at)}</td>
                 <td>${formatDate(task.deadline)}</td>
                 <td>${task.priority}</td>
@@ -274,6 +352,12 @@ async function handleSubmitTask(e) {
         closeModal('submit-task-modal');
         loadMyTasks();
     }
+}
+
+// Mobile Sidebar Toggle
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('active');
 }
 
 // ==========================

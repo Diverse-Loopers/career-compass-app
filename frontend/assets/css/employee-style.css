@@ -3,7 +3,7 @@
     --primary-dark: #4338ca;
     --secondary-color: #64748b;
     --accent-color: #06b6d4;
-    --bg-color: #f3f4f6;
+    --bg-color: #decbec9a;
     --sidebar-bg: #1e293b;
     --card-bg: #ffffff;
     --text-main: #1f2937;
@@ -38,6 +38,10 @@ body {
 }
 
 /* SIDEBAR */
+#mobile-menu-btn {
+    display: none;
+}
+
 .sidebar {
     width: 260px;
     background-color: var(--sidebar-bg);
@@ -55,10 +59,11 @@ body {
     font-size: 1.25rem;
     font-weight: 700;
     letter-spacing: 0.5px;
+    
 }
 
 .logo img {
-    height: 50px;
+    height: 70px;
     width: auto;
     background: white;
     padding: 8px;
@@ -268,6 +273,34 @@ tr:last-child td {
     display: none !important;
 }
 
+.flex {
+    display: flex;
+}
+
+.flex-col {
+    flex-direction: column;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.justify-end {
+    justify-content: flex-end;
+}
+
+.gap-2 {
+    gap: 0.5rem;
+}
+
+.gap-4 {
+    gap: 1rem;
+}
+
 .modal-content {
     background: white;
     padding: 2rem;
@@ -317,4 +350,108 @@ tr:last-child td {
     outline: none;
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+    body {
+        height: auto;
+        overflow: auto;
+        /* Allow both x and y scroll */
+        overflow-x: hidden;
+        /* Prevent horizontal scroll specifically */
+    }
+
+    .dashboard-container {
+        position: relative;
+        display: block;
+        height: auto;
+        min-height: 100vh;
+    }
+
+    /* Mobile Menu Button */
+    #mobile-menu-btn {
+        display: block !important;
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        z-index: 2000;
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-size: 1.5rem;
+        cursor: pointer;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Sidebar - Hidden by default off-screen */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: -280px;
+        width: 260px;
+        height: 100vh;
+        z-index: 1999;
+        transition: left 0.3s ease-in-out;
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.5);
+        display: flex;
+    }
+
+    /* Sidebar Active State (Slide in) */
+    .sidebar.active {
+        left: 0 !important;
+    }
+
+    /* Main Content */
+    .main-content {
+        padding: 1.5rem;
+        padding-top: 5rem;
+        width: 100%;
+        overflow: visible;
+    }
+
+    /* Header Adjustments */
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .header>div {
+        width: 100%;
+    }
+
+    .header .flex {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    #attendance-box {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    /* Cards */
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+    }
+
+    /* Tables */
+    .table-container {
+        overflow-x: auto;
+    }
+
+    th,
+    td {
+        white-space: nowrap;
+        padding: 0.75rem;
+        font-size: 0.85rem;
+    }
 }

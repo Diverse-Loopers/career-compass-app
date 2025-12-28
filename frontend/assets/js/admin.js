@@ -9,6 +9,32 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initial Load
     showSection('employees');
     loadEmployees(); // Pre-load for selections
+
+    // Mobile Menu Logic
+    const menuBtn = document.getElementById('mobile-menu-btn');
+    const sidebar = document.getElementById('sidebar');
+
+    if (menuBtn && sidebar) {
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            sidebar.classList.toggle('active');
+        });
+
+        // Close when clicking outside (on main content)
+        document.querySelector('.main-content').addEventListener('click', () => {
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('active');
+            }
+        });
+    }
+
+    // Close notifications when clicking elsewhere
+    document.addEventListener('click', (e) => {
+        const dropdown = document.getElementById('notif-dropdown');
+        if (dropdown && !dropdown.classList.contains('hidden') && !e.target.closest('.notification-wrapper')) {
+            dropdown.classList.add('hidden');
+        }
+    });
 });
 
 function showSection(sectionId) {
