@@ -1,0 +1,97 @@
+/* Notification Styles */
+.notification-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #ef4444;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 0.7rem;
+    font-weight: bold;
+}
+
+.dropdown-content {
+    position: absolute;
+    right: 0;
+    top: 40px;
+    background: white;
+    min-width: 300px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    border-radius: 8px;
+    z-index: 50;
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+    animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-header {
+    background: #f9fafb;
+    padding: 10px 15px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#notif-list {
+    list-style: none;
+    max-height: 300px;
+    overflow-y: auto;
+    margin: 0;
+    padding: 0;
+}
+
+#notif-list li {
+    padding: 12px 15px;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 0.9rem;
+    color: #374151;
+    transition: background 0.2s;
+}
+
+#notif-list li:hover {
+    background: #f9fafb;
+}
+
+#notif-list li.unread {
+    background: #eff6ff;
+    border-left: 3px solid #3b82f6;
+}
+
+#notif-list li:last-child {
+    border-bottom: none;
+}
+
+/* Scrollbar for notif list */
+#notif-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+#notif-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+#notif-list::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 3px;
+}

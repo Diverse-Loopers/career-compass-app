@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HRMS - Login</title>
+    <link rel="stylesheet" href="assets/css/hrms-style.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Face API -->
+    <script defer src="assets/js/face-api.min.js"></script>
+</head>
+
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+    <div class="login-container">
+        <div class="header">
+            <img src="assets/images/logo.png" alt="Company Logo" style="height: 80px; margin-bottom: 1rem;">
+            <h1>HRMS Portal</h1>
+            <p>Welcome back! Please login to continue.</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('employee')">Employee Login</button>
+            <button class="tab" onclick="switchTab('admin')">Admin Login</button>
+        </div>
+
+        <!-- Employee Login Form -->
+        <div id="employee-login" class="form-section">
+            <div class="input-group">
+                <label for="emp-id">Employee ID</label>
+                <input type="text" id="emp-id" placeholder="e.g. AB123" maxlength="5" required>
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="emp-password" placeholder="Enter your password" required>
+            </div>
+
+            <button type="button" id="emp-login-btn" class="btn-primary" style="margin-top: 1rem;">Login</button>
+            <p id="emp-error" class="error-msg"></p>
+        </div>
+
+        <!-- Admin Login Form -->
+        <div id="admin-login" class="form-section hidden">
+            <div class="input-group">
+                <label for="admin-email">Email</label>
+                <input type="email" id="admin-email" placeholder="admin@hrms.com">
+            </div>
+            <div class="input-group">
+                <label for="admin-password">Password</label>
+                <input type="password" id="admin-password" placeholder="********">
+            </div>
+
+            <button id="admin-login-btn" class="btn-primary">Login as Admin</button>
+            <p id="admin-error" class="error-msg"></p>
+        </div>
+    </div>
+
+    <!-- Face Verification Modal -->
+    <div id="camera-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Face Verification</h2>
+            <div class="camera-feed">
+                <video id="video" width="400" height="300" autoplay muted></video>
+                <canvas id="overlay"></canvas>
+            </div>
+            <p id="status-msg">Loading models...</p>
+            <button id="capture-btn" class="btn-secondary" disabled>Verify</button>
+            <button id="close-modal" class="btn-text">Cancel</button>
+        </div>
+    </div>
+
+    <script src="assets/js/supabase-config.js"></script>
+    <script src="assets/js/auth.js"></script>
+</body>
+
+</html>

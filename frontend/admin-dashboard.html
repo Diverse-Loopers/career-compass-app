@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HRMS - Admin Dashboard</title>
+    <link rel="stylesheet" href="assets/css/hrms-style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body class="bg-gray-100">
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="assets/images/logo.png" alt="Logo"
+                    style="width: 80%; margin-bottom: 1rem; border-radius: 8px; background: white; padding: 5px;">
+                <br>HRMS Admin
+            </div>
+            <nav class="nav-links">
+                <button class="active" onclick="showSection('employees')">Employees</button>
+                <button onclick="showSection('tasks')">Task Management</button>
+                <button onclick="showSection('attendance')">Attendance</button>
+                <button onclick="showSection('leaves')">Leave Requests</button>
+                <button onclick="logoutAdmin()" style="margin-top: auto; color: #ef4444;">Logout</button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- SECTION: EMPLOYEES -->
+            <section id="employees-section">
+                <!-- Overview Cards -->
+                <div class="card-grid" style="margin-bottom: 2rem;">
+                    <div class="card">
+                        <h3>Total Employees</h3>
+                        <div class="stat-value" id="stat-total-employees">Loading...</div>
+                    </div>
+                    <div class="card">
+                        <h3>Present Today</h3>
+                        <div class="stat-value" id="stat-present-today">Loading...</div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between" style="margin-bottom: 1.5rem;">
+                    <h2>Employee Management</h2>
+
+                    <!-- Notification Bell -->
+                    <div class="notification-wrapper" style="position: relative; margin-right: 47rem;">
+                        <button id="notif-btn" onclick="toggleNotifications()"
+                            style="background:none; border:none; font-size:1.5rem; color:#ef4444;  cursor:pointer;">
+                            🔔 <span id="notif-count" class="badge hidden">0</span>
+                        </button>
+                        <div id="notif-dropdown" class="dropdown-content hidden">
+                            <div class="dropdown-header">Notifications <button onclick="markAllRead()"
+                                    style="font-size:0.8rem; color:blue; background:none; border:none; cursor:pointer;">Mark
+                                    all read</button></div>
+                            <ul id="notif-list">
+                                <li style="padding:10px; color:#666;">No new notifications</li>
+                            </ul>
+                        </div>
+                    </div>
+
+
+                    <button class="btn-primary" style="width: auto;" onclick="openAddEmployeeModal()">+ Add
+                        Employee</button>
+                </div>
+
+                
+
+                <div class="table-container">
+                    <thead>
+                        <!-- Header is handled in the table implementation below -->
+                    </thead>
+                    <table id="employees-table">
+                        <thead>
+                            <tr>
+                                <th>Employee ID</th>
+                                <th>Name</th>
+                                <th>Role</th>
+                                <th>Email</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- SECTION: TASKS -->
+            <section id="tasks-section" class="hidden">
+                <div class="flex items-center justify-between" style="margin-bottom: 1.5rem;">
+                    <h2>Task Management</h2>
+                    <button class="btn-primary" style="width: auto;" onclick="openAssignTaskModal()">Assign New
+                        Task</button>
+                </div>
+
+                <div class="table-container">
+                    <table id="tasks-table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Assigned To</th>
+                                <th>Deadline</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- SECTION: ATTENDANCE -->
+            <section id="attendance-section" class="hidden">
+                <h2>Attendance Records</h2>
+                <div class="input-group" style="max-width: 300px; margin: 1rem 0;">
+                    <label>Filter by Date</label>
+                    <input type="date" id="attendance-filter-date" onchange="loadAttendance()">
+                </div>
+                <div class="table-container">
+                    <table id="attendance-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Employee ID</th>
+                                <th>Name</th>
+                                <th>Check In</th>
+                                <th>Face Verified</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- SECTION: LEAVES -->
+            <section id="leaves-section" class="hidden">
+                <h2>Leave Requests</h2>
+                <div class="table-container">
+                    <table id="leaves-table">
+                        <thead>
+                            <tr>
+                                <th>Employee</th>
+                                <th>Dates</th>
+                                <th>Reason</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- MODAL: ADD EMPLOYEE -->
+    <div id="add-employee-modal" class="modal hidden">
+        <div class="modal-content premium-modal">
+            <div class="modal-header">
+                <h2>New Employee</h2>
+                <p class="modal-subtitle">Create a new account and generate ID</p>
+            </div>
+
+            <form id="add-employee-form" onsubmit="handleAddEmployee(event)">
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label>Full Name</label>
+                        <input type="text" id="new-emp-name" placeholder="e.g. John Doe" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Email (Personal)</label>
+                        <input type="email" id="new-emp-email" placeholder="john@example.com" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Department</label>
+                        <select id="new-emp-dept" required>
+                            <option value="">Select Dept</option>
+                            <option value="IT">IT & Engineering</option>
+                            <option value="HR">Human Resources</option>
+                            <option value="Sales">Sales & Marketing</option>
+                            <option value="Finance">Finance</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Designation</label>
+                        <input type="text" id="new-emp-designation" placeholder="e.g. Senior Developer" required>
+                    </div>
+                    <!-- New Password Field -->
+                    <div class="input-group">
+                        <label>Login Password</label>
+                        <input type="text" id="new-emp-password" placeholder="Set login password" required>
+                    </div>
+                </div>
+
+                <div class="id-preview-box">
+                    <span class="label">Auto-Generated ID will be:</span>
+                    <span class="value">XX000</span>
+                    <small>(Assigned on creation)</small>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-text" onclick="closeModal('add-employee-modal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Create Employee</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: ASSIGN TASK -->
+    <div id="assign-task-modal" class="modal hidden">
+        <div class="modal-content" style="text-align: left;">
+            <h2 style="margin-bottom: 1rem;">Assign Task</h2>
+            <form id="assign-task-form" onsubmit="handleAssignTask(event)">
+                <div class="input-group">
+                    <label>Task Title</label>
+                    <input type="text" id="task-title" required>
+                </div>
+                <div class="input-group">
+                    <label>Description (Optional)</label>
+                    <textarea id="task-desc" rows="3"></textarea>
+                </div>
+                <div class="input-group">
+                    <label>Assign To (Employee ID)</label>
+                    <select id="task-assign-to" required>
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Deadline</label>
+                    <input type="datetime-local" id="task-deadline" required>
+                </div>
+                <div class="input-group">
+                    <label>Priority</label>
+                    <select id="task-priority">
+                        <option value="Low">Low</option>
+                        <option value="Medium" selected>Medium</option>
+                        <option value="High">High</option>
+                    </select>
+                </div>
+                <div class="flex" style="gap: 1rem;">
+                    <button type="submit" class="btn-primary">Assign Task</button>
+                    <button type="button" class="btn-secondary"
+                        onclick="closeModal('assign-task-modal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="assets/js/supabase-config.js"></script>
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/admin.js"></script>
+</body>
+
+</html>

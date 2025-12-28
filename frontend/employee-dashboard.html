@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HRMS - Employee Dashboard</title>
+    <link rel="stylesheet" href="assets/css/employee-style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script defer src="assets/js/face-api.min.js"></script>
+</head>
+
+<body class="bg-gray-100">
+
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="assets/images/logo.png" alt="Logo"
+                    style="width: 80%; margin-bottom: 1rem; border-radius: 8px; background: white; padding: 5px;">
+                <br>Employee Panel
+            </div>
+            <div class="user-profile-summary" style="text-align: center; margin-bottom: 2rem; color: #a6a6b7;">
+                <div id="sidebar-user-name" style="font-weight: 600; color: white;">Loading...</div>
+                <div id="sidebar-user-id" style="font-size: 0.8rem;">...</div>
+            </div>
+            <nav class="nav-links">
+                <button class="active" onclick="showSection('dashboard')">Dashboard</button>
+                <button onclick="showSection('tasks')">My Tasks</button>
+                <button onclick="showSection('leaves')">Apply Leave</button>
+                <button onclick="logoutUser()" style="margin-top: auto; color: #ef4444;">Logout</button>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- SECTION: DASHBOARD (Attendance & Stats) -->
+            <section id="dashboard-section">
+                <div class="header flex justify-between items-center" style="text-align: left; margin-bottom: 2rem;">
+                    <div>
+                        <h2>Welcome back, <span id="welcome-name">User</span>!</h2>
+                        <p class="text-muted">Here is your daily overview.</p>
+                    </div>
+
+                    <div class="flex items-center" style="gap: 15px;">
+                        <!-- Notification Bell -->
+                        <div class="notification-wrapper" style="position: relative;">
+                            <button id="notif-btn" onclick="toggleNotifications()"
+                                style="background:none; border:none; font-size:1.5rem; cursor:pointer;">
+                                🔔 <span id="notif-count" class="badge hidden">0</span>
+                            </button>
+                            <div id="notif-dropdown" class="dropdown-content hidden">
+                                <div class="dropdown-header">Notifications <button onclick="markAllRead()"
+                                        style="font-size:0.8rem; color:blue; background:none; border:none; cursor:pointer;">Mark
+                                        all read</button></div>
+                                <ul id="notif-list">
+                                    <li style="padding:10px; color:#666;">No new notifications</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div id="attendance-box">
+                            <button id="mark-attendance-btn" class="btn-primary" onclick="markAttendance()">📷 Mark
+                                Attendance</button>
+                            <p id="attendance-status" class="text-muted"
+                                style="font-size: 0.9rem; margin-top: 0.5rem; text-align: right;"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <h3>Tasks Pending</h3>
+                        <div class="stat-value" id="stat-pending-tasks">0</div>
+                    </div>
+                    <div class="card">
+                        <h3>Attendance (This Month)</h3>
+                        <div class="stat-value" id="stat-attendance">0%</div>
+                    </div>
+                    <div class="card">
+                        <h3>Leaves Taken</h3>
+                        <div class="stat-value" id="stat-leaves">0</div>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Recent Attendance</h3>
+                <div class="table-container">
+                    <table id="recent-attendance-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Check In</th>
+                                <th>Status</th>
+                                <th>Verification</th>
+                            </tr>
+                        </thead>
+                        <tbody><!-- JS --></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- SECTION: TASKS -->
+            <section id="tasks-section" class="hidden">
+                <h2>My Tasks</h2>
+                <div class="table-container">
+                    <table id="my-tasks-table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Date Assigned</th>
+                                <th>Deadline</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody><!-- JS --></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- SECTION: LEAVES -->
+            <section id="leaves-section" class="hidden">
+                <div class="flex items-center justify-between" style="margin-bottom: 1.5rem;">
+                    <h2>Leave Applications</h2>
+                    <button class="btn-primary" style="width: auto;" onclick="openLeaveModal()">+ Apply Leave</button>
+                </div>
+                <div class="table-container">
+                    <table id="my-leaves-table">
+                        <thead>
+                            <tr>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Reason</th>
+                                <th>Status</th>
+                                <th>Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody><!-- JS --></tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- MODAL: SUBMIT TASK -->
+    <div id="submit-task-modal" class="modal hidden">
+        <div class="modal-content" style="text-align: left;">
+            <h2 style="margin-bottom: 1rem;">Submit Task</h2>
+            <form id="submit-task-form" onsubmit="handleSubmitTask(event)">
+                <input type="hidden" id="submit-task-id">
+                <div class="input-group">
+                    <label>Submission Link / Notes</label>
+                    <textarea id="submission-link" rows="4" placeholder="Paste drive link or describe work..."
+                        required></textarea>
+                </div>
+                <div class="flex" style="gap: 1rem;">
+                    <button type="submit" class="btn-primary">Submit</button>
+                    <button type="button" class="btn-secondary"
+                        onclick="closeModal('submit-task-modal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: APPLY LEAVE -->
+    <div id="apply-leave-modal" class="modal hidden">
+        <div class="modal-content" style="text-align: left;">
+            <h2 style="margin-bottom: 1rem;">Apply for Leave</h2>
+            <form id="apply-leave-form" onsubmit="handleApplyLeave(event)">
+                <div class="input-group">
+                    <label>Start Date</label>
+                    <input type="date" id="leave-start" required>
+                </div>
+                <div class="input-group">
+                    <label>End Date</label>
+                    <input type="date" id="leave-end" required>
+                </div>
+                <div class="input-group">
+                    <label>Reason</label>
+                    <textarea id="leave-reason" rows="3" required></textarea>
+                </div>
+                <div class="flex" style="gap: 1rem;">
+                    <button type="submit" class="btn-primary">Apply</button>
+                    <button type="button" class="btn-secondary"
+                        onclick="closeModal('apply-leave-modal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Face Verification Modal (Re-used for attendance) -->
+    <div id="camera-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Verify Attendance</h2>
+            <div class="camera-feed">
+                <video id="video" width="400" height="300" autoplay muted></video>
+                <canvas id="overlay"></canvas>
+            </div>
+            <p id="status-msg">Loading models...</p>
+            <button id="capture-btn" class="btn-secondary" disabled>Verify & Check In</button>
+            <button id="close-modal" class="btn-text" onclick="closeModal('camera-modal')">Cancel</button>
+        </div>
+    </div>
+
+    <script src="assets/js/supabase-config.js"></script>
+    <script src="assets/js/utils.js"></script>
+    <script src="assets/js/employee.js"></script>
+</body>
+
+</html>
