@@ -20,20 +20,13 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
-        /* --- Brand Colors & Global Styles --- */
         :root {
             --color-primary: #3b82f6;
-            /* Blue-500 */
             --color-secondary: #ec4899;
-            /* Pink-500 */
             --color-dark: #1e293b;
-            /* Slate-800 */
             --color-light: #f1f5f9;
-            /* Slate-100 */
             --color-text: #334155;
-            /* Slate-700 */
             --color-subtle: #64748b;
-            /* Slate-500 */
             --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
             --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
         }
@@ -77,7 +70,6 @@
         }
 
 
-        /* --- Layout & Containers --- */
         .container {
             max-width: 1100px;
             margin: 0 auto;
@@ -92,7 +84,6 @@
             display: none !important;
         }
 
-        /* --- Header --- */
         .header {
             background-color: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(12px);
@@ -143,7 +134,6 @@
             display: none;
         }
 
-        /* --- Hero Section --- */
         #hero {
             background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(236, 72, 153, 0.05));
             text-align: center;
@@ -185,7 +175,6 @@
             box-shadow: var(--shadow-lg);
         }
 
-        /* --- How It Works Section --- */
         .section-header {
             text-align: center;
             margin-bottom: 3rem;
@@ -237,7 +226,6 @@
             margin-bottom: 0.5rem;
         }
 
-        /* --- Analyzer Section --- */
         #analyzer {
             background-color: var(--color-light);
         }
@@ -299,7 +287,6 @@
             display: flex;
             align-items: center;
             gap: 1rem;
-            /* margin-left: 290px; */
         }
 
         .navbar {
@@ -307,12 +294,10 @@
             align-items: center;
             width: 100%;
             justify-content: space-between;
-            /* ADD THIS LINE */
         }
 
-        /* ADD THIS NEW RULE */
         .nav-links {
-            /* margin-left: auto; */
+            
         }
 
         .profile-icon-btn {
@@ -329,7 +314,6 @@
 
         .profile-icon-btn:hover {
             background-color: #e2e8f0;
-            /* slate-200 */
             transform: scale(1.05);
         }
 
@@ -348,17 +332,9 @@
             font-size: 1rem;
             font-family: 'Poppins', sans-serif;
             appearance: none;
-            /* Hides the default ugly arrow */
             -webkit-appearance: none;
-            /* For Safari/Chrome */
             -moz-appearance: none;
-            /* For Firefox */
             background-color: #fff;
-            /* Ensure a solid background */
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 0.75rem center;
-            background-size: 1.2em 1.2em;
             cursor: pointer;
         }
 
@@ -369,22 +345,18 @@
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
         }
 
-        /* ADD THIS NEW RULE FOR THE GROUP LABELS */
         .form-group select optgroup {
             font-size: 0.9rem;
             font-weight: 600;
             color: var(--color-dark);
             background-color: var(--color-light);
-            /* Light background for the label */
             padding: 8px 0;
         }
 
-        /* ADD THIS NEW RULE FOR THE OPTIONS */
         .form-group select option {
             font-weight: 500;
             color: var(--color-text);
             padding: 8px 12px;
-            /* Adds nice spacing */
             background-color: #fff;
         }
 
@@ -408,7 +380,6 @@
             box-shadow: var(--shadow-lg);
         }
 
-        /* --- Loading & Error --- */
         .loader-container {
             text-align: center;
             padding: 3rem 0;
@@ -439,7 +410,6 @@
             text-align: center;
         }
 
-        /* --- Results Display --- */
         #results-display .back-btn {
             margin-bottom: 1.5rem;
             background: none;

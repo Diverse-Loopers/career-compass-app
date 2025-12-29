@@ -1,1126 +1,714 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" class="scroll-smooth bg-[#0f172a]">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>
-    Diverse Loopers – Redefining University-Industry Collaboration
-  </title>
-  <!-- Google Fonts for the 'Inter' font -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
-    rel="stylesheet" />
-  <style>
-    /* --- Base & Typography --- */
-    body {
-      font-family: "Inter", sans-serif;
-      scroll-behavior: smooth;
-      background-color: #000000;
-      color: #e5e7eb;
-      overflow-x: hidden;
-    }
-
-    /* --- Animations & Effects --- */
-    @keyframes pan-background {
-      0% {
-        background-position: 0% 0%;
-      }
-
-      100% {
-        background-position: 50px 50px;
-      }
-    }
-
-    .animated-grid-bg {
-      background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px,
-          transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-      background-size: 50px 50px;
-      animation: pan-background 20s linear infinite;
-    }
-
-    .text-glow {
-      text-shadow: 0 0 12px rgba(59, 130, 246, 0.6),
-        0 0 30px rgba(59, 130, 246, 0.4);
-    }
-
-    /* --- Layout --- */
-    .container {
-      width: 100%;
-      margin-left: auto;
-      margin-right: auto;
-      padding-left: 1.5rem;
-      padding-right: 1.5rem;
-    }
-
-    @media (min-width: 640px) {
-      .container {
-        padding-left: 1rem;
-          padding-right: 1rem;
-          max-width: 100%;
-      }
-    }
-
-    @media (min-width: 768px) {
-      .container {
-        max-width: 768px;
-      }
-    }
-
-    @media (min-width: 1024px) {
-      .container {
-        max-width: 1024px;
-      }
-    }
-
-    @media (min-width: 1280px) {
-      .container {
-        max-width: 1280px;
-      }
-    }
-
-    /* --- Header --- */
-    header {
-      background-color: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(1.5rem);
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 50;
-      border-bottom: 1px solid rgba(55, 65, 81, 0.5);
-    }
-
-    header .logo {
-      height: auto;
-      
-      width: 9rem;
-    }
-    header span {
-            font-size: 1rem !important; 
-        }
-
-    /* --- Timeline (Blueprint Section) --- */
-    .timeline-item::before {
-      content: "";
-      position: absolute;
-      left: 11px;
-      top: 36px;
-      bottom: -1.5rem;
-      width: 2px;
-      background-color: #374151;
-      /* gray-700 */
-    }
-
-    .timeline-item:last-child::before {
-      display: none;
-    }
-
-    .blueprint-list {
-      margin-top: 1rem;
-      padding-left: 1.5rem;
-      list-style-type: disc;
-      color: #9ca3af;
-    }
-
-    .blueprint-list li {
-      margin-top: 0.5rem;
-    }
-
-    /* --- Main Content Sections --- */
-    main {
-      padding-top: 5rem;
-    }
-
-    section {
-      padding-top: 6rem;
-      padding-bottom: 6rem;
-    }
-
-    .bg-black {
-      background-color: #000;
-    }
-
-    .hero-section {
-      padding-top: 8rem;
-      padding-bottom: 8rem;
-    }
-
-    @media (min-width: 768px) {
-      .hero-section {
-        padding-top: 12rem;
-        padding-bottom: 12rem;
-      }
-    }
-
-    /* --- Text & Headlines --- */
-    h1 {
-      font-size: 3rem;
-      /* 5xl */
-      font-weight: 900;
-      color: white;
-      line-height: 1;
-      letter-spacing: -0.05em;
-    }
-
-    @media (min-width: 768px) {
-      h1 {
-        font-size: 4.5rem;
-        /* 7xl */
-      }
-    }
-
-    @media (min-width: 1024px) {
-      h1 {
-        font-size: 6rem;
-        /* 8xl */
-      }
-    }
-
-    h2 {
-      font-size: 1rem;
-      /* base */
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      color: #3b82f6;
-      /* blue-500 */
-      text-transform: uppercase;
-    }
-
-    h3 {
-      font-size: 1.25rem;
-      /* xl */
-      font-weight: 700;
-      color: white;
-    }
-
-    .manifesto-title {
-      margin-top: 1rem;
-      font-size: 2.25rem;
-      /* 4xl */
-      font-weight: 900;
-      color: white;
-      letter-spacing: -0.025em;
-    }
-
-    @media (min-width: 768px) {
-      .manifesto-title {
-        font-size: 3rem;
-        /* 5xl */
-      }
-    }
-
-    .blueprint-title {
-      margin-top: 1rem;
-      font-size: 2.25rem;
-      /* 4xl */
-      font-weight: 900;
-      color: white;
-      letter-spacing: -0.025em;
-    }
-
-    @media (min-width: 768px) {
-      .blueprint-title {
-        font-size: 3rem;
-        /* 5xl */
-      }
-    }
-
-    p {
-      margin-top: 1.5rem;
-      font-size: 1.25rem;
-      color: #9ca3af;
-      /* gray-400 */
-    }
-
-    .max-w-2xl {
-      max-width: 42rem;
-    }
-
-    .max-w-3xl {
-      max-width: 48rem;
-    }
-
-    .max-w-4xl {
-      max-width: 56rem;
-    }
-
-    /* --- Buttons --- */
-    .button {
-      display: inline-block;
-      margin-top: 2.5rem;
-      padding: 1rem 2rem;
-      color: white;
-      font-weight: 700;
-      border-radius: 0.5rem;
-      background-color: #3b82f6;
-      /* blue-600 */
-      font-size: 1.125rem;
-      box-shadow: 0 20px 25px -5px rgba(59, 130, 246, 0.3),
-        0 8px 10px -6px rgba(59, 130, 246, 0.3);
-      transition: all 0.3s ease;
-      text-decoration: none;
-    }
-
-    .button:hover {
-      background-color: #2563eb;
-      /* blue-500 */
-      transform: scale(1.05);
-    }
-
-    /* --- Forms --- */
-    form input {
-      width: 95%;
-      padding: 0.75rem 2rem;
-      border: 1px solid #4b5563;
-      /* gray-700 */
-      border-radius: 0.375rem;
-      background-color: #111827;
-      /* gray-900 */
-      color: white;
-      text-align: center;
-    }
-
-    form input::placeholder {
-      color: #6b7280;
-      /* gray-500 */
-    }
-
-    form input:focus {
-      outline: 2px solid transparent;
-      outline-offset: 2px;
-      border-color: #3b82f6;
-      /* blue-500 */
-      box-shadow: 0 0 0 2px #3b82f6;
-    }
-
-    form button {
-      width: 100%;
-      padding: 0.75rem 2rem;
-      color: white;
-      font-weight: 700;
-      border-radius: 0.375rem;
-      background-color: #3b82f6;
-      /* blue-600 */
-      font-size: 1.125rem;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-        0 2px 4px -2px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s ease;
-    }
-
-    form button:hover {
-      background-color: #2563eb;
-      /* blue-500 */
-      box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.4),
-        0 4px 6px -4px rgba(59, 130, 246, 0.4);
-    }
-
-    /* --- Navigation Links --- */
-    .nav-links {
-      display: none;
-      /* Hide on mobile by default */
-    }
-
-    @media (min-width: 768px) {
-      .nav-links {
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-      }
-    }
-
-    .nav-links a {
-      padding: 0.5rem 1rem;
-      border-radius: 9999px;
-      font-size: 0.875rem;
-      font-weight: 600;
-      text-decoration: none;
-      color: #9ca3af;
-      transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
-    }
-
-    .nav-links a:hover {
-      background-color: #1f2937;
-      color: #ffffff;
-    }
-
-    .nav-links a.active {
-      background-color: #1f2937;
-      color: #ffffff;
-    }
-
-    /* --- MOBILE NAVIGATION STYLES START --- */
-    .mobile-menu-button {
-      /* display: flex !important; */
-        align-items: center;
-        justify-content: center;
-        
-       
-        background-color: rgba(255, 255, 255, 0.15) !important;
-        border: 1px solid rgba(255, 255, 255, 0.4) !important;
-        color: #ffffff !important;
-        border-radius: 8px;
-        padding: 6px;
-    }
-
-    .mobile-menu {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: #000;
-      z-index: 90;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      gap: 2rem;
-      transform: translateX(100%);
-      transition: transform 0.3s ease-in-out;
-    }
-
-    .mobile-menu.open {
-      transform: translateX(0);
-    }
-
-    .mobile-menu a {
-      font-size: 1.5rem;
-      font-weight: 600;
-      color: #9ca3af;
-      text-decoration: none;
-    }
-
-    .mobile-menu a.active {
-      color: #3b82f6;
-    }
-
-    .mobile-menu .button {
-      margin-top: 1rem;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    .mobile-menu-close-button {
-      position: absolute;
-      top: 1.5rem;
-      right: 1.5rem;
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: white;
-    }
-    .mobile-menu-button:hover {
-        background-color: rgba(255, 255, 255, 0.2);
-      }
-      
-      .mobile-menu-button svg {
-       width: 32px;  
-        height: 32px;
-        stroke: #ffffff;
-        stroke-width: 2.5; 
-        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-        margin-left: -5rem;
-      }
-
-    .header-cta-button {
-      display: none;
-      
-    }
-
-    @media (min-width: 768px) {
-      .mobile-menu-button {
-        display: none;
-        
-      }
-
-      .header-cta-button {
-        display: inline-block;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-      }
-    }
-
+    <!-- SEO Meta Tags -->
+    <title>Universities | Diverse Loopers - Redefining University-Industry Collaboration</title>
+    <meta name="description" content="Diverse Loopers partners with visionary universities to build application-driven ecosystems, ensuring graduates build verified proof of work and lead as innovators.">
     
-  </style>
-</head>
+    <!-- Fonts & Scripts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-<body class="animated-grid-bg">
-  <!-- Header / Navigation -->
-  <header>
-  <div
-    class="container"
-    style="
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-top: 1rem;
-      padding-bottom: 1rem;
-      /* Ensure proper spacing on mobile */
-      padding-left: 1.5rem; 
-      padding-right: 1.5rem;
-      width: 100%;
-    "
-  >
-    <a
-      href="index.html"
-      style="
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        text-decoration: none;
-        z-index: 101; /* Ensure logo stays above mobile menu if needed */
-      "
-    >
-      <img src="Diverse Loopers Black BG (2).png" alt="Diverse Loopers Logo" class="logo" />
-      
-    </a>
-
-    <!-- Desktop Nav Links -->
-    <div class="nav-links">
-      <a href="index.html">For Students</a>
-      <a href="home-uni.html" class="active">For Universities</a>
-      <a href="home-bus.html">For Businesses</a>
-    </div>
-
-    <!-- Wrapper for desktop button and mobile hamburger -->
-    <div style="display: flex; align-items: center;">
-      <a
-        href="#contact"
-        class="header-cta-button"
-        style="
-          padding: 0.5rem 1.5rem;
-          color: white;
-          font-weight: 600;
-          border-radius: 0.375rem;
-          background-color: #3b82f6;
-          text-decoration: none;
-          transition: all 0.3s ease;
-        "
-      >
-        Become a Partner
-      </a>
-
-      <!-- Mobile Menu Button (Hamburger) -->
-      <!-- Added margin-left: 0 to reset any accidental spacing -->
-      <button id="mobile-menu-btn" class="mobile-menu-button" style="margin-left: 1rem;">
-        <svg
-          id="menu-open-icon"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-          width="28"
-          height="28"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M4 6h16M4 12h16m-7 6h7"
-          ></path>
-        </svg>
-        <svg
-          id="menu-close-icon"
-          class="hidden"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-          width="28"
-          height="28"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M6 18L18 6M6 6l12 12"
-          ></path>
-        </svg>
-      </button>
-    </div>
-  </div>
-</header>
-
-  <!-- Mobile Menu Overlay -->
-  <div id="mobile-menu" class="mobile-menu">
-    <button id="mobile-menu-close-btn" class="mobile-menu-close-button">
-      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="32"
-        height="32">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-      </svg>
-    </button>
-    <a href="index.html">For Students</a>
-    <a href="home-uni.html" class="active">For Universities</a>
-    <a href="home-bus.html">For Businesses</a>
-    <a href="#contact" class="button">Become a Partner</a>
-  </div>
-
-  <!-- Main Content -->
-  <main>
-    <!-- Hero Section -->
-    <section class="hero-section">
-      <div class="container">
-        <div class="max-w-4xl">
-          <h1>
-            Stop Preparing Students for the Last Decade. Start Building for
-            the Next.
-          </h1>
-          <p>
-            For too long, universities have been preparing students with
-            models of education that no longer match the pace and demands of
-            today’s industry. The job market is shifting rapidly, technology
-            is advancing faster than ever, and traditional education often
-            struggles to keep up.
-          </p>
-          <p style="font-size: 1.125rem">
-            Diverse Loopers exists to bridge this gap. We invite universities
-            to become co-architects of a new model of higher education—one
-            that is skills-first, industry-embedded, and outcomes-driven. This
-            is not just about introducing another program; it’s about
-            reshaping how students learn, apply knowledge, and succeed in the
-            real world.
-          </p>
-          <a href="#blueprint" class="button"> View the Blueprint </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- The Manifesto Section -->
-    <section class="bg-black">
-      <div class="container">
-        <div class="max-w-3xl">
-          <h2>Our Manifesto – What We Stand For</h2>
-          <p class="manifesto-title">
-            At Diverse Loopers, we believe the future of education is built on
-            three uncompromising principles:
-          </p>
-        </div>
-        <div style="margin-top: 3rem; display: grid; gap: 2rem" class="grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          <div style="display: flex; flex-direction: column; gap: 0.5rem">
-            <h3>1. Skill is the New Currency</h3>
-            <p style="margin: 0; font-size: 1rem">
-              Degrees alone are no longer enough. Employers demand verified,
-              job-ready skills. We help students build real portfolios of
-              projects, internships, and industry-recognized expertise, making
-              them stand out in competitive job markets.
-            </p>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 0.5rem">
-            <h3>2. Industry Cannot Be a Guest Lecturer</h3>
-            <p style="margin: 0; font-size: 1rem">
-              The corporate world cannot remain an afterthought in education.
-              It must be a core partner in shaping curriculum, guiding
-              projects, and mentoring students. We integrate industry
-              professionals directly into the academic journey, ensuring
-              learning is aligned with actual market needs.
-            </p>
-          </div>
-          <div style="display: flex; flex-direction: column; gap: 0.5rem">
-            <h3>3. Education’s ROI Must Be Explicit</h3>
-            <p style="margin: 0; font-size: 1rem">
-              The true success of an educational program is not measured only
-              in grades but in career outcomes—employment, entrepreneurship,
-              and professional growth. Every student who graduates should be
-              fully prepared to thrive not just academically, but
-              professionally.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- The Blueprint Section -->
-    <section id="blueprint">
-      <div class="container">
-        <div class="max-w-3xl">
-          <h2>The Blueprint – How We Partner With You</h2>
-          <p class="blueprint-title">
-            We don’t believe in one-size-fits-all. Instead, we co-create with
-            you.
-          </p>
-          <p style="font-size: 1.125rem">
-            Together, we embark on a three-phase journey designed to embed
-            skills, validate impact, and scale innovation.
-          </p>
-        </div>
-        <div style="margin-top: 4rem">
-          <div style="
-                position: relative;
-                display: flex;
-                flex-direction: column;
-                gap: 3rem;
-              ">
-            <!-- Timeline Item 1 -->
-            <div class="timeline-item" style="position: relative; padding-left: 3rem">
-              <div style="
-                    position: absolute;
-                    left: 0;
-                    top: 0;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    width: 1.5rem;
-                    height: 1.5rem;
-                    border-radius: 9999px;
-                    background-color: #1f2937;
-                    border-width: 2px;
-                    border-color: #3b82f6;
-                  ">
-                <div style="
-                      width: 0.5rem;
-                      height: 0.5rem;
-                      border-radius: 9999px;
-                      background-color: #3b82f6;
-                    "></div>
-              </div>
-              <p style="
-                    margin: 0;
-                    font-size: 0.875rem;
-                    font-weight: 600;
-                    color: #60a5fa;
-                  ">
-                Phase 1: Co-Creation & Integration (6 Months)
-              </p>
-              <h3 style="margin-top: 0.5rem; font-size: 1.5rem">
-                Embed the Ecosystem
-              </h3>
-              <ul class="blueprint-list" style="font-size: 1rem">
-                <li>
-                  Collaborate with your faculty to identify a pilot
-                  department.
-                </li>
-                <li>
-                  Integrate Diverse Loopers’ platform and ecosystem into your
-                  academic flow.
-                </li>
-                <li>
-                  Co-develop Live Curriculum™ modules, aligned with the most
-                  urgent needs of the industry.
-                </li>
-                <li>
-                  Equip students with access to mentorship, real-world
-                  projects, and skill-based learning from day one.
-                </li>
-              </ul>
-            </div>
-            <!-- Timeline Item 2 -->
-            <div class="timeline-item" style="position: relative; padding-left: 3rem">
-              <div style="
-                    position: absolute;
-                    left: 0;
-                    top: 0;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    width: 1.5rem;
-                    height: 1.5rem;
-                    border-radius: 9999px;
-                    background-color: #1f2937;
-                    border-width: 2px;
-                    border-color: #374151;
-                  "></div>
-              <p style="
-                    margin: 0;
-                    font-size: 0.875rem;
-                    font-weight: 600;
-                    color: #9ca3af;
-                  ">
-                Phase 2: Pilot Program & Placement (12 Months)
-              </p>
-              <h3 style="margin-top: 0.5rem; font-size: 1.5rem">
-                Launch the Pilot & Prove the Model
-              </h3>
-              <ul class="blueprint-list" style="font-size: 1rem">
-                <li>Launch the first cohort of students into the program.</li>
-                <li>
-                  Guide them to build Verified Skill Portfolios with real
-                  projects, not just grades.
-                </li>
-                <li>
-                  Activate our placement ecosystem with partner companies.
-                </li>
-                <li>
-                  Secure internships, interviews, and job opportunities for
-                  students.
-                </li>
-                <li>
-                  Provide tangible success metrics (employment rate, placement
-                  statistics, ROI).
-                </li>
-              </ul>
-            </div>
-            <!-- Timeline Item 3 -->
-            <div class="timeline-item" style="position: relative; padding-left: 3rem">
-              <div style="
-                    position: absolute;
-                    left: 0;
-                    top: 0;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    width: 1.5rem;
-                    height: 1.5rem;
-                    border-radius: 9999px;
-                    background-color: #1f2937;
-                    border-width: 2px;
-                    border-color: #374151;
-                  "></div>
-              <p style="
-                    margin: 0;
-                    font-size: 0.875rem;
-                    font-weight: 600;
-                    color: #9ca3af;
-                  ">
-                Phase 3: National Spotlight & Scale (Ongoing)
-              </p>
-              <h3 style="margin-top: 0.5rem; font-size: 1.5rem">
-                Showcase the Success & Expand
-              </h3>
-              <ul class="blueprint-list" style="font-size: 1rem">
-                <li>
-                  Showcase results through case studies and whitepapers that
-                  position your institution as a national leader.
-                </li>
-                <li>Expand the model across multiple departments.</li>
-                <li>
-                  Create a sustainable competitive advantage for your
-                  university.
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Why Partner Section -->
-    <section class="bg-black">
-      <div class="container">
-        <div class="max-w-3xl">
-          <h2>Why Partner With Diverse Loopers?</h2>
-        </div>
-        <div style="margin-top: 3rem; display: grid; gap: 2rem" class="grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          <div style="
-                background-color: #111827;
-                padding: 1.5rem;
-                border-radius: 0.5rem;
-              ">
-            <h3 style="font-size: 1.125rem">Future-Ready Students</h3>
-            <p style="margin: 0.5rem 0 0 0; font-size: 1rem">
-              Graduates leave with industry portfolios, not just transcripts.
-            </p>
-          </div>
-          <div style="
-                background-color: #111827;
-                padding: 1.5rem;
-                border-radius: 0.5rem;
-              ">
-            <h3 style="font-size: 1.125rem">Enhanced Employability</h3>
-            <p style="margin: 0.5rem 0 0 0; font-size: 1rem">
-              Access to internships and placements with our partner network.
-            </p>
-          </div>
-          <div style="
-                background-color: #111827;
-                padding: 1.5rem;
-                border-radius: 0.5rem;
-              ">
-            <h3 style="font-size: 1.125rem">Faculty Empowerment</h3>
-            <p style="margin: 0.5rem 0 0 0; font-size: 1rem">
-              Training, mentorship, and direct collaboration with industry
-              experts.
-            </p>
-          </div>
-          <div style="
-                background-color: #111827;
-                padding: 1.5rem;
-                border-radius: 0.5rem;
-              ">
-            <h3 style="font-size: 1.125rem">Institutional Leadership</h3>
-            <p style="margin: 0.5rem 0 0 0; font-size: 1rem">
-              Position your university as an innovator in education.
-            </p>
-          </div>
-          <div style="
-                background-color: #111827;
-                padding: 1.5rem;
-                border-radius: 0.5rem;
-              ">
-            <h3 style="font-size: 1.125rem">Stronger Industry Bonds</h3>
-            <p style="margin: 0.5rem 0 0 0; font-size: 1rem">
-              Build long-term corporate partnerships.
-            </p>
-          </div>
-        </div>
-        <p style="margin-top: 3rem; font-size: 1.125rem">
-          This is not just a partnership; it’s an opportunity to transform
-          your university into a hub of innovation and employability.
-        </p>
-      </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="bg-black">
-      <div class="container">
-        <div style="
-              background-color: rgba(59, 130, 246, 0.1);
-              border-radius: 1rem;
-              border: 1px solid rgba(59, 130, 246, 0.2);
-              overflow: hidden;
-              display: grid;
-            " class="lg:grid-cols-2">
-          <div style="padding: 2rem" class="md:p-12">
-            <h2 style="font-size: 1.875rem; font-weight: 800; color: white" class="md:text-4xl">
-              An Invitation to Build
-            </h2>
-            <p style="margin-top: 1rem; font-size: 1.125rem; color: #bfdbfe">
-              We are extending an exclusive invitation to visionary
-              universities to join us as founding partners in this mission.
-              This is not another vendor relationship; this is a co-created
-              movement that will define the next decade of education.
-            </p>
-            <p style="margin-top: 1.5rem; font-size: 1.125rem; color: #bfdbfe">
-              If this vision resonates with you, we would be honored to
-              collaborate and design the future of higher education together.
-            </p>
-          </div>
-          <div style="padding: 2rem" class="md:p-12">
-            <form id="uni-contact-form" style="display: flex; flex-direction: column; gap: 1.25rem">
-              <!-- 1. University Name -->
-              <input type="text" name="university_name" placeholder="University / College Name" required style="
-                    width: 100%;
-                    padding: 0.75rem 1rem;
-                    border: 1px solid #4b5563;
-                    border-radius: 0.375rem;
-                    background-color: #111827;
-                    color: white;
-                  " />
-
-              <!-- 2. Contact Person -->
-              <input type="text" name="contact_person" placeholder="Contact Person Name" required style="
-                    width: 100%;
-                    padding: 0.75rem 1rem;
-                    border: 1px solid #4b5563;
-                    border-radius: 0.375rem;
-                    background-color: #111827;
-                    color: white;
-                  " />
-
-              <!-- 3. Designation -->
-              <input type="text" name="designation" placeholder="Designation / Role" required style="
-                    width: 100%;
-                    padding: 0.75rem 1rem;
-                    border: 1px solid #4b5563;
-                    border-radius: 0.375rem;
-                    background-color: #111827;
-                    color: white;
-                  " />
-
-              <!-- 4. Email -->
-              <input type="email" name="email" placeholder="Official Email ID" required style="
-                    width: 100%;
-                    padding: 0.75rem 1rem;
-                    border: 1px solid #4b5563;
-                    border-radius: 0.375rem;
-                    background-color: #111827;
-                    color: white;
-                  " />
-
-              <!-- 5. Phone -->
-              <input type="tel" name="phone" placeholder="Contact Number" required style="
-                    width: 100%;
-                    padding: 0.75rem 1rem;
-                    border: 1px solid #4b5563;
-                    border-radius: 0.375rem;
-                    background-color: #111827;
-                    color: white;
-                  " />
-
-              <!-- 6. Message -->
-              <textarea name="message" rows="4" placeholder="How can we help your students?" style="
-                    width: 100%;
-                    padding: 0.75rem 1rem;
-                    border: 1px solid #4b5563;
-                    border-radius: 0.375rem;
-                    background-color: #111827;
-                    color: white;
-                    font-family: inherit;
-                    box-sizing: border-box;
-                  "></textarea>
-
-              <button type="submit" style="
-                    width: 100%;
-                    padding: 0.75rem 2rem;
-                    color: white;
-                    font-weight: 700;
-                    border-radius: 0.375rem;
-                    background-color: #3b82f6;
-                    cursor: pointer;
-                    border: none;
-                  ">
-                Start the Conversation
-              </button>
-
-              <!-- Message Area -->
-              <div id="uni-message" class="hidden" style="margin-top: 1rem; text-align: center"></div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- Footer -->
-  <footer style="
-        background-color: #000;
-        border-top: 1px solid rgba(55, 65, 81, 0.5);
-      ">
-    <div class="container" style="padding-top: 2rem; padding-bottom: 2rem">
-      <div style="
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-          " class="md:flex-row">
-        <div style="display: flex; align-items: center; gap: 0.75rem">
-          <img src="logo2.png" alt="Diverse Loopers Logo" class="logo" style="height: 2rem" />
-          <span style="font-size: 1.125rem; font-weight: 700; color: white">Diverse Loopers</span>
-        </div>
-        <div style="font-size: 0.875rem; color: #6b7280; margin-top: 1rem" class="md:mt-0">
-          &copy; 2024 Diverse Loopers Inc. Let's create a model where students
-          don’t just graduate but thrive.
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  <script>
-    const SUPABASE_URL = "https://tjqsmkaiajdpotmafqvw.supabase.co";
-    const SUPABASE_ANON_KEY =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqcXNta2FpYWpkcG90bWFmcXZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU5ODA3NDIsImV4cCI6MjA3MTU1Njc0Mn0.9710q9W5EFfCagj340AizUSKiOXYApy0xkTFszFjO8o";
-
-    const { createClient } = supabase;
-    const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    const uniForm = document.getElementById("uni-contact-form");
-    const uniMessage = document.getElementById("uni-message");
-
-    if (uniForm) {
-      uniForm.addEventListener("submit", async function (e) {
-        e.preventDefault();
-
-        // 1. Reset UI
-        uniMessage.classList.add("hidden");
-        uniMessage.textContent = "Submitting...";
-        uniMessage.className =
-          "mt-4 text-center p-3 rounded text-sm font-medium bg-indigo-900/50 text-indigo-200 animate-pulse";
-        uniMessage.classList.remove("hidden");
-
-        // 2. Collect Data
-        const formData = new FormData(uniForm);
-        // REPLACE THE "const data = { ... }" BLOCK WITH THIS:
-
-        const data = {
-          university_name: formData.get("university_name"), // Matches HTML name="university_name"
-          contact_person_name: formData.get("contact_person"), // Matches HTML name="contact_person"
-          designation: formData.get("designation"), // Matches HTML name="designation"
-          email_id: formData.get("email"), // Matches HTML name="email"
-          contact_number: formData.get("phone"), // Matches HTML name="phone"
-          message: formData.get("message"), // Matches HTML name="message"
-        };
-
-        try {
-          // 3. Send to Supabase
-          const { error } = await _supabase
-            .from("university_contacts") // Table name from SQL
-            .insert([data]);
-
-          if (error) {
-            console.error("University Form Error:", error);
-            uniMessage.innerHTML = `<strong>Submission Failed</strong><br/>${error.message}`;
-            uniMessage.className =
-              "mt-4 text-center p-3 rounded text-sm font-medium bg-red-900/50 border border-red-500 text-red-100";
-          } else {
-            // 4. Success
-            uniMessage.innerHTML = `<strong>Success!</strong><br/>We have received your inquiry. Our team will contact you shortly.`;
-            uniMessage.className =
-              "mt-4 text-center p-3 rounded text-sm font-medium bg-green-900/50 border border-green-500 text-green-100";
-            uniForm.reset();
-          }
-        } catch (err) {
-          console.error("Network Error:", err);
-          uniMessage.textContent =
-            "Network error. Please check your internet connection.";
-          uniMessage.className =
-            "mt-4 text-center p-3 rounded text-sm font-medium bg-red-900/50 border border-red-500 text-red-100";
-        }
-      });
-    }
-    document.addEventListener("DOMContentLoaded", function () {
-      // --- MOBILE NAVIGATION SCRIPT START ---
-      document.addEventListener("DOMContentLoaded", function () {
-    console.log("Initializing Mobile Menu Logic...");
-
-    // 1. Get Elements
-    const btn = document.getElementById("mobile-menu-btn");
-    const menu = document.getElementById("mobile-menu");
-    const closeBtn = document.getElementById("mobile-menu-close-btn");
-    
-    // Icons inside the button (optional, but good for UX)
-    const openIcon = document.getElementById("menu-open-icon");
-    const closeIcon = document.getElementById("menu-close-icon");
-
-    // 2. Safety Check
-    if (!btn || !menu) {
-        console.error("Mobile Menu Error: Button or Menu element not found!");
-        return;
-    }
-
-    // 3. Define Toggle Function
-    function toggleMenu() {
-        // Toggle the class that handles the slide-in animation
-        menu.classList.toggle("open");
-        
-        // Log for debugging
-        const isOpen = menu.classList.contains("open");
-        console.log("Menu toggled. Open?", isOpen);
-
-        // Toggle Icons if they exist
-        if (openIcon && closeIcon) {
-            if (isOpen) {
-                openIcon.classList.add("hidden");
-                closeIcon.classList.remove("hidden");
-            } else {
-                openIcon.classList.remove("hidden");
-                closeIcon.classList.add("hidden");
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#db2777',
+                        dark: '#0f172a',
+                        surface: '#f8fafc'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Poppins', 'sans-serif'],
+                    }
+                }
             }
         }
-    }
+    </script>
 
-    // 4. Add Event Listeners
-    btn.addEventListener("click", (e) => {
-        e.stopPropagation(); // Prevent clicks from bubbling up
-        toggleMenu();
-    });
+    <style>
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at top right, rgba(37, 99, 235, 0.1), transparent),
+                        radial-gradient(circle at bottom left, rgba(219, 39, 119, 0.05), transparent);
+        }
+        .bento-card {
+            background: #ffffff;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .bento-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.05), 0 8px 10px -6px rgb(0 0 0 / 0.05);
+            border-color: #2563eb40;
+        }
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out;
+        }
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        details > summary { list-style: none; }
+        details > summary::-webkit-details-marker { display: none; }
+    </style>
+</head>
+<body class="font-sans text-slate-600 bg-white selection:bg-primary selection:text-white min-h-screen flex flex-col overflow-x-hidden">
 
-    if (closeBtn) {
-        closeBtn.addEventListener("click", toggleMenu);
-    }
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass-nav">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <a href="index.html" class="flex-shrink-0 flex items-center gap-2">
+                    <img src="DIVERSE LOOPERS (1) bg.png" alt="Diverse Loopers" class="h-12 w-auto">
+                </a>
+                
+                <!-- Desktop Nav -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <div class="flex space-x-1 p-1 bg-slate-100 rounded-full text-xs font-semibold mr-4">
+                        <a href="index.html" class="px-4 py-1.5 text-slate-500 hover:text-slate-700 transition">Students</a>
+                        <a href="home-uni.html" class="px-4 py-1.5 bg-white text-primary rounded-full shadow-sm">Universities</a>
+                        <a href="home-bus.html" class="px-4 py-1.5 text-slate-500 hover:text-slate-700 transition">Businesses</a>
+                    </div>
+                    <a href="#philosophy" class="text-slate-600 hover:text-primary font-medium transition text-sm">Philosophy</a>
+                    <a href="#blueprint" class="text-slate-600 hover:text-primary font-medium transition text-sm">Blueprint</a>
+                    <a href="#contact" class="px-5 py-2.5 bg-primary text-white rounded-full font-bold text-sm hover:bg-blue-700 transition shadow-lg shadow-blue-200">Become a Partner</a>
+                </div>
 
-    // Close menu when clicking any link inside it
-    const menuLinks = menu.querySelectorAll("a");
-    menuLinks.forEach(link => {
-        link.addEventListener("click", () => {
-            if (menu.classList.contains("open")) toggleMenu();
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-toggle" class="p-2 text-slate-600">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-100 max-h-[calc(100vh-80px)] overflow-y-auto">
+            <div class="px-4 pt-2 pb-8 space-y-1">
+                <div class="flex gap-2 p-2 mb-4 bg-slate-50 rounded-xl text-center">
+                    <a href="index.html" class="flex-1 py-2 text-slate-500 text-xs font-bold">Students</a>
+                    <a href="home-uni.html" class="flex-1 py-2 bg-white text-primary rounded-lg text-xs font-bold shadow-sm">Universities</a>
+                    <a href="home-bus.html" class="flex-1 py-2 text-slate-500 text-xs font-bold">Businesses</a>
+                </div>
+                <a href="#philosophy" class="block px-4 py-3 text-base font-semibold text-slate-700 hover:bg-slate-50 rounded-xl">Our Philosophy</a>
+                <a href="#blueprint" class="block px-4 py-3 text-base font-semibold text-slate-700 hover:bg-slate-50 rounded-xl">Blueprint</a>
+                <a href="#partnership-models" class="block px-4 py-3 text-base font-semibold text-slate-700 hover:bg-slate-50 rounded-xl">Models</a>
+                <div class="pt-6 px-2">
+                    <a href="#contact" class="block w-full text-center py-4 bg-primary text-white rounded-2xl font-bold shadow-lg">Partner Now</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-grow">
+        <!-- Hero Section -->
+        <section id="hero-section" class="relative pt-40 pb-24 overflow-hidden hero-gradient">
+            <canvas id="hero-canvas" class="absolute inset-0 pointer-events-none opacity-40"></canvas>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="text-center max-w-4xl mx-auto">
+                    <span class="inline-block py-1 px-4 rounded-full bg-blue-50 text-primary text-xs font-bold tracking-widest uppercase mb-6 fade-in">Academic Transformation Model</span>
+                    <h1 class="text-4xl md:text-7xl font-heading font-black text-slate-900 leading-tight mb-8 fade-in">
+                        Build Graduates Who Don't Just Graduate — <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">They Lead.</span>
+                    </h1>
+                    <p class="text-xl text-slate-600 leading-relaxed mb-12 fade-in">
+                        Higher education is at a turning point. Industries are evolving faster than curricula. Partner with Diverse Loopers to build an application-driven ecosystem where learning is proof-based.
+                    </p>
+                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 fade-in">
+                        <a href="#blueprint" class="w-full sm:w-auto px-8 py-4 bg-primary text-white rounded-full font-bold text-lg hover:bg-blue-700 shadow-xl shadow-blue-100 flex items-center justify-center gap-2 group transition">
+                            Explore Blueprint <i data-lucide="arrow-right" class="w-5 h-5 group-hover:translate-x-1 transition"></i>
+                        </a>
+                        <a href="#contact" class="w-full sm:w-auto px-8 py-4 bg-white text-slate-700 border border-slate-200 rounded-full font-bold text-lg hover:border-primary hover:text-primary transition">
+                            Schedule Strategy Call
+                        </a>
+                    </div>
+                </div>
+
+                <!-- NEW: Why Universities Need This Now -->
+                <div class="mt-24 max-w-5xl mx-auto grid md:grid-cols-2 gap-12 items-center fade-in">
+                    <div>
+                        <h2 class="text-3xl font-heading font-bold text-slate-900 mb-6">Why Universities Need This Now</h2>
+                        <p class="text-slate-600 mb-6 leading-relaxed">Universities across the world are facing the same challenge: industry expectations are changing faster than academic structures. Students want direction, relevance, and results.</p>
+                        <p class="text-slate-600 font-medium">Diverse Loopers helps institutions modernize without replacing what already works. We strengthen the existing academic ecosystem.</p>
+                    </div>
+                    <div class="grid grid-cols-1 gap-4">
+                        <div class="flex gap-4 p-4 bg-white border border-slate-100 rounded-2xl shadow-sm">
+                            <i data-lucide="alert-circle" class="text-secondary w-6 h-6 flex-shrink-0"></i>
+                            <p class="text-sm text-slate-600">Employers demand applied skills and verifiable portfolios over scores.</p>
+                        </div>
+                        <div class="flex gap-4 p-4 bg-white border border-slate-100 rounded-2xl shadow-sm">
+                            <i data-lucide="trending-up" class="text-primary w-6 h-6 flex-shrink-0"></i>
+                            <p class="text-sm text-slate-600">Bridging the widening gap between traditional curricula and market needs.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trusted By Institutions -->
+                <div class="mt-24 pt-10 border-t border-slate-100 text-center fade-in">
+                    <p class="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-8">Who We Work With</p>
+                    <div class="flex flex-wrap justify-center gap-8 md:gap-16 opacity-60 grayscale hover:grayscale-0 transition duration-500 mb-8">
+                        <span class="text-lg font-bold text-slate-700">Engineering Institutes</span>
+                        <span class="text-lg font-bold text-slate-700">Business Schools</span>
+                        <span class="text-lg font-bold text-slate-700">Innovation Cells</span>
+                        <span class="text-lg font-bold text-slate-700">Technical Universities</span>
+                    </div>
+                    <p class="text-sm text-slate-500 max-w-2xl mx-auto italic">We collaborate closely with academic leaders to design practical, outcome-driven ecosystems tailored to engineering, management, research, and interdisciplinary programs.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Philosophy Section -->
+        <section id="philosophy" class="py-24 bg-surface">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="mb-16 fade-in text-center">
+                    <h2 class="text-primary font-bold uppercase tracking-widest text-sm mb-4">Our Philosophy</h2>
+                    <h3 class="text-3xl md:text-5xl font-heading font-bold text-slate-900 mb-6">Why Diverse Loopers Exists</h3>
+                     <p class="text-lg text-slate-600 leading-relaxed mb-6">
+                        Diverse Loopers is a business and education ecosystem that blends real-world project execution, career pathways, and applied learning environments.
+                    </p>
+                    <p class="text-lg text-slate-600 leading-relaxed">
+                        We connect institutions, learners, and industry to create measurable outcomes and meaningful opportunities.
+                    </p>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Phil 1 -->
+                    <div class="bento-card p-10 rounded-[2.5rem] fade-in">
+                        <div class="w-14 h-14 bg-blue-50 text-primary rounded-2xl flex items-center justify-center mb-8">
+                            <i data-lucide="gem" class="w-8 h-8"></i>
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-900 mb-4">Skill is the New Academic Currency</h4>
+                        <p class="text-sm text-slate-500 leading-relaxed mb-6">Degrees validate knowledge; skills validate capability. We ensure students graduate as contributors, not trainees.</p>
+                        <ul class="space-y-2 text-xs font-semibold text-slate-700">
+                            <li class="flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4 text-primary"></i> Verified projects</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4 text-primary"></i> Real industry exposure</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4 text-primary"></i> Demonstrable outcomes</li>
+                        </ul>
+                    </div>
+                    <!-- Phil 2 -->
+                    <div class="bento-card p-10 rounded-[2.5rem] fade-in">
+                        <div class="w-14 h-14 bg-pink-50 text-secondary rounded-2xl flex items-center justify-center mb-8">
+                            <i data-lucide="hammer" class="w-8 h-8"></i>
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-900 mb-4">Industry Must Shape, Not Observe</h4>
+                        <p class="text-sm text-slate-500 leading-relaxed mb-6">Industry shouldn't just be guest lecturers. We embed practitioners directly into the learning journey.</p>
+                        <ul class="space-y-2 text-xs font-semibold text-slate-700">
+                            <li class="flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4 text-secondary"></i> Industry mentors</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4 text-secondary"></i> Real project assignments</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4 text-secondary"></i> Feedback loops</li>
+                        </ul>
+                    </div>
+                    <!-- Phil 3 -->
+                    <div class="bento-card p-10 rounded-[2.5rem] fade-in">
+                        <div class="w-14 h-14 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center mb-8">
+                            <i data-lucide="bar-chart-3" class="w-8 h-8"></i>
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-900 mb-4">Education Must Show Measurable ROI</h4>
+                        <p class="text-sm text-slate-500 leading-relaxed mb-6">Impact is seen in employability and research application. We help universities track results confidently.</p>
+                        <ul class="space-y-2 text-xs font-semibold text-slate-700">
+                            <li class="flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4 text-green-600"></i> Placement performance</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4 text-green-600"></i> Internship quality</li>
+                            <li class="flex items-center gap-2"><i data-lucide="check-circle" class="w-4 h-4 text-green-600"></i> Competency levels</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Blueprint Section -->
+        <section id="blueprint" class="py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid lg:grid-cols-2 gap-16 items-start">
+                    <div class="sticky top-32 fade-in">
+                        <h2 class="text-primary font-bold uppercase tracking-widest text-sm mb-4">The Blueprint</h2>
+                        <h3 class="text-4xl md:text-5xl font-heading font-black text-slate-900 mb-8 leading-tight">We co-design academic <br>ecosystems.</h3>
+                        <p class="text-lg text-slate-600 leading-relaxed mb-8">
+                            Our partnership grows across three structured stages. We don't implement pre-built modules; we co-create with your vision.
+                        </p>
+                        <div class="p-6 bg-blue-50 border-l-4 border-primary rounded-r-2xl">
+                            <p class="text-sm font-medium text-slate-700 italic">"Students begin building proof-based skill portfolios from day one."</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-12 relative">
+                        <!-- Phase 1 -->
+                        <div class="p-8 bento-card rounded-[2rem] fade-in">
+                            <div class="flex items-center gap-4 mb-6">
+                                <span class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-bold text-sm shadow-lg shadow-blue-200">1</span>
+                                <h4 class="text-xl font-bold text-slate-900">Co-Creation & Integration</h4>
+                            </div>
+                            <p class="text-sm text-slate-500 mb-6 italic">Embed capability into the foundation (6 Months).</p>
+                            <ul class="space-y-3 text-sm text-slate-600 font-medium">
+                                <li class="flex items-start gap-3"><i data-lucide="check" class="w-4 h-4 text-primary mt-1"></i> Map curriculum against industry needs</li>
+                                <li class="flex items-start gap-3"><i data-lucide="check" class="w-4 h-4 text-primary mt-1"></i> Introduce learning labs & tools</li>
+                                <li class="flex items-start gap-3"><i data-lucide="check" class="w-4 h-4 text-primary mt-1"></i> Train faculty to collaborate with mentors</li>
+                            </ul>
+                        </div>
+                        <!-- Phase 2 -->
+                        <div class="p-8 bento-card rounded-[2rem] fade-in">
+                            <div class="flex items-center gap-4 mb-6">
+                                <span class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-bold text-sm shadow-lg shadow-blue-200">2</span>
+                                <h4 class="text-xl font-bold text-slate-900">Pilot Execution & Impact</h4>
+                            </div>
+                            <p class="text-sm text-slate-500 mb-6 italic">Validate outcomes through results (12 Months).</p>
+                            <ul class="space-y-3 text-sm text-slate-600 font-medium">
+                                <li class="flex items-start gap-3"><i data-lucide="check" class="w-4 h-4 text-primary mt-1"></i> Assign real business projects to batches</li>
+                                <li class="flex items-start gap-3"><i data-lucide="check" class="w-4 h-4 text-primary mt-1"></i> Conduct hybrid learning workshops</li>
+                                <li class="flex items-start gap-3"><i data-lucide="check" class="w-4 h-4 text-primary mt-1"></i> Activate placement & internship pipeline</li>
+                            </ul>
+                        </div>
+                        <!-- Phase 3 -->
+                        <div class="p-8 bento-card rounded-[2rem] fade-in">
+                            <div class="flex items-center gap-4 mb-6">
+                                <span class="w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center font-bold text-sm shadow-lg shadow-blue-200">3</span>
+                                <h4 class="text-xl font-bold text-slate-900">National Spotlight & Scale</h4>
+                            </div>
+                            <p class="text-sm text-slate-500 mb-6 italic">Transform your institution into a role model (Ongoing).</p>
+                            <ul class="space-y-3 text-sm text-slate-600 font-medium">
+                                <li class="flex items-start gap-3"><i data-lucide="check" class="w-4 h-4 text-primary mt-1"></i> Expand across multiple departments</li>
+                                <li class="flex items-start gap-3"><i data-lucide="check" class="w-4 h-4 text-primary mt-1"></i> Establish innovation labs & hybrid workspaces</li>
+                                <li class="flex items-start gap-3"><i data-lucide="check" class="w-4 h-4 text-primary mt-1"></i> Position as a future-ready education leader</li>
+                            </ul>
+                        </div>
+                       
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gains Section -->
+        <section class="py-24 bg-surface">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid lg:grid-cols-2 gap-12">
+                    <div class="fade-in space-y-12">
+                        <div>
+                            <h3 class="text-2xl font-bold text-slate-900 mb-8 border-l-4 border-primary pl-4">What Universities Gain</h3>
+                            <div class="space-y-6">
+                                <div class="flex gap-4">
+                                    <i data-lucide="graduation-cap" class="w-6 h-6 text-primary flex-shrink-0"></i>
+                                    <div>
+                                        <p class="text-slate-900 font-bold">Future-Ready Graduates</p>
+                                        <p class="text-sm">Strong portfolios and applied real-world experience.</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-4">
+                                    <i data-lucide="award" class="text-primary flex-shrink-0"></i>
+                                    <div>
+                                        <p class="text-slate-900 font-bold">Institutional Reputation</p>
+                                        <p class="text-sm">Be recognized for innovation, not tradition alone.</p>
+                                    </div>
+                                </div>
+                                <!-- NEW: Faculty Empowerment -->
+                                <div class="flex gap-4">
+                                    <i data-lucide="user-plus" class="text-primary flex-shrink-0"></i>
+                                    <div>
+                                        <p class="text-slate-900 font-bold">Faculty Empowerment & Support</p>
+                                        <p class="text-sm">Enable faculty with tools, co-teaching models, and industry insights.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="fade-in space-y-12">
+                        <div>
+                            <h3 class="text-2xl font-bold text-slate-900 mb-8 border-l-4 border-secondary pl-4">What Students Gain</h3>
+                            <div class="space-y-6">
+                                <div class="flex gap-4">
+                                    <i data-lucide="user-check" class="text-secondary flex-shrink-0"></i>
+                                    <div>
+                                        <p class="text-slate-900 font-bold">Guided Practitioner Mentorship</p>
+                                        <p class="text-sm">Exposure to modern tools and industrial workflows.</p>
+                                    </div>
+                                </div>
+                                <div class="flex gap-4">
+                                    <i data-lucide="coins" class="text-secondary flex-shrink-0"></i>
+                                    <div>
+                                        <p class="text-slate-900 font-bold">Hybrid Hustle Access</p>
+                                        <p class="text-sm">Opportunities to earn through verified project pathways.</p>
+                                    </div>
+                                </div>
+                                <!-- NEW: Career Direction -->
+                                <div class="flex gap-4">
+                                    <i data-lucide="compass" class="text-secondary flex-shrink-0"></i>
+                                    <div>
+                                        <p class="text-slate-900 font-bold">Career Direction & Confidence</p>
+                                        <p class="text-sm">Graduate with purpose instead of uncertainty.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NEW: Partnership Models -->
+        <section id="partnership-models" class="py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16 fade-in">
+                    <h2 class="text-primary font-bold uppercase tracking-widest text-sm mb-4">Collaboration</h2>
+                    <h3 class="text-4xl font-heading font-black text-slate-900">Partnership Models</h3>
+                    <p class="mt-4 text-slate-500 max-w-2xl mx-auto">We offer flexible structures co-created based on academic vision and institution-wide roadmaps.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 fade-in">
+                    <div class="p-8 bento-card rounded-3xl">
+                        <h4 class="text-lg font-bold text-slate-900 mb-2">Department Pilot Model</h4>
+                        <p class="text-sm text-slate-500">Focused integration for specific technical or management streams.</p>
+                    </div>
+                    <div class="p-8 bento-card rounded-3xl">
+                        <h4 class="text-lg font-bold text-slate-900 mb-2">Innovation Lab Partnership</h4>
+                        <p class="text-sm text-slate-500">Physical spaces for experimentation, prototyping, and research.</p>
+                    </div>
+                    <div class="p-8 bento-card rounded-3xl">
+                        <h4 class="text-lg font-bold text-slate-900 mb-2">Joint Certification Program</h4>
+                        <p class="text-sm text-slate-500">Industry-recognized skill validation alongside academic degrees.</p>
+                    </div>
+                    <div class="p-8 bento-card rounded-3xl lg:col-span-1">
+                        <h4 class="text-lg font-bold text-slate-900 mb-2">Full-University Integration</h4>
+                        <p class="text-sm text-slate-500">Comprehensive ecosystem deployment across all departments.</p>
+                    </div>
+                    <div class="p-8 bento-card rounded-3xl lg:col-span-2">
+                        <h4 class="text-lg font-bold text-slate-900 mb-2">Custom Institutional Collaboration Framework</h4>
+                        <p class="text-sm text-slate-500">A bespoke roadmap tailored to the institution's long-term legacy goals.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NEW: Success Indicators ribbon -->
+        <section class="py-16 bg-slate-900 text-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12 fade-in">
+                    <h3 class="text-3xl font-heading font-bold mb-4">How We Measure Impact</h3>
+                    <p class="text-slate-400">Data-driven education leads to stronger institutional credibility.</p>
+                </div>
+                <div class="grid grid-cols-2 lg:grid-cols-5 gap-8 text-center fade-in">
+                    <div>
+                        <p class="text-3xl font-black text-primary mb-2">%</p>
+                        <p class="text-[10px] font-black uppercase tracking-widest text-slate-500 leading-tight">Verified Portfolios</p>
+                    </div>
+                    <div>
+                        <p class="text-3xl font-black text-secondary mb-2">#</p>
+                        <p class="text-[10px] font-black uppercase tracking-widest text-slate-500 leading-tight">Projects Completed</p>
+                    </div>
+                    <div>
+                        <p class="text-3xl font-black text-green-500 mb-2">↑</p>
+                        <p class="text-[10px] font-black uppercase tracking-widest text-slate-500 leading-tight">Placement Growth</p>
+                    </div>
+                    <div>
+                        <p class="text-3xl font-black text-blue-400 mb-2">★</p>
+                        <p class="text-[10px] font-black uppercase tracking-widest text-slate-500 leading-tight">Interview Readiness</p>
+                    </div>
+                    <div>
+                        <p class="text-3xl font-black text-white mb-2">+</p>
+                        <p class="text-[10px] font-black uppercase tracking-widest text-slate-500 leading-tight">Industry Partnerships</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NEW: Case Study Placeholder -->
+        <section class="py-24 bg-surface">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="bg-white p-12 rounded-[3rem] border border-slate-100 shadow-sm fade-in">
+                    <div class="flex items-center gap-3 mb-6">
+                        <span class="px-3 py-1 bg-green-50 text-green-600 text-[10px] font-bold uppercase rounded-full">Success Story</span>
+                        <h3 class="text-2xl font-heading font-bold text-slate-900">Case Study: Pilot Department Deployment</h3>
+                    </div>
+                    <p class="text-slate-600 mb-8">Within one year of hybrid curriculum integration, our partner institution achieved:</p>
+                    <div class="grid sm:grid-cols-2 gap-6">
+                        <div class="flex items-start gap-3">
+                            <i data-lucide="check" class="text-green-500 w-5 h-5 mt-1"></i>
+                            <p class="text-sm font-medium text-slate-700">72% Students built demo portfolios</p>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i data-lucide="check" class="text-green-500 w-5 h-5 mt-1"></i>
+                            <p class="text-sm font-medium text-slate-700">38+ Startup partnerships activated</p>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i data-lucide="check" class="text-green-500 w-5 h-5 mt-1"></i>
+                            <p class="text-sm font-medium text-slate-700">Increased internship conversion rates</p>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <i data-lucide="check" class="text-green-500 w-5 h-5 mt-1"></i>
+                            <p class="text-sm font-medium text-slate-700">Improved overall learning engagement</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Updated FAQ Section -->
+        <section id="faq" class="py-24 bg-white">
+            <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h3 class="text-3xl font-heading font-bold text-slate-900 mb-12 text-center fade-in">Partnership FAQ</h3>
+                <div class="space-y-4 fade-in">
+                    <details class="group bg-surface border border-slate-100 rounded-2xl overflow-hidden">
+                        <summary class="flex justify-between items-center p-6 cursor-pointer font-bold text-slate-900 select-none">
+                            Is Diverse Loopers replacing faculty or curriculum?
+                            <i data-lucide="plus" class="w-5 h-5 text-primary group-open:rotate-45 transition"></i>
+                        </summary>
+                        <div class="px-6 pb-6 text-slate-500 text-sm leading-relaxed">
+                            No. We strengthen existing structures and collaborate with faculty. We align industrial modules with academic subjects to make them practical.
+                        </div>
+                    </details>
+                    <details class="group bg-surface border border-slate-100 rounded-2xl overflow-hidden">
+                        <summary class="flex justify-between items-center p-6 cursor-pointer font-bold text-slate-900 select-none">
+                            Do students have to pay individually?
+                            <i data-lucide="plus" class="w-5 h-5 text-primary group-open:rotate-45 transition"></i>
+                        </summary>
+                        <div class="px-6 pb-6 text-slate-500 text-sm leading-relaxed">
+                            Partnership models vary—some are institution-funded while others are student-led. The financial structure is finalized with the institution.
+                        </div>
+                    </details>
+                    <details class="group bg-surface border border-slate-100 rounded-2xl overflow-hidden">
+                        <summary class="flex justify-between items-center p-6 cursor-pointer font-bold text-slate-900 select-none">
+                            Does this guarantee placements?
+                            <i data-lucide="plus" class="w-5 h-5 text-primary group-open:rotate-45 transition"></i>
+                        </summary>
+                        <div class="px-6 pb-6 text-slate-500 text-sm leading-relaxed">
+                            We don’t make unrealistic guarantees. We build verified capability, create industry pipelines, and increase measurable opportunities for students.
+                        </div>
+                    </details>
+                    <details class="group bg-surface border border-slate-100 rounded-2xl overflow-hidden">
+                        <summary class="flex justify-between items-center p-6 cursor-pointer font-bold text-slate-900 select-none">
+                            Can non-technical programs participate?
+                            <i data-lucide="plus" class="w-5 h-5 text-primary group-open:rotate-45 transition"></i>
+                        </summary>
+                        <div class="px-6 pb-6 text-slate-500 text-sm leading-relaxed">
+                            Yes. Hybrid learning models benefit innovation, business, research, and design domains equally by focusing on outcomes over theory.
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </section>
+
+        <!-- NEW: SEO Final Section -->
+        <section class="py-24 bg-surface border-t border-slate-100">
+            <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center fade-in">
+                <h3 class="text-3xl font-heading font-black text-slate-900 mb-6">Why Partner With Diverse Loopers Now</h3>
+                <p class="text-lg text-slate-500 mb-8 leading-relaxed">The future belongs to institutions that align with industry, invest in capability development, and create measurable student outcomes. Diverse Loopers exists to help universities lead this change with confidence.</p>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-24 bg-white">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="bg-gradient-to-br from-primary to-secondary rounded-[3rem] p-px shadow-2xl fade-in overflow-hidden">
+                    <div class="bg-white rounded-[3rem] grid lg:grid-cols-2 overflow-hidden">
+                        <!-- CTA Text -->
+                        <div class="p-10 lg:p-16 flex flex-col justify-center bg-slate-900 text-white">
+                            <h2 class="text-3xl md:text-5xl font-heading font-black mb-6 leading-tight">An Invitation <br>to Partner.</h2>
+                            <p class="text-lg text-slate-300 mb-8 leading-relaxed">
+                                Not as customers. Not as vendors. But as co-creators of a new academic paradigm. Let's design the future of higher education together.
+                            </p>
+                            <div class="space-y-4">
+                                <div class="flex items-center gap-4 text-slate-400">
+                                    <i data-lucide="mail" class="w-5 h-5 text-primary"></i> contact@diverseloopers.com
+                                </div>
+                                <div class="flex items-center gap-4 text-slate-400">
+                                    <i data-lucide="phone" class="w-5 h-5 text-primary"></i> +91 98393 50961
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Partner Form -->
+                        <div class="p-10 lg:p-16">
+                            <form id="uni-contact-form" class="space-y-5">
+                                <div class="space-y-1">
+                                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Institution Name</label>
+                                    <input type="text" name="university_name" required placeholder="University / College" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 focus:ring-2 focus:ring-primary outline-none transition">
+                                </div>
+                                <div class="grid sm:grid-cols-2 gap-4">
+                                    <div class="space-y-1">
+                                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Contact Person</label>
+                                        <input type="text" name="contact_person" required placeholder="Full Name" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 focus:ring-2 focus:ring-primary outline-none transition">
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Designation</label>
+                                        <input type="text" name="designation" required placeholder="e.g. Principal" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 focus:ring-2 focus:ring-primary outline-none transition">
+                                    </div>
+                                </div>
+                                <div class="grid sm:grid-cols-2 gap-4">
+                                    <div class="space-y-1">
+                                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Official Email</label>
+                                        <input type="email" name="email" required placeholder="admin@univ.edu" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 focus:ring-2 focus:ring-primary outline-none transition">
+                                    </div>
+                                    <div class="space-y-1">
+                                        <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Contact Number</label>
+                                        <input type="tel" name="phone" required placeholder="+91 ..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 focus:ring-2 focus:ring-primary outline-none transition">
+                                    </div>
+                                </div>
+                                <div class="space-y-1">
+                                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-500">Support Inquiry</label>
+                                    <textarea name="message" rows="3" placeholder="How can we help your students?" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 focus:ring-2 focus:ring-primary outline-none transition"></textarea>
+                                </div>
+                                <button type="submit" class="w-full py-4 bg-primary text-white rounded-xl font-bold hover:bg-blue-700 transition shadow-xl shadow-blue-100">
+                                    Start the Conversation
+                                </button>
+                                <div id="uni-message" class="hidden text-center p-4 rounded-xl text-sm font-bold"></div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-white pt-20 pb-10 mt-auto block">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 text-sm">
+                <div class="col-span-1 lg:col-span-1">
+                    <img src="Diverse Loopers Black BG (2).png" alt="Diverse Loopers" class="h-12 w-auto mb-6">
+                    <p class="text-slate-400 leading-relaxed">Empowering talents for tomorrow through future-ready career pathways.</p>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-6">Quick Navigation</h4>
+                    <ul class="space-y-4 text-slate-400">
+                        <li><a href="index.html" class="hover:text-white transition">For Students</a></li>
+                        <li><a href="home-bus.html" class="hover:text-white transition">For Businesses</a></li>
+                        <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-6">Contact Us</h4>
+                    <ul class="space-y-4 text-slate-400">
+                        <li class="flex gap-3"><i data-lucide="mail" class="w-4 h-4 text-primary"></i> contact@diverseloopers.com</li>
+                        <li class="flex gap-3"><i data-lucide="phone" class="w-4 h-4 text-primary"></i> +91 98393 50961</li>
+                    </ul>
+                </div>
+                <div>
+                    <p class="text-xs text-slate-500 font-bold">&copy; 2024 Diverse Loopers Inc.</p>
+                    <p class="text-[10px] text-slate-500 mt-2 italic leading-relaxed">Creating an ecosystem where students do not simply pass examinations, but thrive as innovators, leaders, and professionals.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // --- Supabase Config ---
+        const SUPABASE_URL = 'https://tjqsmkaiajdpotmafqvw.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqcXNta2FpYWpkcG90bWFmcXZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU5ODA3NDIsImV4cCI6MjA3MTU1Njc0Mn0.9710q9W5EFfCagj340AizUSKiOXYApy0xkTFszFjO8o';
+        const { createClient } = supabase;
+        const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // --- Mobile Menu Logic ---
+        const mobileToggle = document.getElementById('mobile-menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
         });
-    });
-});
-});
-  </script>
-</body>
 
+        mobileMenu.addEventListener('click', (e) => {
+            if (e.target.closest('a') || e.target.closest('button')) {
+                mobileMenu.classList.add('hidden');
+            }
+        });
+
+        // --- FORM SUBMISSION Logic (Preserved) ---
+        const uniForm = document.getElementById('uni-contact-form');
+        const uniMessage = document.getElementById('uni-message');
+
+        if (uniForm) {
+            uniForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+                
+                uniMessage.classList.remove('hidden');
+                uniMessage.textContent = "Processing Inquiry...";
+                uniMessage.className = "block p-4 rounded-xl text-sm font-bold bg-blue-50 text-primary animate-pulse mt-4";
+
+                const formData = new FormData(uniForm);
+                const data = {
+                    university_name: formData.get('university_name'),
+                    contact_person_name: formData.get('contact_person'),
+                    designation: formData.get('designation'),
+                    email_id: formData.get('email'),
+                    contact_number: formData.get('phone'),
+                    message: formData.get('message'),
+                };
+
+                try {
+                    const { error } = await _supabase.from('university_contacts').insert([data]);
+                    if (error) throw error;
+
+                    uniMessage.textContent = "Success! We have received your inquiry.";
+                    uniMessage.className = "block p-4 rounded-xl text-sm font-bold bg-green-50 text-green-600 mt-4";
+                    uniForm.reset();
+                } catch (err) {
+                    uniMessage.textContent = "Submission failed. Please try again.";
+                    uniMessage.className = "block p-4 rounded-xl text-sm font-bold bg-red-50 text-red-600 mt-4";
+                }
+            });
+        }
+
+        // --- Animations & Particles ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        const canvas = document.getElementById('hero-canvas');
+        const ctx = canvas.getContext('2d');
+        const heroSection = document.getElementById('hero-section');
+        let pts = [];
+
+        function resize() {
+            if (!heroSection) return;
+            canvas.width = window.innerWidth;
+            canvas.height = heroSection.offsetHeight;
+        }
+
+        function create() {
+            pts = [];
+            for(let i=0; i<40; i++) pts.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                vx: (Math.random() - 0.5) * 0.5,
+                vy: (Math.random() - 0.5) * 0.5,
+                s: Math.random() * 2
+            });
+        }
+
+        function draw() {
+            ctx.clearRect(0,0,canvas.width, canvas.height);
+            ctx.fillStyle = '#3b82f6';
+            pts.forEach(p => {
+                p.x += p.vx; p.y += p.vy;
+                if(p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                if(p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.s, 0, Math.PI*2);
+                ctx.fill();
+            });
+            requestAnimationFrame(draw);
+        }
+
+        window.addEventListener('resize', () => { resize(); create(); });
+        resize(); create(); draw();
+
+        
+    </script>
+</body>
 </html>
