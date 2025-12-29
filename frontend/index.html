@@ -1,67 +1,78 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth bg-[#0f172a]">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Diverse Loopers - Empowering Talents for Tomorrow</title>
+
+    <!-- SEO Meta Tags -->
+    <title>Diverse Loopers | Hybrid Hustle  - Empowering Talent For Tomorrow</title>
     <meta name="description"
-        content="Diverse Loopers offers a personalized Career Compass tool to help engineering students bridge the gap between their curriculum and their dream tech job.">
-    <link rel="canonical" href="https://www.diverseloopers.com/" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
+        content="Discover the Hybrid Hustle model at Diverse Loopers. Bridge the gap between engineering curriculum and tech industry needs with our Career Compass Path Analyzer.">
+    <meta name="keywords"
+        content="Hybrid Hustle, Hybrid Hustle Diverse Loopers, Hybrid Hustle program, career development platform, earn while learning, project-based learning, student career pathway tool">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="Diverse Loopers - Empowering Talents for Tomorrow">
+    <meta property="og:description"
+        content="Transform from an ambitious learner to a tech professional through structured learning and real project exposure.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.diverseloopers.com/">
+
+    <!-- Fonts & Scripts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap"
         rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#db2777',
+                        dark: '#0f172a',
+                        surface: '#f8fafc'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Poppins', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        :root {
-            --color-primary: #3b82f6;
-            --color-secondary: #ec4899;
-            --color-dark: #1e293b;
-            --color-light: #f1f5f9;
-            --color-text: #334155;
-            --color-subtle: #64748b;
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
+        .hero-gradient {
+            background: radial-gradient(circle at top right, rgba(37, 99, 235, 0.1), transparent),
+                radial-gradient(circle at bottom left, rgba(219, 39, 119, 0.05), transparent);
         }
 
-        html {
-            scroll-behavior: smooth;
+        .bento-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #fff;
-            color: var(--color-text);
-            line-height: 1.7;
-            overflow-x: hidden;
+        .bento-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-        }
-
-        section {
-            padding: 6rem 0;
-        }
-
-        /* --- Animations --- */
         .fade-in {
             opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out;
         }
 
         .fade-in.visible {
@@ -69,1768 +80,767 @@
             transform: translateY(0);
         }
 
-        /* --- Header & Navbar --- */
-        .header {
-            background-color: rgba(255, 255, 255, 0.8);
-            /* Start transparent */
-            backdrop-filter: blur(10px);
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            transition: background-color 0.4s ease, border-bottom 0.4s ease, backdrop-filter 0.4s ease;
-        }
-
-        .header.scrolled {
-            background-color: rgba(255, 255, 255, 0.8);
-            /* Semi-transparent white */
-            backdrop-filter: blur(10px);
-            /* This creates the frosted glass effect */
-            border-bottom: 1px solid #e2e8f0;
-        }
-
-
-        .navbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            text-decoration: none;
-        }
-
-        .logo img {
-            height: 60px;
-            width: 200px;
-        }
-
-        .logo-text {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--color-dark);
-        }
-
-        .nav-links,
-        .nav-actions {
+        /* Custom Carousel Scrollbar hide */
+        .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
 
-        /* Hide on mobile by default */
-
-        /* --- Mobile Menu Styles --- */
-        .hamburger {
-            cursor: pointer;
-            width: 24px;
-            height: 24px;
-            transition: all 0.25s;
-            position: relative;
-        }
-
-        .hamburger-top,
-        .hamburger-middle,
-        .hamburger-bottom {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 24px;
-            height: 3px;
-            background: var(--color-dark);
-            transform: rotate(0);
-            transition: all 0.5s;
-        }
-
-        .hamburger-middle {
-            transform: translateY(7px);
-        }
-
-        .hamburger-bottom {
-            transform: translateY(14px);
-        }
-
-        .open .hamburger-top {
-            transform: rotate(45deg) translateY(6px) translateX(6px);
-        }
-
-        .open .hamburger-middle {
-            display: none;
-        }
-
-        .open .hamburger-bottom {
-            transform: rotate(-45deg) translateY(6px) translateX(-6px);
-        }
-
-        .mobile-menu-inner {
-            position: absolute;
-            top: 85px;
-            left: 0;
-            width: 100%;
-            background-color: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 2rem;
-            box-shadow: var(--shadow-lg);
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            animation: slideDown 0.5s ease-out;
-        }
-
-        .mobile-link {
-            color: var(--color-dark);
-            font-size: 1.2rem;
-            font-weight: 600;
-            text-align: center;
-            text-decoration: none;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        #mobile-login-btn.login {
-            border: 2px solid #e2e8f0;
-            color: var(--color-subtle);
-        }
-
-        /* --- Desktop Navigation Styles --- */
-        @media (min-width: 768px) {
-
-            .hamburger,
-            #mobile-menu {
-                display: none;
-            }
-
-            /* Hide mobile elements on desktop */
-            .nav-links {
-                display: flex;
-                align-items: center;
-                gap: 2rem;
-            }
-
-            .nav-actions {
-                display: flex;
-                align-items: center;
-                gap: 1rem;
-            }
-
-            .nav-links a {
-                position: relative;
-                text-decoration: none;
-                color: var(--color-subtle);
-                font-weight: 600;
-                padding: 8px 16px;
-                border-radius: 50px;
-                transition: color 0.3s, background-color 0.3s;
-            }
-
-            .nav-links a:hover {
-                color: var(--color-primary);
-                background-color: var(--color-light);
-            }
-
-            .nav-links a::after {
-                content: '';
-                position: absolute;
-                width: 0;
-                height: 2px;
-                bottom: -4px;
-                left: 50%;
-                transform: translateX(-50%);
-                background-color: var(--color-primary);
-                transition: width 0.3s ease-out;
-            }
-
-            .nav-links a:hover::after {
-                width: 60%;
-            }
-        }
-
-
-        .persona-switcher {
-            padding-top: 1rem;
-            border-top: 1px solid #e2e8f0;
-            margin-top: 1rem;
-            display: flex;
-            gap: 1.5rem;
-
-
-        }
-
-        .persona-switcher a {
-            color: var(--color-subtle);
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 500;
-            padding-bottom: 0.25rem;
-            border-bottom: 2px solid transparent;
-            transition: color 0.3s, border-color 0.3s;
-        }
-
-        .persona-switcher a:hover {
-            color: var(--color-dark);
-        }
-
-        .persona-switcher a.active {
-            color: var(--color-primary);
-            font-weight: 600;
-            border-bottom-color: var(--color-primary);
-        }
-
-
-
-        /* Hide switcher on mobile for a cleaner look */
-        @media (max-width: 767px) {
-            .persona-switcher {
-                display: none;
-            }
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 0.6rem 1.2rem;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .btn-secondary {
-            border: 2px solid #e2e8f0;
-            color: var(--color-subtle);
-        }
-
-        .btn-secondary:hover {
-            border-color: var(--color-primary);
-            color: var(--color-primary);
-        }
-
-        .btn-primary {
-            text-align: center;
-            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
-            color: #fff;
-            border: 2px solid transparent;
-            box-shadow: var(--shadow-md);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        /* Professional footer logout styling */
-        .footer-user-section {
-            margin: 2rem 0;
-            padding: 1.5rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-        }
-
-        .user-info {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, var(--color-primary), var(--color-secondary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-            font-size: 1.1rem;
-        }
-
-        .user-details h4 {
-            margin: 0;
-            color: #fff;
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
-
-        .user-details p {
-            margin: 0;
-            color: var(--color-subtle);
-            font-size: 0.9rem;
-        }
-
-        .logout-btn-footer {
-            width: 100%;
-            padding: 0.75rem 1.5rem;
-            background: transparent;
-            border: 2px solid rgba(239, 68, 68, 0.7);
-            color: #ef4444;
-            border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .logout-btn-footer:hover {
-            background: #ef4444;
-            color: white;
-            border-color: #ef4444;
-            transform: translateY(-1px);
-        }
-
-        @media (max-width: 768px) {
-            .user-info {
-                flex-direction: column;
-                text-align: center;
-            }
-        }
-
-        /* ... All other styles for Hero, About, Contact, Footer, etc. remain the same ... */
-        #hero {
-            position: relative;
-            text-align: center;
-            padding: 8rem 0;
-            background-color: #0a0a2a;
-            color: #fff;
-        }
-
-        #hero-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
-        }
-
-        #hero h1 {
-            font-size: clamp(3rem, 6vw, 5rem);
-            font-weight: 800;
-            line-height: 1.1;
-            background: linear-gradient(90deg, #fff, #c7d2fe);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 1.5rem;
-        }
-
-        #hero .tagline {
-            font-size: 1.25rem;
-            color: #e2e8f0;
-            margin: 0 auto 2.5rem;
-            max-width: 700px;
-        }
-
-        .about-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 4rem;
-            align-items: center;
-        }
-
-        @media (min-width: 992px) {
-            .about-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        .about-image {
-            background: url('team.jpg') no-repeat center center/cover;
-            border-radius: 1rem;
-            min-height: 400px;
-            box-shadow: var(--shadow-lg);
-        }
-
-        .section-header {
-            text-align: left;
-            margin-bottom: 1.5rem;
-        }
-
-        .section-header h2 {
-            font-size: 2.8rem;
-            font-weight: 700;
-            color: var(--color-dark);
-        }
-
-        .section-header p {
-            font-size: 1.1rem;
-            color: var(--color-subtle);
-        }
-
-        #contact {
-            background-color: #e2e8f0;
-            /* A slightly darker grey/blue for contrast */
-            color: var(--color-text);
-            padding: 6rem 0;
-        }
-
-        .contact-form {
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-        }
-
-        @media (min-width: 768px) {
-            .form-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group.full-width {
-            grid-column: 1 / -1;
-        }
-
-        .form-group label {
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-            display: block;
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            /* ADDED select HERE */
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #cbd5e1;
-            border-radius: 0.375rem;
-            font-size: 1rem;
-            font-family: 'Poppins', sans-serif;
-            transition: all 0.3s;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            /* ADDED select HERE */
-            outline: none;
-            border-color: var(--color-primary);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
-        }
-
-        .footer {
-            background-color: var(--color-dark);
-            color: var(--color-light);
-            padding: 4rem 0;
-            text-align: center;
-        }
-
-        .footer .logo {
-            justify-content: center;
-        }
-
-        .footer .logo-text {
-            color: #fff;
-        }
-
-        .footer .tagline {
-            margin: 1rem 0 2rem;
-            color: var(--color-subtle);
-        }
-
-        .footer-links {
-            margin-bottom: 2rem;
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-        }
-
-        .footer-links a {
-            color: var(--color-light);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .footer-links a:hover {
-            text-decoration: underline;
-        }
-
-        .contact-details p {
-            margin-bottom: 0.5rem;
-        }
-
-        .contact-details a {
-            color: #fff;
-            text-decoration: none;
-        }
-
-        .contact-details a:hover {
-            text-decoration: underline;
-        }
-
-        .copyright {
-            margin-top: 3rem;
-            font-size: 0.9rem;
-            color: var(--color-subtle);
-        }
-
-        .programs-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            /* 1 column on mobile */
-            gap: 2rem;
-        }
-
-        /* Card styling for "Why Choose Us" items */
-        .feature-card {
-            background-color: #fff;
-            border-radius: 12px;
-            padding: 2rem 1.5rem;
-            text-align: center;
-            border: 1px solid #e2e8f0;
-            transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
-            /* Added border-color */
-            box-shadow: var(--shadow-md);
-            /* Add initial shadow */
-        }
-
-        .feature-card:hover {
-            transform: translateY(-8px);
-            /* More pronounced lift */
-            box-shadow: var(--shadow-lg);
-            /* Stronger shadow on hover */
-            border-color: var(--color-primary);
-            /* Highlight border */
-        }
-
-        .feature-icon {
-            margin: 0 auto 1.5rem;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .feature-card h3 {
-            margin-bottom: 0.5rem;
-            color: var(--color-dark);
-        }
-
-        .feature-card p {
-            color: var(--color-subtle);
-            line-height: 1.6;
-        }
-
-        /* Card styling for the main program cards */
-        .program-card {
-            background-color: #fff;
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            padding: 2.5rem;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-
-        .program-card:hover {
-            transform: translateY(-8px);
-            /* More pronounced lift */
-            box-shadow: var(--shadow-lg);
-            border-left: 5px solid var(--color-primary);
-        }
-
-        .program-header {
-            margin-bottom: 1rem;
-        }
-
-        .program-header h3 {
-            color: var(--color-dark);
-        }
-
-        .program-tag {
-            display: inline-block;
-            background-color: var(--color-light);
-            color: var(--color-primary);
-            font-weight: 600;
-            font-size: 0.8rem;
-            padding: 0.25rem 0.75rem;
-            border-radius: 50px;
-            margin-top: 0.5rem;
-        }
-
-        .program-features {
-            list-style: none;
-            margin-top: 1.5rem;
-            padding-left: 0;
-            color: var(--color-subtle);
-        }
-
-        .program-features li {
-            padding-left: 1.75rem;
-            position: relative;
-            margin-bottom: 0.75rem;
-        }
-
-        /* Custom checkmark for list items */
-        .program-features li::before {
-            content: '✔';
-            position: absolute;
-            left: 0;
-            top: 2px;
-            color: var(--color-primary);
-            font-weight: 600;
-        }
-
-        /* Grid and cards for "Extra Features" */
-        .extra-features-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-            justify-items: center;
-            /* Center items on the grid axis */
-        }
-
-
-
-        /* Responsive adjustments for larger screens */
-        @media (min-width: 768px) {
-            .features-grid {
-                grid-template-columns: repeat(2, 1fr);
-                /* 2 columns on tablets */
-            }
-
-            .programs-grid {
-                grid-template-columns: repeat(2, 1fr);
-                /* 2 columns on tablets */
-            }
-
-            .extra-features-grid {
-                grid-template-columns: repeat(3, 1fr);
-                /* 3 columns on tablets */
-            }
-        }
-
-        @media (min-width: 992px) {
-            .features-grid {
-                grid-template-columns: repeat(4, 1fr);
-                /* 4 columns on desktops */
-            }
-        }
-
-        @keyframes rotate {
-            from {
-                transform: rotate(0deg);
-            }
-
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .courses-cta-btn {
-            /* Positioning and Layout */
-            position: relative;
-            z-index: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            margin: 3rem auto 4rem;
-            /* Adjusts spacing around the button */
-            width: fit-content;
-
-            /* Appearance */
-            background-color: #fff;
-            color: var(--color-dark);
-            border-radius: 50px;
-            /* Fully rounded pill shape */
-            padding: 0.8rem 1.75rem;
-            font-size: 1rem;
-            font-weight: 600;
-            text-decoration: none;
-            overflow: hidden;
-            /* Important for the border effect */
-
-            /* Effects */
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-        }
-
-        /* The Animated Gradient Border */
-        .courses-cta-btn::before {
-            content: '';
-            position: absolute;
-            z-index: -1;
-            top: -2px;
-            left: -2px;
-            width: calc(100% + 4px);
-            height: calc(100% + 4px);
-
-            /* Using a conic-gradient for a smooth spin */
-            background: conic-gradient(from 0deg,
-                    var(--color-primary),
-                    var(--color-secondary),
-                    var(--color-primary));
-
-            border-radius: inherit;
-            /* Matches the button's border-radius */
-            animation: rotate 4s linear infinite;
-        }
-
-        /* Hover State */
-        .courses-cta-btn:hover {
-            transform: translateY(-3px);
-            color: #fff;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Gradient background appears on hover */
-        .courses-cta-btn:hover::after {
-            content: '';
-            position: absolute;
-            z-index: -1;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
-            border-radius: inherit;
-        }
-
-        /* The arrow icon inside the button */
-        .courses-cta-btn .arrow-icon {
-            transition: transform 0.3s ease;
-        }
-
-        /* Arrow moves to the right on hover */
-        .courses-cta-btn:hover .arrow-icon {
-            transform: translateX(5px);
-        }
-
-        #programs {
-            background-color: #f0f4f8;
-            /* A light, soft grey/blue */
-            padding: 6rem 0;
-            border-top: 1px solid #e2e8f0;
-        }
-
-        /* Background for "Why Students Choose Us" section (ID: programs, but target the first child) */
-        /* We'll apply this to the first child div of #programs to avoid affecting the whole background */
-        #programs>div.container>div:first-child:has(h2:contains("Why Students Choose Us")) {
-            position: relative;
-            background-color: #fff;
-            /* White background for the content area */
-            padding: 4rem 2rem;
-            /* Add padding to contain content */
-            border-radius: 15px;
-            /* Slightly rounded corners for the content area */
-            box-shadow: var(--shadow-lg);
-            /* Add shadow to make it pop */
-            margin-bottom: 4rem;
-            /* Space below this content area */
-            overflow: hidden;
-            /* Hide overflow of the pattern */
-            z-index: 1;
-            /* Ensure content is above background pattern */
-        }
-
-        /* Abstract background pattern using pseudo-elements */
-        #programs>div.container>div:first-child:has(h2:contains("Why Students Choose Us"))::before {
-            content: '';
-            position: absolute;
-            top: -50px;
-            left: -50px;
-            right: -50px;
-            bottom: -50px;
-            background-image: radial-gradient(circle, #e0f2fe 1px, transparent 1px);
-            background-size: 40px 40px;
-            opacity: 0.3;
-            z-index: -1;
-            animation: backgroundPan 30s linear infinite;
-            /* Subtle animation */
-        }
-
-        @keyframes backgroundPan {
-            from {
-                background-position: 0 0;
-            }
-
-            to {
-                background-position: 400px 400px;
-                /* Pan pattern across */
-            }
-        }
-
-        /* Adjustments for the section-header within this specific visual block */
-        #programs>div.container>div:first-child:has(h2:contains("Why Students Choose Us")) .section-header {
-            margin-bottom: 2rem !important;
-            /* Adjust margin inside the visual block */
-            position: relative;
-            z-index: 2;
-            /* Ensure text is above the pattern */
-        }
-
-        /* Ensure the features grid also has z-index to be above the pattern */
-        #programs>div.container>div:first-child:has(h2:contains("Why Students Choose Us")) .features-grid {
-            position: relative;
-            z-index: 2;
-        }
-
-        /* From Uiverse.io by joe-watson-sbf - MODIFIED */
-        .flip-card {
-            background-color: transparent;
-            width: 21rem;
-            /* Matched to the inner card width */
-            height: 254px;
-            perspective: 1000px;
-            font-family: sans-serif;
-        }
-
-        .title {
-            font-size: 1.5em;
-            font-weight: 900;
-            text-align: center;
-            margin: 0;
-        }
-
-        .flip-card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.8s;
-            transform-style: preserve-3d;
-        }
-
-        .flip-card:hover .flip-card-inner {
-            transform: rotateY(180deg);
-            transform-origin: 50% 50%;
-        }
-
-        .flip-card-front,
-        .flip-card-back {
-            box-shadow: 0 8px 14px 0 rgba(0, 0, 0, 0.2);
-            position: absolute;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            width: 100%;
-            /* Changed from 21rem to 100% */
-            height: 100%;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            border: 1px solid coral;
-            border-radius: 1rem;
-        }
-
-        .flip-card-front {
-            background: linear-gradient(120deg, bisque 60%, rgb(255, 231, 222) 88%,
-                    rgb(255, 211, 195) 40%, rgba(255, 127, 80, 0.603) 48%);
-            color: coral;
-        }
-
-        .flip-card-back {
-            background: linear-gradient(120deg, rgb(255, 174, 145) 30%, coral 88%,
-                    bisque 40%, rgb(255, 185, 160) 78%);
-            color: white;
-            transform: rotateY(180deg);
-        }
-
-        /* --- NEW: Events Section Styles --- */
-        #events {
-            background-color: #ffffff;
-            padding: 6rem 0;
-        }
-
-        /* --- NEW CAROUSEL STYLES (ADD THIS TO YOUR <style> BLOCK) --- */
-
-        /* Wrapper for buttons and scroll area */
-        .carousel-wrapper {
-            position: relative;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* The actual scrolling container */
-        .events-grid-container {
-            overflow-x: hidden;
-            overflow-y: hidden;
-            /* <--- NEW: Explicitly prevents vertical scrollbar */
-            scroll-behavior: smooth;
-            padding: 0 1.5rem;
-        }
-
-        /* The horizontal tracks that holds all cards */
-        /* The horizontal tracks that holds all cards */
-        .events-grid {
-            --gap: 2rem;
-            --card-count: 3;
-            display: grid;
-            /* Forces the layout to fit 3 items per view exactly. The JS sets --total-events. */
-            grid-template-columns: repeat(var(--total-events, 4), minmax(calc((100% / var(--card-count)) - var(--gap) * (var(--card-count) - 1) / var(--card-count)), 1fr));
-            grid-auto-flow: column;
-            gap: var(--gap);
-            width: fit-content;
-            padding-bottom: 1.5rem;
-        }
-
-        /* Style for individual cards (ensures they match grid sizing) */
-        .event-card {
-            /* Base styles */
-            background-color: #fff;
-            border-radius: 12px;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-            border: 1px solid #e2e8f0;
-
-            /* FIX 1: Ensures card uses its full vertical space and grows naturally */
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            height: auto;
-            min-height: 100%;
-        }
-
-        /* Scroll buttons (control layout and state) */
-        .scroll-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 10;
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.9);
-            border: 1px solid var(--color-primary);
-            border-radius: 50%;
-            box-shadow: var(--shadow-md);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: opacity 0.3s, background-color 0.3s;
-            color: var(--color-primary);
-            opacity: 1;
-        }
-
-        .scroll-btn:hover {
-            background-color: var(--color-primary);
-            color: white;
-        }
-
-        #scroll-left-btn {
-            left: 0.5rem;
-            padding-right: 0.25rem;
-        }
-
-        #scroll-right-btn {
-            right: 0.5rem;
-            padding-left: 0.25rem;
-        }
-
-        .scroll-btn.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .event-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        .event-media {
-            width: 100%;
-            height: 200px;
-            background-color: var(--color-dark);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .event-media img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .event-content {
-            padding: 1.5rem;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .event-content h3 {
-            font-size: 1.5rem;
-            color: var(--color-dark);
-            margin-bottom: 0.5rem;
-        }
-
-        .event-date {
-            font-size: 0.9rem;
-            color: var(--color-primary);
-            font-weight: 600;
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        .event-content p {
-            color: var(--color-subtle);
-            margin-bottom: 1rem;
-            line-height: 1.6;
-        }
-
-        .event-join-btn {
-            display: block;
-            width: 100%;
-            text-align: center;
-            padding: 0.75rem 1rem;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: all 0.3s;
-        }
-
-        /* --- FIX: Mobile Event Layout Override --- */
-        @media (max-width: 767px) {
-
-            /* 1. Ensure the container takes up its full horizontal space */
-            .events-grid-container {
-                padding: 0 0;
-                /* Remove inner padding to use full width */
-                overflow-x: scroll;
-                /* Allow horizontal scrolling on mobile */
-            }
-
-            /* 2. Redefine the main grid for mobile */
-            .events-grid {
-                --gap: 1rem;
-                /* Smaller gap on mobile */
-                --card-count: 1;
-                /* Only show 1 card in the viewport */
-                /* Use a custom calculation for 1 item view (100% - gap) */
-                grid-template-columns: repeat(var(--total-events, 2), calc(100% - var(--gap) * 2));
-                padding: 0 1rem 1.5rem;
-                /* Add side padding for a peeking effect */
-                scroll-snap-type: x mandatory;
-                /* Optional: Snap to cards on scroll */
-            }
-
-            /* 3. Ensure cards scroll-snap correctly and take full width minus padding */
-            .event-card {
-                scroll-snap-align: start;
-                min-width: 100%;
-                /* Ensure card takes the full calculated width of its grid column */
-                margin-left: 0.5rem;
-                /* Pushes the card inward to allow the left snap-padding */
-            }
-
-            /* 4. Hide scroll buttons on mobile, as users will swipe */
-            .scroll-btn {
-                display: none !important;
-            }
-
-            /* 5. Center the section header text on mobile container */
-            #events .container {
-                padding: 0;
-            }
-
-            #events .container .section-header {
-                padding: 0 1.5rem;
-            }
-        }
-
-        /* FIX 2: General grid cleanup (Make sure this exists in your general .events-grid style) */
-        .events-grid {
-            /* ... existing styles ... */
-            padding-bottom: 1.5rem;
-            /* Ensure no wrapping happens. This forces the scroll. */
-            grid-auto-flow: column;
-        }
-
-        /* --- NEW: Hybrid Hustler Section Styles --- */
-        #hybrid-hustler {
-            /* Full-width container setup */
-            background-color: var(--color-dark);
-            /* Use dark color as fallback */
-            padding: 0;
-            /* Remove vertical padding from section level */
-            position: relative;
-            min-height: 70vh;
-            /* Give it a decent height on all screens */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
-
-        .hustler-content-grid {
-            /* Use container properties only for content, not layout */
-            max-width: 1200px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 6rem 1.5rem;
-            /* Add padding here to push content off the edges */
-            position: relative;
-            z-index: 10;
-            /* Ensure content is above the video */
-            display: flex;
-            justify-content: flex-end;
-            /* Push content (the form) to the right edge */
-        }
-
-        /* The visual container is no longer needed to limit the video width */
-        .hustler-visual {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            /* Keep it below content */
-            background-color: var(--color-dark);
-            overflow: hidden;
-            border-radius: 0;
-            /* Remove border-radius here as it's full screen */
-            box-shadow: none;
-            /* Remove shadow */
-        }
-
-        /* STYLES FOR VIDEO BACKGROUND */
-        .video-container,
-        .hustler-video {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            left: 0;
-        }
-
-        .hustler-video {
-            object-fit: cover;
-            /* Ensures the video covers the entire screen space */
-            display: block;
-        }
-
-        /* The Form Card must now only occupy one side, floating over the background */
-        .hustler-form-card {
-            background-color: rgb(255 255 255 / 0%);
-            padding: 2.5rem;
-            border-radius: 12px;
-            /* box-shadow: var(--shadow-lg); */
-            max-width: 1000px;
-            width: 100%;
-            border: none;
-        }
-
-        /* Overlay removed/redefined for the card itself */
-        .hustler-form-card::before {
-            content: none;
-            /* Remove previous overlay from the card */
-        }
-
-        @media (max-width: 991px) {
-            .hustler-content-grid {
-                /* On tablets/mobile, center the form */
-                justify-content: center;
-                padding: 4rem 1.5rem;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .hustler-form-card {
-                /* Allow card to fill more space on smaller mobiles */
-                max-width: 100%;
-            }
-
-            #hybrid-hustler {
-                min-height: 100vh;
-                /* Use full height on mobile */
-            }
-        }
-
-        /* --- Tools Dropdown Styles --- */
-        .dropdown-container {
-            position: relative;
-            display: inline-block;
-        }
-
-        /* The Menu (Hidden by default) */
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: 100%;
-            background-color: #fff;
-            min-width: 200px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-            border-radius: 12px;
-            border: 1px solid #e2e8f0;
-            z-index: 1000;
-            overflow: visible;
-            /* Changed from hidden to allow the bridge to work */
-            margin-top: 0.5rem;
-            /* This creates the gap visually */
-            animation: fadeIn 0.3s ease-out;
-            /* Made animation slightly slower (0.2s -> 0.3s) */
-        }
-
-        /* Show menu on hover */
-        .dropdown-container:hover .dropdown-menu {
-            display: block;
-        }
-
-        /* Links inside the dropdown */
-        .dropdown-item {
-            color: var(--color-text);
-            padding: 12px 20px;
-            text-decoration: none;
-            display: block;
-            font-size: 0.95rem;
-            font-weight: 500;
-            transition: all 0.5s;
-            text-align: left;
-            border-left: 3px solid transparent;
-        }
-
-        .dropdown-item:hover {
-            background-color: var(--color-light);
-            color: var(--color-primary);
-            border-left: 3px solid var(--color-primary);
-        }
-
-        /* Icon rotation on hover */
-        .dropdown-container:hover .fa-chevron-down {
-            transform: rotate(180deg);
-        }
-
-        .dropdown-btn-icon {
-            transition: transform 0.5s ease;
-            margin-left: 8px;
-            font-size: 0.8em;
-        }
-
-        .dropdown-menu::before {
-            content: "";
-            position: absolute;
-            top: -20px;
-            /* Reaches up towards the button */
-            left: 0;
-            width: 100%;
-            height: 20px;
-            /* Height of the invisible bridge */
-            background: transparent;
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
     </style>
 </head>
 
-<body>
+<body class="font-sans text-slate-800 bg-white min-h-screen flex flex-col overflow-x-hidden">
 
-
-    <header class="header">
-        <div class="container">
-            <nav class="navbar">
-                <a href="index.html" class="logo">
-                    <img src="DIVERSE LOOPERS (1) bg.png" alt="Diverse Loopers Logo">
-
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass-nav">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <a href="index.html" class="flex-shrink-0 flex items-center gap-2">
+                    <img src="DIVERSE LOOPERS (1) bg.png" alt="Diverse Loopers" class="h-12 w-auto">
                 </a>
 
-                <!-- Desktop Menu -->
-                <div class="nav-links">
-                    <a href="aboutus-std.html">About Us</a>
+                <!-- Desktop Nav -->
+                <div class="hidden md:flex items-center space-x-8">
+                    <div class="flex space-x-1 p-1 bg-slate-100 rounded-full text-xs font-semibold mr-4">
+                        <a href="index.html"
+                            class="px-4 py-1.5 bg-white text-primary rounded-full shadow-sm">Students</a>
+                        <a href="home-uni.html"
+                            class="px-4 py-1.5 text-slate-500 hover:text-slate-700 transition">Universities</a>
+                        <a href="home-bus.html"
+                            class="px-4 py-1.5 text-slate-500 hover:text-slate-700 transition">Businesses</a>
+                    </div>
+                    <a href="#about" class="text-slate-600 hover:text-primary font-medium transition">About</a>
+                    <a href="#programs" class="text-slate-600 hover:text-primary font-medium transition">Programs</a>
+                    <a href="#events" class="text-slate-600 hover:text-primary font-medium transition">Events</a>
 
-
-                    <a href="courses.html">Our Courses</a>
-                    <a href="#events">Events</a>
-                    <a href="#contact">Contact Us</a>
-
-                </div>
-                <div class="nav-actions">
-                    <!-- Login button - shown when user is logged out -->
-                    <a href="login.html" id="login-btn" class="btn btn-secondary hidden">Login</a>
-
-                    <!-- Profile button - shown when user is logged in -->
-                    <a href="profile.html" id="profile-btn" class="btn btn-secondary hidden">Profile</a>
-
-                    <!-- Tools Dropdown -->
-                    <div class="dropdown-container">
-                        <button class="btn btn-primary"
-                            style="display: flex; align-items: center; cursor: pointer; font-size: 1rem; font-family: inherit;">
-                            Tools <i class="fa-solid fa-chevron-down dropdown-btn-icon"></i>
+                    <div class="relative group">
+                        <button class="flex items-center gap-1 text-slate-600 hover:text-primary font-medium">
+                            Tools <i data-lucide="chevron-down" class="w-4 h-4"></i>
                         </button>
-                        <div class="dropdown-menu">
-                            <a href="career-analyzer.html" class="dropdown-item">
-                                <i class="fa-solid fa-bullseye"
-                                    style="margin-right: 8px; color: var(--color-primary);"></i> Career Analyzer
-                            </a>
-                            <a href="analyzer.html" class="dropdown-item">
-                                <i class="fa-solid fa-road"
-                                    style="margin-right: 8px; color: var(--color-secondary);"></i> Path Analyzer
-                            </a>
+                        <div
+                            class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                            <a href="career-analyzer.html"
+                                class="block px-4 py-3 hover:bg-slate-50 text-sm rounded-t-xl">Career Analyzer</a>
+                            <a href="analyzer.html" class="block px-4 py-3 hover:bg-slate-50 text-sm rounded-b-xl">Path
+                                Analyzer</a>
                         </div>
                     </div>
+
+                    <div id="auth-actions" class="flex items-center gap-4">
+                        <a href="login.html" id="login-btn"
+                            class="text-slate-600 hover:text-primary font-semibold">Login</a>
+                        <a href="profile.html" id="profile-btn"
+                            class="hidden px-5 py-2.5 bg-slate-100 text-slate-700 rounded-full font-semibold hover:bg-slate-200 transition">Profile</a>
+                        <a href="#hybrid-hustle"
+                            class="px-5 py-2.5 bg-primary text-white rounded-full font-semibold hover:bg-blue-700 shadow-lg shadow-blue-200 transition">Join
+                            Hustle</a>
+                    </div>
                 </div>
 
-                <!-- Mobile Menu Button (Hamburger) -->
-                <button id="menu-btn" class="hamburger">
-                    <span class="hamburger-top"></span>
-                    <span class="hamburger-middle"></span>
-                    <span class="hamburger-bottom"></span>
-                </button>
-            </nav>
-            <div class="persona-switcher">
-                <a href="index.html" class="persona-link active" data-persona="students">For Students</a>
-                <a href="home-uni.html" class="persona-link" data-persona="universities">For Universities</a>
-                <a href="home-bus.html" class="persona-link" data-persona="businesses">For Businesses</a>
-            </div>
-
-            <!-- Mobile Menu Panel -->
-            <div id="mobile-menu" class="hidden">
-                <div class="mobile-menu-inner">
-                    <a href="aboutus-std.html" class="mobile-link">About Us</a>
-                    <a href="#contact" class="mobile-link">Contact Us</a>
-                    <a href="#events" class="mobile-link">Events</a>
-
-
-                    <a href="home_bus.html" class="mobile-link">For Businesses</a>
-                    <a href="homeuni.html" class="mobile-link">For Universities</a>
-
-                    <!-- Mobile login button -->
-                    <a href="login.html" class="mobile-link hidden" id="mobile-login-btn">Login</a>
-                    <!-- Mobile profile button -->
-                    <a href="profile.html" class="mobile-link hidden" id="mobile-profile-btn">Profile</a>
-                    <div style="margin-top: 1rem; border-top: 1px solid #e2e8f0; padding-top: 1rem;">
-                        <p style="font-weight: 600; color: var(--color-subtle); margin-bottom: 0.5rem;">Tools</p>
-                        <a href="career-analyzer.html" class="mobile-link"
-                            style="display: block; text-align: left; padding: 0.5rem 0; color: var(--color-primary); font-size: 1rem;">
-                            <i class="fa-solid fa-bullseye"></i> Career Analyzer
-                        </a>
-                        <a href="analyzer.html" class="mobile-link"
-                            style="display: block; text-align: left; padding: 0.5rem 0; color: var(--color-secondary); font-size: 1rem;">
-                            <i class="fa-solid fa-road"></i> Path Analyzer
-                        </a>
-                    </div>
+                <!-- Mobile menu button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-toggle" class="p-2 text-slate-600">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
                 </div>
             </div>
         </div>
-    </header>
-    </div>
 
-    <main>
-        <section id="hero">
-            <canvas id="hero-canvas"></canvas>
-            <div class="hero-content container">
-                <h1 id="hero-title">Empowering talents for tomorrow.....</h1>
-                <p class="tagline" id="hero-tagline">Stop guessing, start planning. Our Career Compass tool provides a
-                    personalized,
-                    data-driven roadmap to bridge the gap between your college curriculum and your dream tech job.</p>
-                <a href="analyzer.html" class="btn btn-primary" id="hero-cta"
-                    style="padding: 1rem 2.5rem; font-size: 1.1rem;">Get
-                    Started</a>
-            </div>
-        </section>
-
-        <section id="about">
-            <div class="container about-grid">
-                <div class="about-text fade-in">
-                    <div class="section-header">
-                        <h2>Empowering Talents for Tomorrow.</h2>
-                        <p>Our Mission</p>
-                    </div>
-                    <p>At Diverse Loopers, we believe every student deserves a clear path to their dream career. The
-                        tech industry is vast and complex, and university curriculums can't always keep up with its
-                        rapid evolution. Our Career Compass was born from a simple idea: to provide students with the
-                        clarity and confidence they need to navigate their educational journey and enter the workforce
-                        with the right skills.</p>
-                    <br>
-                    <p>We analyze thousands of job descriptions and compare them against standard engineering syllabi to
-                        give you a personalized, actionable roadmap. We're here to turn your ambition into achievement.
-                    </p>
-                </div>
-                <div class="about-image fade-in"></div>
-            </div>
-        </section>
-
-        <!-- NEW SECTION: Hybrid Hustler Registration with FULL-SCREEN Video Background -->
-        <section id="hybrid-hustler">
-
-            <!-- Video Background Visual (Full Screen) -->
-            <div class="hustler-visual">
-                <div class="video-container">
-                    <!-- IMPORTANT: REPLACE THE SRC VALUE BELOW WITH YOUR ACTUAL VIDEO LINK -->
-                    <video autoplay muted loop playsinline class="hustler-video">
-                        <source src="hh bg.mp4" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                    <!-- Optional: Add a subtle overlay here if text needs more contrast -->
-                    <div
-                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2); z-index: 5;">
-                    </div>
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-100">
+            <div class="px-4 pt-2 pb-6 space-y-2">
+                <a href="#about"
+                    class="block px-3 py-2 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg">About
+                    Us</a>
+                <a href="#programs"
+                    class="block px-3 py-2 text-base font-medium text-slate-700 hover:bg-slate-50 rounded-lg">Programs</a>
+                <a href="#hybrid-hustle"
+                    class="block px-3 py-2 text-base font-medium text-primary hover:bg-blue-50 rounded-lg">Hybrid
+                    Hustle</a>
+                <hr class="my-2">
+                <a href="career-analyzer.html" class="block px-3 py-2 text-slate-600">Career Analyzer</a>
+                <a href="analyzer.html" class="block px-3 py-2 text-slate-600">Path Analyzer</a>
+                <div class="pt-4">
+                    <a href="login.html"
+                        class="block w-full text-center py-3 bg-primary text-white rounded-xl font-semibold">Get
+                        Started</a>
                 </div>
             </div>
-
-            <div class="hustler-content-grid">
-                <!-- Registration Form (Floating over the video background) -->
-                <div class="hustler-form-card fade-in">
-                    <div class="section-header" style="text-align: center;">
-                        <h2 style="position: relative; z-index: 2;">Become a Hybrid Hustler</h2>
-                        <p style="position: relative; z-index: 2;">Join our exclusive network and fast-track your path
-                            to tech mastery.</p>
-                    </div>
-                    <form id="hustler-form">
-                        <div class="form-grid">
-                            <div class="form-group">
-                                <label for="hustler-name">Full Name</label>
-                                <input type="text" id="hustler-name" name="name" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="hustler-college">College Name</label>
-                                <input type="text" id="hustler-college" name="college" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="hustler-email">Email ID</label>
-                                <input type="email" id="hustler-email" name="email" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="hustler-contact">Contact Number</label>
-                                <input type="tel" id="hustler-contact" name="contact" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="hustler-tech">Core Technology</label>
-                                <select id="hustler-tech" name="tech" required>
-                                    <option value="">Select Technology</option>
-                                    <option value="AI/ML">AI/ML</option>
-                                    <option value="WebDev">Web Development (Full Stack)</option>
-                                    <option value="GameDev">Game Development </option>
-                                    <option value="AndroidDev">Android Development</option>
-                                    <option value="DataScience">Data Science</option>
-                                    <option value="CyberSecurity">Cyber Security</option>
-                                    <option value="Cloud">Cloud Engineering</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="hustler-year">Course Year</label>
-                                <select id="hustler-year" name="year" required>
-                                    <option value="">Select Year</option>
-                                    <option value="1">1st Year</option>
-                                    <option value="2">2nd Year</option>
-                                    <option value="3">3rd Year</option>
-                                    <option value="4">4th Year</option>
-                                    <option value="Graduate">Graduate</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="hustler-semester">Semester</label>
-                                <input type="number" id="hustler-semester" name="semester" min="1" max="8" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="hustler-roll">Roll No.</label>
-                                <input type="text" id="hustler-roll" name="roll" required>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 2rem;">
-                            Enroll in the Hustle!
-                        </button>
-                        <p id="hustler-message"
-                            style="margin-top: 1rem; text-align: center; color: var(--color-primary);" class="hidden">
-                        </p>
-                    </form>
-                </div>
-            </div>
-        </section>
-        <!-- END NEW SECTION -->
-
-        <section id="programs">
-            <div class="container">
-                <div class="section-header" style="text-align: center; margin-bottom: 4rem;">
-                    <h2 style="color: var(--color-dark);">Why Students Choose Us</h2>
-                    <p style="font-size: 1.1rem; color: var(--color-subtle);">Your Launchpad for a Career in Tech</p>
-                </div>
-
-                <div class="features-grid">
-                    <div class="feature-card fade-in">
-                        <div class="feature-icon" style="background-color: #dbeafe;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M10 20H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h6" />
-                                <path d="m14 4 6 6-6 6" />
-                                <path d="M4 12h16" />
-                            </svg>
-                        </div>
-                        <h3>Practical Learning</h3>
-                        <p>Go beyond theory and gain experience with projects sourced directly from companies.</p>
-                    </div>
-                    <div class="feature-card fade-in">
-                        <div class="feature-icon" style="background-color: #e0e7ff;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <rect width="20" height="14" x="2" y="7" rx="2" ry="2" />
-                                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-                            </svg>
-                        </div>
-                        <h3>Career Focused</h3>
-                        <p>Whether you’re in your 1st year or final year, we have tailored programs to fit your journey.
-                        </p>
-                    </div>
-                    <div class="feature-card fade-in">
-                        <div class="feature-icon" style="background-color: #fae8ff;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="#a855f7" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                                <path d="m9 12 2 2 4-4" />
-                            </svg>
-                        </div>
-                        <h3>Guaranteed Opportunities</h3>
-                        <p>Access internships, placements, and projects that build your portfolio.</p>
-                    </div>
-                    <div class="feature-card fade-in">
-                        <div class="feature-icon" style="background-color: #ffedd5;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                                <circle cx="9" cy="7" r="4" />
-                                <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                            </svg>
-                        </div>
-                        <h3>Community Support</h3>
-                        <p>Be part of a growing ecosystem of learners, mentors, and employers.</p>
-                    </div>
-                </div>
-
-                <hr style="margin: 6rem auto; border: 0; height: 1px; background-color: #e2e8f0; max-width: 400px;">
-
-                <div class="section-header" style="text-align: center; margin-bottom: 4rem;">
-                    <h2 style="color: var(--color-dark);">Our Programs for Students</h2>
-                </div>
-
-                <div class="programs-grid">
-                    <div class="program-card fade-in">
-                        <div class="program-header">
-                            <h3>Vision Builders Program (12-Month)</h3>
-                            <span class="program-tag">For Early-Year Students</span>
-                        </div>
-                        <p>Learn at your pace with flexible sessions, hands-on projects, and a supportive community.</p>
-                        <ul class="program-features">
-                            <li>Basics of coding, AI, web development, and digital skills.</li>
-                            <li>Guided mentorship from industry professionals.</li>
-                            <li>Portfolio-building mini-projects.</li>
-                            <li>Networking opportunities with peers and companies.</li>
-                        </ul>
-                    </div>
-                    <div class="program-card fade-in">
-                        <div class="program-header">
-                            <h3>Accelerate Program (6-Month)</h3>
-                            <span class="program-tag">For Final-Year & Graduates</span>
-                        </div>
-                        <p>For final-year students & graduates who want to become job-ready quickly.</p>
-                        <ul class="program-features">
-                            <li>Intensive hands-on training in in-demand tech skills.</li>
-                            <li>Work on live projects with partner companies.</li>
-                            <li>Get interview prep, mock tests, and career counseling.</li>
-                            <li>Direct access to internships and placement support.</li>
-                        </ul>
-                    </div>
-                </div>
-                <div>
-                    <a href="courses.html" class="courses-cta-btn">
-                        Explore Our Courses
-                        <svg class="arrow-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M5 12h14" />
-                            <path d="m12 5 7 7-7 7" />
-                        </svg>
+        </div>
+    </nav>
+<main class="flex-grow">
+    <!-- Hero Section -->
+    <section class="relative pt-32 pb-20 overflow-hidden hero-gradient">
+        <canvas id="hero-canvas" class="absolute inset-0 pointer-events-none opacity-40"></canvas>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center max-w-4xl mx-auto">
+                <span
+                    class="inline-block py-1 px-4 rounded-full bg-blue-50 text-primary text-sm font-bold tracking-wide uppercase mb-6 fade-in">Empowering
+                    Talents for Tomorrow</span>
+                <h1 class="text-5xl md:text-7xl font-heading font-extrabold text-slate-900 leading-tight mb-8 fade-in">
+                    Transforming Ambitious Learners into <span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Tech
+                        Professionals</span>
+                </h1>
+                <p class="text-xl text-slate-600 mb-10 leading-relaxed fade-in">
+                    Stop guessing. Start planning your future with clarity, direction, and purpose through structured
+                    learning and real project exposure.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-4 fade-in">
+                    <a href="analyzer.html"
+                        class="w-full sm:w-auto px-8 py-4 bg-primary text-white rounded-full font-bold text-lg hover:bg-blue-700 shadow-xl shadow-blue-200 transition flex items-center justify-center gap-2">
+                        Get Started <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </a>
+                    <a href="#hybrid-hustle"
+                        class="w-full sm:w-auto px-8 py-4 bg-white text-slate-700 border border-slate-200 rounded-full font-bold text-lg hover:border-primary hover:text-primary transition">
+                        Explore Hybrid Hustle
                     </a>
                 </div>
+            </div>
+        </div>
+    </section>
 
-
-
-                <hr style="margin: 6rem auto; border: 0; height: 1px; background-color: #e2e8f0; max-width: 400px;">
-
-                <div class="section-header" style="text-align: center; margin-bottom: 4rem;">
-                    <h2 style="color: var(--color-dark);">Extra Features</h2>
+    <!-- About Section -->
+    <section id="about" class="py-24 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-2 gap-16 items-center">
+                <div class="fade-in">
+                    <div class="flex items-center gap-2 text-primary font-bold mb-4 uppercase tracking-wider">
+                        <span class="h-px w-8 bg-primary"></span> Who We Are
+                    </div>
+                    <h2 class="text-4xl font-heading font-bold text-slate-900 mb-6">Bridging the Gap Between Classroom &
+                        Industry</h2>
+                    <p class="text-lg text-slate-600 mb-8 leading-relaxed">
+                        Diverse Loopers is a next-generation career and business solutions ecosystem. We operate
+                        differently from traditional training institutes.
+                        <strong>We function like a technology company</strong>, building digital solutions for
+                        businesses while preparing learners to become job-ready through guided mentorship.
+                    </p>
+                    <div class="grid sm:grid-cols-2 gap-6">
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                            <h4 class="font-bold text-slate-900 mb-2">Our Vision</h4>
+                            <p class="text-sm text-slate-500">A sustainable ecosystem where learning, working, and
+                                earning exist together.</p>
+                        </div>
+                        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                            <h4 class="font-bold text-slate-900 mb-2">Our Mission</h4>
+                            <p class="text-sm text-slate-500">Equipping learners with in-demand skills and real project
+                                exposure.</p>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="extra-features-grid">
-                    <div class="flip-card">
-                        <div class="flip-card-inner">
-                            <div class="flip-card-front">
-                                <p class="title">Wall of Fame</p>
-
-                            </div>
-                            <div class="flip-card-back">
-                                <p class="title">Showcase your achievements and get recognized by the community and
-                                    employers.</p>
-
-                            </div>
-                        </div>
+                <div class="relative fade-in">
+                    <div
+                        class="absolute -inset-4 bg-gradient-to-tr from-primary to-secondary opacity-10 blur-2xl rounded-3xl">
                     </div>
-                    <div class="flip-card">
-                        <div class="flip-card-inner">
-                            <div class="flip-card-front">
-                                <p class="title">Portfolio Builder</p>
-
-                            </div>
-                            <div class="flip-card-back">
-                                <p class="title">Create a professional portfolio that speaks louder than your resume.
-                                </p>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flip-card">
-                        <div class="flip-card-inner">
-                            <div class="flip-card-front">
-                                <p class="title">Mentorship Hub</p>
-
-                            </div>
-                            <div class="flip-card-back">
-                                <p class="title">Get guidance from industry experts who care about your success.</p>
-
-                            </div>
-                        </div>
-                    </div>
-
-
-
+                    <img src="team.jpg" alt="Our Team at Work"
+                        class="relative rounded-3xl shadow-2xl object-cover w-full aspect-video md:aspect-square">
                 </div>
             </div>
-        </section>
-        <!-- NEW SECTION ADDED HERE -->
-        <section id="events">
-            <div class="container">
-                <div class="section-header" style="text-align: center; margin-bottom: 4rem;">
-                    <h2 style="color: var(--color-dark);">Join & Participate in Our Events</h2>
-                    <p style="font-size: 1.1rem; color: var(--color-subtle);">Connect, learn, and grow with the Diverse
-                        Loopers community.</p>
+        </div>
+    </section>
+
+    <!-- Hybrid Hustle Model -->
+    <section id="hybrid-hustle" class="py-24 bg-slate-900 text-white overflow-hidden relative">
+        <div class="absolute inset-0 opacity-20">
+            <video autoplay muted loop playsinline class="w-full h-full object-cover">
+                <source src="hh bg.mp4" type="video/mp4">
+            </video>
+            <div class="absolute inset-0 bg-slate-900/80"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-heading font-extrabold mb-6">The Hybrid Hustle Model</h2>
+                <p class="text-xl text-slate-300 max-w-3xl mx-auto">The core foundation of Diverse Loopers. A structured
+                    career pathway that redefines how professionals build careers.</p>
+            </div>
+
+            <div class="grid md:grid-cols-4 gap-8 mb-20">
+                <!-- Step 1 -->
+                <div class="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/10 fade-in">
+                    <div
+                        class="w-12 h-12 bg-primary rounded-xl flex items-center justify-center font-bold text-xl mb-6">
+                        01</div>
+                    <h3 class="text-2xl font-bold mb-4">Learn</h3>
+                    <p class="text-slate-300">Guided training across technologies and professional development
+                        essentials.</p>
                 </div>
-
-                <div class="carousel-wrapper">
-
-                    <!-- Scroll Buttons -->
-                    <button id="scroll-left-btn" class="scroll-btn hidden" aria-label="Scroll left">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="m15 18-6-6 6-6" />
-                        </svg>
-                    </button>
-                    <button id="scroll-right-btn" class="scroll-btn" aria-label="Scroll right">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="m9 18 6-6-6-6" />
-                        </svg>
-                    </button>
-
-                    <!-- Scrolling Container -->
-                    <div id="events-grid-container" class="events-grid-container">
-                        <div id="events-grid" class="events-grid">
-                            <!-- Placeholder filled by JavaScript -->
-                            <div style="grid-column: 1 / -1; text-align: center; color: #6b7280; padding: 2rem;">Loading
-                                events from database...</div>
-                        </div>
-                    </div>
-
+                <!-- Step 2 -->
+                <div class="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/10 fade-in">
+                    <div
+                        class="w-12 h-12 bg-secondary rounded-xl flex items-center justify-center font-bold text-xl mb-6">
+                        02</div>
+                    <h3 class="text-2xl font-bold mb-4">Work</h3>
+                    <p class="text-slate-300">Collaborate on internal company projects handled by Diverse Loopers.</p>
+                </div>
+                <!-- Step 3 -->
+                <div class="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/10 fade-in">
+                    <div
+                        class="w-12 h-12 bg-green-500 rounded-xl flex items-center justify-center font-bold text-xl mb-6">
+                        03</div>
+                    <h3 class="text-2xl font-bold mb-4">Earn</h3>
+                    <p class="text-slate-300">Unlock structured earning opportunities through contribution and
+                        performance.</p>
+                </div>
+                <!-- Step 4 -->
+                <div class="bg-white/10 backdrop-blur-md p-8 rounded-3xl border border-white/10 fade-in">
+                    <div
+                        class="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center font-bold text-xl mb-6">
+                        04</div>
+                    <h3 class="text-2xl font-bold mb-4">Grow</h3>
+                    <p class="text-slate-300">Progress toward full-time jobs, internships, or entrepreneurial paths.</p>
                 </div>
             </div>
-        </section>
-        <section id="contact">
-            <div class="container">
-                <div class="section-header" style="text-align: center;">
-                    <h2>Get In Touch</h2>
-                    <p>Have questions or want to partner with us? We'd love to hear from you.</p>
+
+            <!-- Enrollment Form -->
+            <div class="max-w-4xl mx-auto bg-white text-slate-900 rounded-[2rem] p-8 md:p-12 shadow-2xl fade-in">
+                <div class="text-center mb-10">
+                    <h3 class="text-3xl font-heading font-bold mb-2">Enroll in the Hustle</h3>
+                    <p class="text-slate-500">Join our exclusive network and fast-track your path to tech mastery.</p>
                 </div>
-                <form class="contact-form fade-in">
-                    <div class="form-grid">
-                        <div class="form-group"><label for="name">Full Name</label><input type="text" id="name"
-                                required></div>
-                        <div class="form-group"><label for="email">Email Address</label><input type="email" id="email"
-                                required></div>
-                        <div class="form-group full-width"><label for="message">Message</label><textarea id="message"
-                                required></textarea></div>
+                <form id="hustler-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                     <div class="space-y-1">
+                        <label class="text-xs font-bold text-slate-500 uppercase">Full Name</label>
+                        <input type="text" name="name" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition">
                     </div>
-                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 2rem;">Send
-                        Message</button>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-slate-500 uppercase">Email ID</label>
+                        <input type="email" name="email" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-slate-500 uppercase">College Name</label>
+                        <input type="text" name="college" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-slate-500 uppercase">Contact Number</label>
+                        <input type="tel" name="contact" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-slate-500 uppercase">Core Technology</label>
+                        <select name="tech" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition">
+                            <option value="">Select Domain</option>
+                            <option value="AI/ML">AI & Machine Learning</option>
+                            <option value="WebDev">Full Stack Development</option>
+                            <option value="GameDev">Game Development</option>
+                            <option value="Cloud">Cloud Engineering</option>
+                        </select>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-slate-500 uppercase">Course Year</label>
+                        <select name="year" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition">
+                            <option value="">Select Year</option>
+                            <option value="1">1st Year</option>
+                            <option value="2">2nd Year</option>
+                            <option value="3">3rd Year</option>
+                            <option value="4">4th Year</option>
+                            <option value="Graduate">Graduate</option>
+                        </select>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-slate-500 uppercase">Semester</label>
+                        <input type="number" name="semester" min="1" max="8" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-slate-500 uppercase">Roll No.</label>
+                        <input type="text" name="roll" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition">
+                    </div>
+                    <div class="md:col-span-2">
+                        <button type="submit"
+                            class="w-full py-4 bg-primary text-white rounded-xl font-bold text-lg hover:bg-blue-700 transition transform hover:scale-[1.01] active:scale-95">
+                            Submit Registration
+                        </button>
+                        <p id="hustler-message" class="hidden mt-4 text-center text-sm font-medium"></p>
+                    </div>
                 </form>
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
 
-    <footer class="footer">
-        <div class="container">
-            <a href="index.html" class="logo"><img src="Diverse Loopers Black BG (2).png"
-                    alt="Diverse Loopers Logo"></a>
-            <p class="tagline">Empowering talents for tomorrow</p>
-
-            <!-- User section - only visible when logged in -->
-            <div class="footer-user-section hidden" id="footer-user-section">
-                <div class="user-info">
-                    <div class="user-avatar" id="user-avatar">U</div>
-                    <div class="user-details">
-                        <h4 id="user-name">Welcome back!</h4>
-                        <p id="user-email">user@example.com</p>
+    <!-- Career Compass Section -->
+    <section class="py-24 bg-surface">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-white rounded-[3rem] p-8 md:p-16 border border-slate-100 shadow-sm overflow-hidden relative">
+                <div class="absolute top-0 right-0 p-10 opacity-5 pointer-events-none">
+                    <i data-lucide="compass" class="w-64 h-64 text-primary"></i>
+                </div>
+                <div class="grid lg:grid-cols-2 gap-12 items-center relative z-10">
+                    <div>
+                        <span class="text-primary font-bold uppercase tracking-widest text-sm">Exclusive Tool</span>
+                        <h2 class="text-4xl font-heading font-extrabold text-slate-900 mt-4 mb-6 leading-tight">Career
+                            Compass: Path Analyzer</h2>
+                        <p class="text-lg text-slate-600 mb-8 leading-relaxed">
+                            Stop wasting time on irrelevant learning. Our tool analyzes thousands of job descriptions to
+                            identify the exact industry skills you're missing, providing a personalized roadmap.
+                        </p>
+                        <ul class="space-y-4 mb-10">
+                            <li class="flex items-center gap-3 text-slate-700 font-medium">
+                                <i data-lucide="check-circle-2" class="text-primary w-6 h-6"></i> Identifies technical
+                                skill gaps
+                            </li>
+                            <li class="flex items-center gap-3 text-slate-700 font-medium">
+                                <i data-lucide="check-circle-2" class="text-primary w-6 h-6"></i> Personalized 12-month
+                                roadmaps
+                            </li>
+                            <li class="flex items-center gap-3 text-slate-700 font-medium">
+                                <i data-lucide="check-circle-2" class="text-primary w-6 h-6"></i> Engineering syllabus
+                                comparison
+                            </li>
+                        </ul>
+                        <a href="analyzer.html"
+                            class="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white rounded-full font-bold hover:bg-blue-700 transition group shadow-lg shadow-blue-100">
+                            Try Career Analyzer <i data-lucide="chevron-right"
+                                class="w-5 h-5 group-hover:translate-x-1 transition"></i>
+                        </a>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100 text-center">
+                            <div class="text-3xl font-extrabold text-primary mb-1">2000+</div>
+                            <div class="text-xs text-slate-500 uppercase font-bold tracking-wider">Job Postings Analyzed
+                            </div>
+                        </div>
+                        <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100 text-center translate-y-8">
+                            <div class="text-3xl font-extrabold text-secondary mb-1">98%</div>
+                            <div class="text-xs text-slate-500 uppercase font-bold tracking-wider">Roadmap Accuracy
+                            </div>
+                        </div>
+                        <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100 text-center">
+                            <div class="text-3xl font-extrabold text-blue-600 mb-1">100%</div>
+                            <div class="text-xs text-slate-500 uppercase font-bold tracking-wider">Clarity Gained</div>
+                        </div>
+                        <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100 text-center translate-y-8">
+                            <div class="text-3xl font-extrabold text-slate-900 mb-1">Free</div>
+                            <div class="text-xs text-slate-500 uppercase font-bold tracking-wider">Initial Assessment
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <button class="logout-btn-footer" id="logout-btn">
-                    <span>Sign Out</span>
-                </button>
             </div>
-
-            <div class="footer-links">
-                <a href="aboutus-std.html">About Us</a>
-                <a href="#contact">Contact Us</a>
-                <a href="analyzer.html">Path Analyzer</a>
-                <a href="career-analyzer.html">Career Analyzer</a>
-            </div>
-            <div class="contact-details">
-                <p>Email: <a href="mailto:contact@diverseloopers.com">contact@diverseloopers.com</a></p>
-                <p>Phone: <a href="tel:+9839350961">+91 98393 50961</a></p>
-            </div>
-
-            <p class="copyright">&copy; 2024 Diverse Loopers. All Rights Reserved.</p>
         </div>
-    </footer>
+        <!-- test section -->
+        <section class="py-24 bg-surface">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div
+                    class="bg-white rounded-[3rem] p-8 md:p-16 border border-slate-100 shadow-sm overflow-hidden relative">
+                    <div class="w-14 h-14 bg-pink-50 text-secondary rounded-2xl flex items-center justify-center mb-8">
+                        <i data-lucide="target" class="w-8 h-8"></i>
+                    </div>
 
-    <script>
+                    <div class="grid lg:grid-cols-2 gap-12 items-center relative z-10">
+                        <div>
+                            <span class="text-primary font-bold uppercase tracking-widest text-sm">Exclusive Tool</span>
+                            <h2 class="text-4xl font-heading font-extrabold text-slate-900 mt-4 mb-6 leading-tight">
+                                Career Compass: Career Analyzer</h2>
+                            <p class="text-lg text-slate-600 mb-8 leading-relaxed">
+                                Find the Tech Career That Actually Fits You
+                                Not what is trending. Not what others say. But what matches your skills, interests, and
+                                learning style. A 5-7 minute assessment that gives you a clear career direction and next
+                                steps.</p>
+                            <ul class="space-y-4 mb-10">
+                                <li class="flex items-center gap-3 text-slate-700 font-medium">
+                                    <i data-lucide="check-circle-2" class="text-primary w-6 h-6"></i> Answer smart
+                                    questions
+                                    Takes only 5-7 minutes of your time.
+                                </li>
+                                <li class="flex items-center gap-3 text-slate-700 font-medium">
+                                    <i data-lucide="check-circle-2" class="text-primary w-6 h-6"></i> Get Fit Scores
+                                    See how well different tech careers match you.
+                                </li>
+                                <li class="flex items-center gap-3 text-slate-700 font-medium">
+                                    <i data-lucide="check-circle-2" class="text-primary w-6 h-6"></i> Get a clear
+                                    roadmap
+                                    Know what to learn next and where to focus.
+                                </li>
+                            </ul>
+                            <a href="career-analyzer.html"
+                                class="inline-flex items-center gap-2 px-8 py-4 bg-primary text-white rounded-full font-bold hover:bg-blue-700 transition group shadow-lg shadow-blue-100">
+                                Try Career Analyzer <i data-lucide="chevron-right"
+                                    class="w-5 h-5 group-hover:translate-x-1 transition"></i>
+                            </a>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100 text-center">
+                                <div class="text-3xl font-extrabold text-primary mb-1">500+</div>
+                                <div class="text-xs text-slate-500 uppercase font-bold tracking-wider">Career
+                                    Suggestions Given</div>
+                            </div>
+                            <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100 text-center translate-y-8">
+                                <div class="text-3xl font-extrabold text-secondary mb-1">98%</div>
+                                <div class="text-xs text-slate-500 uppercase font-bold tracking-wider">Tool Accuracy
+                                </div>
+                            </div>
+                            <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100 text-center">
+                                <div class="text-3xl font-extrabold text-blue-600 mb-1">100%</div>
+                                <div class="text-xs text-slate-500 uppercase font-bold tracking-wider">Clarity Gained
+                                </div>
+                            </div>
+                            <div class="bg-slate-50 p-6 rounded-3xl border border-slate-100 text-center translate-y-8">
+                                <div class="text-3xl font-extrabold text-slate-900 mb-1">Free</div>
+                                <div class="text-xs text-slate-500 uppercase font-bold tracking-wider">Initial
+                                    Assessment</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        // --- FORM SUBMISSION HANDLER (Supabase Integration) ---
-        const hustlerForm = document.getElementById('hustler-form');
+
+
+
+            <!-- Programs Grid (Bento Style) -->
+            <section id="programs" class="py-24 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-16">
+                        <h2 class="text-4xl font-heading font-extrabold text-slate-900 mb-4">Programs for Students</h2>
+                        <p class="text-slate-500 max-w-2xl mx-auto">Tailored pathways for every stage of your
+                            educational journey.</p>
+                    </div>
+
+                    <div class="grid lg:grid-cols-2 gap-8">
+                        <!-- Program 1 -->
+                        <div
+                            class="bento-card bg-surface p-10 rounded-[2.5rem] border border-slate-100 flex flex-col justify-between">
+                            <div>
+                                <span
+                                    class="inline-block px-4 py-1.5 bg-blue-100 text-primary text-xs font-bold rounded-full mb-6">12
+                                    MONTHS</span>
+                                <h3 class="text-3xl font-heading font-bold mb-4">Vision Builders Program</h3>
+                                <p class="text-slate-600 mb-8 leading-relaxed">Designed for early-stage learners who
+                                    want structured guidance and foundational skills.</p>
+                                <ul class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+                                    <li class="flex items-center gap-2 text-sm text-slate-700 font-medium">
+                                        <i data-lucide="code-2" class="w-4 h-4 text-primary"></i> Basics of Coding & AI
+                                    </li>
+                                    <li class="flex items-center gap-2 text-sm text-slate-700 font-medium">
+                                        <i data-lucide="layers" class="w-4 h-4 text-primary"></i> Mini-projects
+                                    </li>
+                                    <li class="flex items-center gap-2 text-sm text-slate-700 font-medium">
+                                        <i data-lucide="users-2" class="w-4 h-4 text-primary"></i> Mentor Sessions
+                                    </li>
+                                    <li class="flex items-center gap-2 text-sm text-slate-700 font-medium">
+                                        <i data-lucide="globe" class="w-4 h-4 text-primary"></i> Community Support
+                                    </li>
+                                </ul>
+                            </div>
+                            <a href="courses.html"
+                                class="w-full py-4 text-center bg-white border border-slate-200 rounded-2xl font-bold hover:border-primary hover:text-primary transition">Explore
+                                Curriculum</a>
+                        </div>
+
+                        <!-- Program 2 -->
+                        <div
+                            class="bento-card bg-slate-900 p-10 rounded-[2.5rem] text-white flex flex-col justify-between">
+                            <div>
+                                <span
+                                    class="inline-block px-4 py-1.5 bg-secondary text-white text-xs font-bold rounded-full mb-6">6
+                                    MONTHS</span>
+                                <h3 class="text-3xl font-heading font-bold mb-4">Accelerate Program</h3>
+                                <p class="text-slate-300 mb-8 leading-relaxed">For final-year students and graduates who
+                                    want to become job-ready quickly with intensive training.</p>
+                                <ul class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+                                    <li class="flex items-center gap-2 text-sm text-slate-200 font-medium">
+                                        <i data-lucide="zap" class="w-4 h-4 text-secondary"></i> Intensive Tech Training
+                                    </li>
+                                    <li class="flex items-center gap-2 text-sm text-slate-200 font-medium">
+                                        <i data-lucide="briefcase" class="w-4 h-4 text-secondary"></i> Live Industry
+                                        Projects
+                                    </li>
+                                    <li class="flex items-center gap-2 text-sm text-slate-200 font-medium">
+                                        <i data-lucide="award" class="w-4 h-4 text-secondary"></i> Placement Guidance
+                                    </li>
+                                    <li class="flex items-center gap-2 text-sm text-slate-200 font-medium">
+                                        <i data-lucide="user-check" class="w-4 h-4 text-secondary"></i> Interview Prep
+                                    </li>
+                                </ul>
+                            </div>
+                            <a href="courses.html"
+                                class="w-full py-4 text-center bg-white/10 border border-white/20 rounded-2xl font-bold hover:bg-white hover:text-slate-900 transition">Get
+                                Fast-Tracked</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Additional Benefits Section (Bento Grid) -->
+            <section class="py-24 bg-surface">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="grid md:grid-cols-3 gap-8">
+                        <div
+                            class="md:col-span-2 bento-card bg-white p-10 rounded-[2.5rem] border border-slate-100 flex flex-col md:flex-row gap-8 items-center">
+                            <div class="flex-1">
+                                <h3 class="text-2xl font-bold mb-4">Portfolio Builder</h3>
+                                <p class="text-slate-500">Create a professional project portfolio that showcases your
+                                    real-world achievements to top recruiters.</p>
+                            </div>
+                            <div class="w-full md:w-1/3 h-32 bg-slate-100 rounded-2xl flex items-center justify-center">
+                                <i data-lucide="layout" class="w-12 h-12 text-slate-300"></i>
+                            </div>
+                        </div>
+                        <div
+                            class="bento-card bg-gradient-to-br from-primary to-blue-700 p-10 rounded-[2.5rem] text-white">
+                            <i data-lucide="trending-up" class="w-10 h-10 mb-6"></i>
+                            <h3 class="text-2xl font-bold mb-4">Wall of Fame</h3>
+                            <p class="text-blue-100 text-sm">Recognition space dedicated to our outstanding contributors
+                                and top performers.</p>
+                        </div>
+                        <div class="bento-card bg-white p-10 rounded-[2.5rem] border border-slate-100">
+                            <i data-lucide="headset" class="w-10 h-10 text-secondary mb-6"></i>
+                            <h3 class="text-2xl font-bold mb-4">Mentorship Hub</h3>
+                            <p class="text-slate-500 text-sm">Direct access to experienced professionals across multiple
+                                domains.</p>
+                        </div>
+                        <div
+                            class="md:col-span-2 bento-card bg-white p-10 rounded-[2.5rem] border border-slate-100 flex flex-col md:flex-row-reverse gap-8 items-center">
+                            <div class="flex-1">
+                                <h3 class="text-2xl font-bold mb-4">Workshops & Events</h3>
+                                <p class="text-slate-500">Unity GameDev, AI/ML, and AR/VR workshops with practical
+                                    demonstrations and real exposure.</p>
+                            </div>
+                            <div class="w-full md:w-1/3 h-32 bg-slate-100 rounded-2xl flex items-center justify-center">
+                                <i data-lucide="calendar" class="w-12 h-12 text-slate-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Events Section -->
+            <section id="events" class="py-24 bg-white overflow-hidden">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="flex flex-col md:flex-row justify-between items-end gap-6 mb-12">
+                        <div class="max-w-xl">
+                            <h2 class="text-4xl font-heading font-extrabold text-slate-900 mb-4">Join & Participate</h2>
+                            <p class="text-slate-500">Connect, learn, and grow with the Diverse Loopers community
+                                through interactive workshops.</p>
+                        </div>
+                        <div class="flex gap-4">
+                            <button id="scroll-left-btn"
+                                class="w-12 h-12 rounded-full border border-slate-200 flex items-center justify-center hover:border-primary hover:text-primary transition">
+                                <i data-lucide="chevron-left" class="w-6 h-6"></i>
+                            </button>
+                            <button id="scroll-right-btn"
+                                class="w-12 h-12 rounded-full border border-slate-200 flex items-center justify-center hover:border-primary hover:text-primary transition">
+                                <i data-lucide="chevron-right" class="w-6 h-6"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="events-grid-container" class="overflow-x-auto no-scrollbar scroll-smooth pb-8">
+                        <div id="events-grid" class="flex gap-8" style="width: max-content;">
+                            <!-- Dynamically Loaded -->
+                            <div class="w-[350px] h-[400px] animate-pulse bg-slate-100 rounded-3xl"></div>
+                            <div class="w-[350px] h-[400px] animate-pulse bg-slate-100 rounded-3xl"></div>
+                            <div class="w-[350px] h-[400px] animate-pulse bg-slate-100 rounded-3xl"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Section -->
+            <section id="contact" class="py-24 bg-surface">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="max-w-3xl mx-auto">
+                        <div class="text-center mb-12">
+                            <h2 class="text-4xl font-heading font-extrabold text-slate-900 mb-4">Get In Touch</h2>
+                            <p class="text-slate-500">Have questions or wish to collaborate? We'd be happy to connect.
+                            </p>
+                        </div>
+
+                        <form id="contact-form"
+                            class="bg-white p-8 md:p-12 rounded-[2.5rem] border border-slate-100 shadow-sm space-y-6">
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div class="space-y-2">
+                                    <label class="text-sm font-semibold text-slate-700">Full Name</label>
+                                    <input type="text" id="name" required placeholder="John Doe"
+                                        class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none">
+                                </div>
+                                <div class="space-y-2">
+                                    <label class="text-sm font-semibold text-slate-700">Email Address</label>
+                                    <input type="email" id="email" required placeholder="john@example.com"
+                                        class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none">
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-sm font-semibold text-slate-700">Message</label>
+                                <textarea id="message" rows="4" required placeholder="How can we help you?"
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none"></textarea>
+                            </div>
+                            <button type="submit"
+                                class="w-full py-4 bg-slate-900 text-white rounded-xl font-bold hover:bg-black transition">Send
+                                Message</button>
+                            <p id="contact-status" class="text-center text-sm font-medium hidden"></p>
+                        </form>
+                    </div>
+                </div>
+            </section>
+</main>
+            <!-- Footer -->
+            <footer class="bg-slate-900 text-white pt-20 pb-10">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                        <!-- Branding -->
+                        <div class="col-span-1 lg:col-span-1">
+                            <img src="Diverse Loopers Black BG (2).png" alt="Diverse Loopers" class="h-12 w-auto mb-6">
+                            <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                                Empowering talents for tomorrow through structured, future-ready career pathways and
+                                real industry exposure.
+                            </p>
+                            <div class="flex gap-4">
+                                <a href="https://www.linkedin.com/company/105277450"
+                                    class="w-8 h-8 bg-white/5 rounded-full flex items-center justify-center hover:bg-primary transition"><i
+                                        data-lucide="linkedin" class="w-4 h-4"></i></a>
+                                <a href="https://www.instagram.com/diverseloopers/"
+                                    class="w-8 h-8 bg-white/5 rounded-full flex items-center justify-center hover:bg-primary transition"><i
+                                        data-lucide="instagram" class="w-4 h-4"></i></a>
+                                <a href="#"
+                                    class="w-8 h-8 bg-white/5 rounded-full flex items-center justify-center hover:bg-primary transition">
+                                    <i data-lucide="twitter" class="w-4 h-4"></i>
+                                   <a href="https://chat.whatsapp.com/B6XJSoLC2Hg7Wgg5lHRfSf"
+   class="w-8 h-8 bg-white/5 rounded-full flex items-center justify-center hover:bg-primary transition">
+  <svg xmlns="http://www.w3.org/2000/svg"
+       class="w-4 h-4"
+       fill="none"
+       stroke="currentColor"
+       stroke-width="2"
+       stroke-linecap="round"
+       stroke-linejoin="round"
+       viewBox="0 0 24 24">
+    <path d="M16.7 13.4c-.3-.2-1.7-.8-2-1-.3-.2-.5-.2-.7.2s-.8 1-1 1.2c-.2.2-.4.2-.7.1-.3-.1-1.2-.4-2.2-1.3-1-1-1.3-1.9-1.4-2.2-.1-.3 0-.5.2-.7.2-.2.6-.7.8-1 .2-.3.1-.5 0-.7-.1-.2-.7-1.7-.9-2.1-.2-.4-.4-.3-.7-.3-.3 0-.6 0-.9.3-.3.3-1.1 1.1-1.1 2.6 0 1.5.9 3 1.1 3.2.1.2 2.1 3.2 5.1 4.4 1.9.8 2.6.9 3.5.8.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.1-1.4-.1-.1-.3-.2-.6-.4z"/>
+    <path d="M21 12a9 9 0 1 0-16.5 5.2L3 21l3.8-1.5A9 9 0 0 0 21 12z"/>
+  </svg>
+</a>
+
+
+                                </a>
+
+                            </div>
+                        </div>
+
+                        <!-- Navigation -->
+                        <div>
+                            <h4 class="font-bold mb-6">Quick Navigation</h4>
+                            <ul class="space-y-4 text-slate-400 text-sm">
+                                <li><a href="aboutus-std.html" class="hover:text-white transition">About Us</a></li>
+                                <li><a href="#contact" class="hover:text-white transition">Contact Us</a></li>
+                                <li><a href="#programs" class="hover:text-white transition">Programs</a></li>
+                                <li><a href="#hybrid-hustle" class="hover:text-white transition">Hybrid Hustle</a></li>
+                                <li><a href="analyzer.html" class="hover:text-white transition">Career Compass</a></li>
+                                <li><a href="#events" class="hover:text-white transition">Events</a></li>
+                            </ul>
+                        </div>
+
+                        <!-- For Students & Partners -->
+                        <div>
+                            <h4 class="font-bold mb-6">Specializations</h4>
+                            <ul class="space-y-4 text-slate-400 text-sm">
+                                <li><a href="index.html" class="hover:text-white transition">For Students</a></li>
+                                <li><a href="home-uni.html" class="hover:text-white transition">For Universities</a>
+                                </li>
+                                <li><a href="home-bus.html" class="hover:text-white transition">For Businesses</a></li>
+                                <li><a href="#" class="hover:text-white transition">Placement Support</a></li>
+                            </ul>
+                        </div>
+
+                        <!-- Contact Info -->
+                        <div>
+                            <h4 class="font-bold mb-6">Contact Us</h4>
+                            <ul class="space-y-4 text-slate-400 text-sm">
+                                <li class="flex gap-3"><i data-lucide="mail" class="w-4 h-4 text-primary"></i>
+                                    contact@diverseloopers.com</li>
+                                <li class="flex gap-3"><i data-lucide="phone" class="w-4 h-4 text-primary"></i> +91
+                                    98393 50961</li>
+                            </ul>
+
+                            <!-- Auth Section in Footer -->
+                            <div id="footer-auth" class="mt-8 pt-6 border-t border-white/10 hidden">
+                                <div class="flex items-center gap-3 mb-4">
+                                    <div id="footer-user-avatar"
+                                        class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-xs font-bold uppercase">
+                                        U</div>
+                                    <div>
+                                        <p id="footer-user-name" class="text-xs font-bold text-white"></p>
+                                        <p id="footer-user-email" class="text-[10px] text-slate-500"></p>
+                                    </div>
+                                </div>
+                                <button id="logout-btn"
+                                    class="text-xs text-red-400 hover:text-red-300 font-bold uppercase tracking-widest">Sign
+                                    Out</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500 font-medium">
+                        <p>&copy; 2025 Diverse Loopers. All Rights Reserved.</p>
+                        <div class="flex gap-8">
+                            <a href="#" class="hover:text-white transition">Privacy Policy</a>
+                            <a href="#" class="hover:text-white transition">Terms & Conditions</a>
+                        </div>
+                        <p>Hybrid Hustle&reg; is a registered program concept.</p>
+                    </div>
+                </div>
+            </footer>
+
+            <script>
+                // --- Initialization ---
+                lucide.createIcons();
+
+                const SUPABASE_URL = 'https://tjqsmkaiajdpotmafqvw.supabase.co';
+                const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqcXNta2FpYWpkcG90bWFmcXZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU5ODA3NDIsImV4cCI6MjA3MTU1Njc0Mn0.9710q9W5EFfCagj340AizUSKiOXYApy0xkTFszFjO8o';
+                const { createClient } = supabase;
+                const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+                // --- Mobile Menu Toggle ---
+                const mobileToggle = document.getElementById('mobile-menu-toggle');
+                const mobileMenu = document.getElementById('mobile-menu');
+                mobileToggle.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+
+                // --- Auth State Management ---
+                async function updateUIForAuth(session) {
+                    const user = session?.user;
+                    const loginBtn = document.getElementById('login-btn');
+                    const profileBtn = document.getElementById('profile-btn');
+                    const footerAuth = document.getElementById('footer-auth');
+                    const footerName = document.getElementById('footer-user-name');
+                    const footerEmail = document.getElementById('footer-user-email');
+                    const footerAvatar = document.getElementById('footer-user-avatar');
+
+                    if (user) {
+                        loginBtn.classList.add('hidden');
+                        profileBtn.classList.remove('hidden');
+                        footerAuth.classList.remove('hidden');
+
+                        const name = user.user_metadata?.full_name || 'User';
+                        footerName.textContent = name;
+                        footerEmail.textContent = user.email;
+                        footerAvatar.textContent = name[0];
+                    } else {
+                        loginBtn.classList.remove('hidden');
+                        profileBtn.classList.add('hidden');
+                        footerAuth.classList.add('hidden');
+                    }
+                }
+
+                document.getElementById('logout-btn')?.addEventListener('click', async () => {
+                    await _supabase.auth.signOut();
+                    window.location.reload();
+                });
+
+                _supabase.auth.onAuthStateChange((_event, session) => updateUIForAuth(session));
+                _supabase.auth.getSession().then(({ data }) => updateUIForAuth(data.session));
+
+                // --- Hybrid Hustler Form Handler ---
+               const hustlerForm = document.getElementById('hustler-form');
         const hustlerMessage = document.getElementById('hustler-message');
 
         if (hustlerForm) {
             hustlerForm.addEventListener('submit', async function (e) {
                 e.preventDefault();
-                hustlerMessage.classList.add('hidden'); // Hide previous message
+                hustlerMessage.classList.add('hidden');
 
-                // Basic client-side validation check
                 if (!e.target.checkValidity()) {
                     hustlerMessage.textContent = 'Please fill out all required fields correctly.';
                     hustlerMessage.style.color = '#ef4444';
@@ -1838,7 +848,6 @@
                     return;
                 }
 
-                // Collect form data
                 const formData = new FormData(hustlerForm);
                 const data = {
                     full_name: formData.get('name'),
@@ -1847,483 +856,152 @@
                     contact_number: formData.get('contact'),
                     core_technology: formData.get('tech'),
                     course_year: formData.get('year'),
-                    // Convert semester to integer as per your SQL schema
                     semester: parseInt(formData.get('semester'), 10),
                     roll_no: formData.get('roll'),
                 };
 
-                // Get the current user ID for linking registration (if logged in)
                 const { data: { user } } = await _supabase.auth.getUser();
                 if (user) {
                     data.user_id = user.id;
                 }
 
                 try {
-                    // Show loading state 
                     hustlerMessage.textContent = 'Registering...';
-                    hustlerMessage.style.color = 'var(--color-primary)';
+                    hustlerMessage.style.color = '#2563eb';
                     hustlerMessage.classList.remove('hidden');
 
-                    // Attempt to insert data into Supabase
                     const { error } = await _supabase
                         .from('hybrid_hustler_registrations')
                         .insert([data]);
 
                     if (error) {
                         console.error('Supabase Insert Error:', error);
-                        // Handle unique constraint error specifically for email_id (SQL error code '23505')
-                        if (error.code === '23505' && error.details.includes('email_id')) {
+                        if (error.code === '23505' && error.details?.includes('email_id')) {
                             hustlerMessage.textContent = 'Registration failed: This email address is already registered.';
                         } else {
                             hustlerMessage.textContent = `Registration failed: An error occurred.`;
                         }
                         hustlerMessage.style.color = '#ef4444';
                     } else {
-                        // Success message
                         const firstName = data.full_name.split(' ')[0];
-                        hustlerMessage.textContent = `Success! Thank you, ${firstName}! Your registration has been saved to the database.`;
-                        hustlerMessage.style.color = 'var(--color-primary)';
-
-                        // Clear form after successful submission
+                        hustlerMessage.textContent = `Success! Thank you, ${firstName}! Your registration has been saved.`;
+                        hustlerMessage.style.color = '#2563eb';
                         hustlerForm.reset();
                     }
                 } catch (e) {
                     console.error('Unexpected Registration Error:', e);
-                    hustlerMessage.textContent = 'An unexpected network error occurred during registration. Try with a different Email ID.';
+                    hustlerMessage.textContent = 'An unexpected network error occurred.';
                     hustlerMessage.style.color = '#ef4444';
                 }
             });
         }
 
+                // --- Contact Form Handler ---
+                document.getElementById('contact-form').addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const status = document.getElementById('contact-status');
+                    const data = {
+                        full_name: document.getElementById('name').value,
+                        email_id: document.getElementById('email').value,
+                        message_content: document.getElementById('message').value
+                    };
 
-        // --- CONTACT FORM HANDLER (Supabase Integration) ---
-        const contactForm = document.querySelector('.contact-form');
-        const contactMessageDiv = document.createElement('p'); // Create a temporary message element for feedback
-        contactMessageDiv.style.marginTop = '1rem';
-        contactMessageDiv.style.textAlign = 'center';
-        contactForm.appendChild(contactMessageDiv);
+                    status.textContent = "Sending...";
+                    status.className = "text-center text-sm font-medium text-primary block";
 
-        if (contactForm) {
-            contactForm.addEventListener('submit', async function (e) {
-                e.preventDefault();
-                contactMessageDiv.textContent = ''; // Clear previous message
-
-                if (!e.target.checkValidity()) {
-                    contactMessageDiv.textContent = 'Please fill out all required fields.';
-                    contactMessageDiv.style.color = '#ef4444';
-                    return;
-                }
-
-                // Collect form data using input IDs
-                const data = {
-                    full_name: document.getElementById('name').value,
-                    email_id: document.getElementById('email').value,
-                    message_content: document.getElementById('message').value,
-                };
-
-                // Get the current user ID for linking registration (if logged in)
-                const { data: { user } } = await _supabase.auth.getUser();
-                if (user) {
-                    data.user_id = user.id;
-                }
-
-                contactMessageDiv.textContent = 'Sending message...';
-                contactMessageDiv.style.color = 'var(--color-primary)';
-                contactForm.querySelector('button[type="submit"]').disabled = true;
-
-                try {
-                    // Attempt to insert data into Supabase
-                    const { error } = await _supabase
-                        .from('contact_inquiries')
-                        .insert([data]);
+                    const { error } = await _supabase.from('contact_inquiries').insert([data]);
 
                     if (error) {
-                        console.error('Supabase Contact Insert Error:', error);
-                        contactMessageDiv.textContent = `Message failed to send: An error occurred.`;
-                        contactMessageDiv.style.color = '#ef4444';
+                        status.textContent = "Failed to send message.";
+                        status.classList.add('text-red-500');
                     } else {
-                        // Success message
-                        contactMessageDiv.textContent = `Thank you, ${data.full_name.split(' ')[0]}! Your message has been sent successfully.`;
-                        contactMessageDiv.style.color = 'var(--color-primary)';
-
-                        // Clear form after successful submission
-                        contactForm.reset();
-                    }
-                } catch (e) {
-                    console.error('Unexpected Contact Error:', e);
-                    contactMessageDiv.textContent = 'An unexpected network error occurred.';
-                    contactMessageDiv.style.color = '#ef4444';
-                } finally {
-                    contactForm.querySelector('button[type="submit"]').disabled = false;
-                }
-            });
-        }
-        // --- END CONTACT FORM HANDLER ---
-
-
-        // --- CAROUSEL CONTROL ELEMENTS ---
-        const scrollContainer = document.getElementById('events-grid-container');
-        const scrollGrid = document.getElementById('events-grid');
-        const scrollLeftBtn = document.getElementById('scroll-left-btn');
-        const scrollRightBtn = document.getElementById('scroll-right-btn');
-        const CARD_SCROLL_COUNT = 3; // Number of cards to move per click
-
-        // --- CAROUSEL CONTROL FUNCTIONS ---
-
-        function updateScrollButtons() {
-            if (!scrollContainer || !scrollLeftBtn || !scrollRightBtn) return;
-
-            // Hide left button if scrolled fully left
-            scrollLeftBtn.classList.toggle('hidden', scrollContainer.scrollLeft === 0);
-
-            // Hide right button if scrolled fully right
-            const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
-            // Use a small tolerance (1px) because of floating point inaccuracies
-            scrollRightBtn.classList.toggle('hidden', scrollContainer.scrollLeft >= maxScroll - 1);
-        }
-
-        function scrollEvents(direction) {
-            if (!scrollGrid || !scrollContainer) return;
-
-            // Get the computed style of the grid (to read the gap size)
-            const gridStyle = window.getComputedStyle(scrollGrid);
-            // Read the actual gap value defined in CSS (default to 2rem = 32px)
-            const gap = parseFloat(gridStyle.getPropertyValue('gap') || '32');
-
-            // Calculate the width of one card (container width / number of visible cards)
-            const cardWidth = scrollContainer.clientWidth / CARD_SCROLL_COUNT;
-
-            // The scroll distance is the width of the cards plus the space (gap) between them
-            const scrollDistance = (cardWidth + (gap / CARD_SCROLL_COUNT)) * CARD_SCROLL_COUNT;
-
-            // Perform the scroll
-            scrollContainer.scrollBy({
-                left: direction * scrollDistance,
-                behavior: 'smooth'
-            });
-
-            // Wait for the scroll animation to finish before updating buttons
-            setTimeout(updateScrollButtons, 500);
-        }
-
-        // Add listeners for the new buttons (Check if elements exist before adding listeners)
-        if (scrollRightBtn) scrollRightBtn.addEventListener('click', () => scrollEvents(1));
-        if (scrollLeftBtn) scrollLeftBtn.addEventListener('click', () => scrollEvents(-1));
-        if (scrollContainer) scrollContainer.addEventListener('scroll', updateScrollButtons);
-
-
-        // --- Supabase Session Management ---
-        const SUPABASE_URL = 'https://tjqsmkaiajdpotmafqvw.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqcXNta2FpYWpkcG90bWFmcXZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU5ODA3NDIsImV4cCI6MjA3MTU1Njc0Mn0.9710q9W5EFfCagj340AizUSKiOXYApy0xkTFszFjO8o';
-
-        const { createClient } = supabase;
-        const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        // Get all the button elements
-        const loginBtn = document.getElementById('login-btn');
-        const profileBtn = document.getElementById('profile-btn');
-        const logoutBtn = document.getElementById('logout-btn');
-        const mobileLoginBtn = document.getElementById('mobile-login-btn');
-        const mobileProfileBtn = document.getElementById('mobile-profile-btn');
-        const footerUserSection = document.getElementById('footer-user-section');
-        const userAvatar = document.getElementById('user-avatar');
-        const userName = document.getElementById('user-name');
-        const userEmail = document.getElementById('user-email');
-
-        // Function to get user initials for avatar
-        function getUserInitials(name, email) {
-            if (name && name.trim()) {
-                const nameParts = name.trim().split(' ');
-                if (nameParts.length >= 2) {
-                    return (nameParts[0][0] + nameParts[1][0]).toUpperCase();
-                }
-                return nameParts[0][0].toUpperCase();
-            } else if (email) {
-                return email[0].toUpperCase();
-            }
-            return 'U';
-        }
-
-        // Function to update UI based on authentication state
-        async function updateUIForAuthState(isLoggedIn, user = null) {
-            if (isLoggedIn && user) {
-                // User is logged in - show profile button and footer user section, hide login
-                loginBtn.classList.add('hidden');
-                profileBtn.classList.remove('hidden');
-                mobileLoginBtn.classList.add('hidden');
-                mobileProfileBtn.classList.remove('hidden');
-                footerUserSection.classList.remove('hidden');
-
-                // Update user info in footer
-                const displayName = user.user_metadata?.full_name || user.user_metadata?.name || 'User';
-                const displayEmail = user.email || 'No email';
-
-                userAvatar.textContent = getUserInitials(displayName, displayEmail);
-                userName.textContent = displayName;
-                userEmail.textContent = displayEmail;
-
-            } else {
-                // User is logged out - show login button, hide profile and footer user section
-                loginBtn.classList.remove('hidden');
-                profileBtn.classList.add('hidden');
-                mobileLoginBtn.classList.remove('hidden');
-                mobileProfileBtn.classList.add('hidden');
-                footerUserSection.classList.add('hidden');
-            }
-        }
-
-        // Function to handle logout
-        async function handleLogout() {
-            try {
-                const { error } = await _supabase.auth.signOut();
-                if (error) {
-                    console.error('Error logging out:', error);
-                    alert('Error logging out. Please try again.');
-                } else {
-                    updateUIForAuthState(false);
-                    // Optionally redirect to home page or login page
-                    window.location.reload();
-                }
-            } catch (error) {
-                console.error('Unexpected error during logout:', error);
-                alert('Unexpected error occurred. Please try again.');
-            }
-        }
-
-        // Add event listener for logout button in footer
-        logoutBtn.addEventListener('click', handleLogout);
-
-        // Check authentication state on page load
-        document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                const { data: { session } } = await _supabase.auth.getSession();
-                updateUIForAuthState(!!session, session?.user);
-            } catch (error) {
-                console.error('Error checking session:', error);
-                // Default to logged out state if there's an error
-                updateUIForAuthState(false);
-            }
-        });
-
-        // Listen for auth state changes
-        _supabase.auth.onAuthStateChange((event, session) => {
-            updateUIForAuthState(!!session, session?.user);
-        });
-
-
-
-        // --- Sticky Header on Scroll ---
-        const header = document.querySelector('.header');
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 50) { // Activates after scrolling 50 pixels
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
-        });
-
-
-        // --- Mobile Menu Toggle ---
-        const menuBtn = document.getElementById('menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        menuBtn.addEventListener('click', () => {
-            menuBtn.classList.toggle('open');
-            mobileMenu.classList.toggle('hidden');
-        });
-
-        // Close mobile menu when clicking on links
-        document.querySelectorAll('.mobile-link').forEach(link => {
-            link.addEventListener('click', () => {
-                menuBtn.classList.remove('open');
-                mobileMenu.classList.add('hidden');
-            });
-        });
-
-        // --- Interactive Hero Background ---
-        const canvas = document.getElementById('hero-canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = document.getElementById('hero').offsetHeight;
-
-        let particlesArray;
-        const mouse = { x: null, y: null, radius: (canvas.height / 120) * (canvas.width / 120) };
-        window.addEventListener('mousemove', event => { mouse.x = event.x; mouse.y = event.y; });
-
-        class Particle {
-            constructor(x, y, directionX, directionY, size, color) {
-                this.x = x;
-                this.y = y;
-                this.directionX = directionX;
-                this.directionY = directionY;
-                this.size = size;
-                this.color = color;
-            }
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
-                ctx.fillStyle = this.color;
-                ctx.fill();
-            }
-            update() {
-                if (this.x > canvas.width || this.x < 0) { this.directionX = -this.directionX; }
-                if (this.y > canvas.height || this.y < 0) { this.directionY = -this.directionY; }
-                let dx = mouse.x - this.x;
-                let dy = mouse.y - this.y;
-                let distance = Math.sqrt(dx * dx + dy * dy);
-                if (distance < mouse.radius + this.size) {
-                    if (mouse.x < this.x && this.x < canvas.width - this.size * 10) { this.x += 5; }
-                    if (mouse.x > this.x && this.x > this.size * 10) { this.x -= 5; }
-                    if (mouse.y < this.y && this.y < canvas.height - this.size * 10) { this.y += 5; }
-                    if (mouse.y > this.y && this.y > this.size * 10) { this.y -= 5; }
-                }
-                this.x += this.directionX;
-                this.y += this.directionY;
-                this.draw();
-            }
-        }
-
-        function init() {
-            particlesArray = [];
-            let numberOfParticles = (canvas.height * canvas.width) / 9000;
-            for (let i = 0; i < numberOfParticles; i++) {
-                let size = (Math.random() * 2) + 1;
-                let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
-                let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
-                let directionX = (Math.random() * 0.4) - 0.2;
-                let directionY = (Math.random() * 0.4) - 0.2;
-                let color = 'rgba(59, 130, 246, 0.5)';
-                if (Math.random() > 0.5) { color = 'rgba(236, 72, 153, 0.5)'; }
-                particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
-            }
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            ctx.clearRect(0, 0, innerWidth, innerHeight);
-            for (let i = 0; i < particlesArray.length; i++) {
-                particlesArray[i].update();
-            }
-        }
-
-        window.addEventListener('resize', () => {
-            canvas.width = innerWidth;
-            canvas.height = document.getElementById('hero').offsetHeight;
-            mouse.radius = (canvas.height / 120) * (canvas.width / 120);
-            init();
-        });
-
-        window.addEventListener('mouseout', () => {
-            mouse.x = undefined;
-            mouse.y = undefined;
-        });
-
-        init();
-        animate();
-
-        // --- Scroll Animations ---
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
-            });
-        }, { threshold: 0.2 });
-
-        const fadeElements = document.querySelectorAll('.fade-in');
-        fadeElements.forEach(el => observer.observe(el));
-        /**
- * Converts ISO date string to a human-readable format.
- */
-        function formatEventDate(isoString) {
-            const date = new Date(isoString);
-            return date.toLocaleString('en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-        }
-
-        function createEventCard(event) {
-            const isPast = new Date(event.date) < new Date();
-            const tagText = isPast ? 'Past Event' : 'Upcoming';
-            const btnText = isPast ? 'View Details' : 'Register Now';
-
-            return `
-        <div class="event-card fade-in">
-            <div class="event-media">
-                <img src="${event.media_url || 'https://placehold.co/400x200/3b82f6/ffffff?text=Event'}" 
-                    alt="${event.title}" onerror="this.onerror=null;this.src='https://placehold.co/400x200/3b82f6/ffffff?text=Event'">
-            </div>
-            <div class="event-content">
-                <span class="program-tag" style="background-color: ${isPast ? '#f3f4f6' : '#dbeafe'}; color: ${isPast ? '#6b7280' : '#3b82f6'};">
-                    ${tagText}
-                </span>
-                <span class="event-date">${formatEventDate(event.date)} | ${event.location || 'Online'}</span>
-                <h3>${event.title}</h3>
-                <p>${event.description}</p>
-                <a href="${event.join_link || '#contact'}" 
-                   class="btn btn-primary event-join-btn" 
-                   style="background: ${isPast ? '#6b7280' : 'linear-gradient(90deg, var(--color-primary), var(--color-secondary))'};" 
-                   target="_blank">
-                    ${btnText}
-                </a>
-            </div>
-        </div>
-    `;
-        }
-        /**
-         * Fetches events from Supabase and renders them to the page.
-         */
-        async function fetchAndRenderEvents() {
-            const container = document.getElementById('events-grid');
-            if (!container) return;
-
-            // Fetch data from Supabase
-            const { data: events, error } = await _supabase
-                .from('events')
-                .select('*')
-                .order('date', { ascending: true });
-
-            if (error) {
-                console.error('Supabase Error fetching events for index page:', error);
-                container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: #ef4444; padding: 2rem;">Error loading events. Please check RLS policies.</div>';
-                return;
-            }
-
-            if (events.length === 0) {
-                container.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: #6b7280; padding: 2rem;">Stay tuned! New events will be announced soon.</div>';
-
-                // Hide buttons if there are no events
-                if (scrollLeftBtn) scrollLeftBtn.classList.add('hidden');
-                if (scrollRightBtn) scrollRightBtn.classList.add('hidden');
-                return;
-            }
-
-            // Set the CSS variable for total event count (Crucial for the Grid layout)
-            scrollGrid.style.setProperty('--total-events', events.length);
-
-            // Generate HTML for all events
-            container.innerHTML = events.map(createEventCard).join('');
-
-            // Re-initialize scroll observer for the newly created elements (Fade-in effect)
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
+                        status.textContent = "Message sent successfully!";
+                        status.classList.replace('text-primary', 'text-green-500');
+                        e.target.reset();
                     }
                 });
-            }, { threshold: 0.2 });
 
-            document.querySelectorAll('.event-card').forEach(el => observer.observe(el));
+                // --- Events Carousel Rendering ---
+                async function loadEvents() {
+                    const grid = document.getElementById('events-grid');
+                    const { data: events, error } = await _supabase.from('events').select('*').order('date', { ascending: true });
 
-            // Initial button state check
-            updateScrollButtons();
-        }
-        // FINAL STEP: Execute the loading function when the page script block finishes loading.
-        fetchAndRenderEvents();
-    </script>
+                    if (error || !events.length) {
+                        grid.innerHTML = `<p class="text-slate-400 p-8 w-full text-center">No upcoming events found.</p>`;
+                        return;
+                    }
+
+                    grid.innerHTML = events.map(event => `
+                <div class="w-[350px] bg-slate-50 rounded-3xl border border-slate-100 overflow-hidden group flex-shrink-0">
+                    <div class="h-48 bg-slate-200 relative overflow-hidden">
+                        <img src="${event.media_url || 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80'}" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                        <div class="absolute top-4 left-4 py-1 px-3 bg-white/90 backdrop-blur rounded-full text-[10px] font-black text-primary uppercase tracking-tighter">
+                            ${new Date(event.date) < new Date() ? 'Past' : 'Upcoming'}
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="text-xs font-bold text-primary mb-2">${new Date(event.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</div>
+                        <h4 class="text-lg font-bold text-slate-900 mb-3 line-clamp-1">${event.title}</h4>
+                        <p class="text-xs text-slate-500 mb-6 line-clamp-2">${event.description}</p>
+                        <a href="${event.join_link || '#'}" target="_blank" class="block w-full py-3 text-center bg-white border border-slate-200 rounded-xl text-xs font-bold hover:bg-primary hover:text-white hover:border-primary transition">View Details</a>
+                    </div>
+                </div>
+            `).join('');
+                }
+
+                loadEvents();
+
+                // Carousel Scroll Logic
+                const container = document.getElementById('events-grid-container');
+                document.getElementById('scroll-right-btn').onclick = () => container.scrollBy({ left: 380, behavior: 'smooth' });
+                document.getElementById('scroll-left-btn').onclick = () => container.scrollBy({ left: -380, behavior: 'smooth' });
+
+                // --- Animations ---
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) entry.target.classList.add('visible');
+                    });
+                }, { threshold: 0.15 });
+
+                document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+                // --- Simple Particles ---
+                const canvas = document.getElementById('hero-canvas');
+                const ctx = canvas.getContext('2d');
+                let pts = [];
+
+                function resize() {
+                    canvas.width = window.innerWidth;
+                    canvas.height = 800;
+                }
+
+                function create() {
+                    for (let i = 0; i < 40; i++) pts.push({
+                        x: Math.random() * canvas.width,
+                        y: Math.random() * canvas.height,
+                        vx: (Math.random() - 0.5) * 0.5,
+                        vy: (Math.random() - 0.5) * 0.5,
+                        s: Math.random() * 2
+                    });
+                }
+
+                function draw() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillStyle = '#3b82f6';
+                    pts.forEach(p => {
+                        p.x += p.vx; p.y += p.vy;
+                        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
+                        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.s, 0, Math.PI * 2);
+                        ctx.fill();
+                    });
+                    requestAnimationFrame(draw);
+                }
+
+                window.onresize = resize;
+                resize(); create(); draw();
+            </script>
 </body>
 
 </html>
