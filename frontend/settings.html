@@ -1,15 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Settings | Diverse Loopers</title>
-    
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/png"
+        href="/https://diverseloopers.com/my-favicon/favicon.ico, enter /my-favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml"
+        href="/https://diverseloopers.com/my-favicon/favicon.ico, enter /my-favicon/favicon.svg" />
+    <link rel="shortcut icon"
+        href="/https://diverseloopers.com/my-favicon/favicon.ico, enter /my-favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180"
+        href="/https://diverseloopers.com/my-favicon/favicon.ico, enter /my-favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="DLPT" />
+    <link rel="manifest"
+        href="/https://diverseloopers.com/my-favicon/favicon.ico, enter /my-favicon/site.webmanifest" />
     <!-- Scripts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -45,11 +57,11 @@
             --border: #1e293b;
         }
 
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: var(--bg-body); 
-            color: var(--text-main); 
-            transition: background-color 0.3s, color 0.3s; 
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .glass-card {
@@ -78,16 +90,30 @@
         }
 
         /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
-        .dark ::-webkit-scrollbar-thumb { background: #1e293b; }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+
+        .dark ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+        }
     </style>
 </head>
+
 <body class="min-h-screen">
 
     <!-- Toast Notification -->
-    <div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 z-[100] px-6 py-3 rounded-2xl shadow-2xl transform translate-y-[-100px] transition-transform duration-500 flex items-center gap-3 font-bold text-sm">
+    <div id="toast"
+        class="fixed top-6 left-1/2 -translate-x-1/2 z-[100] px-6 py-3 rounded-2xl shadow-2xl transform translate-y-[-100px] transition-transform duration-500 flex items-center gap-3 font-bold text-sm">
         <i id="toast-icon" class="w-4 h-4"></i>
         <span id="toast-message"></span>
     </div>
@@ -96,13 +122,15 @@
         <!-- Header -->
         <div class="flex items-center justify-between mb-12">
             <div class="flex items-center gap-4">
-                <a href="profile.html" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:bg-slate-50 transition">
+                <a href="profile.html"
+                    class="w-10 h-10 flex items-center justify-center rounded-xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:bg-slate-50 transition">
                     <i data-lucide="chevron-left" class="w-5 h-5 text-slate-500"></i>
                 </a>
                 <h1 class="text-3xl font-black tracking-tight">Settings</h1>
             </div>
-            
-            <button id="theme-toggle" class="p-3 rounded-xl bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400">
+
+            <button id="theme-toggle"
+                class="p-3 rounded-xl bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400">
                 <i data-lucide="moon" id="theme-icon"></i>
             </button>
         </div>
@@ -111,20 +139,25 @@
         <div class="glass-card rounded-[2.5rem] overflow-hidden shadow-sm">
             <!-- Tabs -->
             <div class="flex border-b border-slate-100 dark:border-white/5 px-8">
-                <button onclick="switchTab('profile')" id="tab-profile" class="tab-btn active px-6 py-5 text-sm font-bold transition">Profile</button>
-                <button onclick="switchTab('career')" id="tab-career" class="tab-btn px-6 py-5 text-sm font-bold text-slate-400 transition">Career & Skills</button>
-                <button onclick="switchTab('account')" id="tab-account" class="tab-btn px-6 py-5 text-sm font-bold text-slate-400 transition">Account</button>
+                <button onclick="switchTab('profile')" id="tab-profile"
+                    class="tab-btn active px-6 py-5 text-sm font-bold transition">Profile</button>
+                <button onclick="switchTab('career')" id="tab-career"
+                    class="tab-btn px-6 py-5 text-sm font-bold text-slate-400 transition">Career & Skills</button>
+                <button onclick="switchTab('account')" id="tab-account"
+                    class="tab-btn px-6 py-5 text-sm font-bold text-slate-400 transition">Account</button>
             </div>
 
             <!-- Profile Tab -->
             <div id="view-profile" class="p-8 md:p-12 space-y-10">
                 <div class="flex flex-col md:flex-row items-center gap-8">
                     <div class="relative group">
-                        <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-primary/10 bg-slate-100 dark:bg-white/5 flex items-center justify-center">
+                        <div
+                            class="w-32 h-32 rounded-full overflow-hidden border-4 border-primary/10 bg-slate-100 dark:bg-white/5 flex items-center justify-center">
                             <img id="avatar-preview" src="" class="w-full h-full object-cover hidden">
                             <i data-lucide="user" id="avatar-placeholder" class="w-12 h-12 text-slate-300"></i>
                         </div>
-                        <label for="avatar-input" class="absolute bottom-0 right-0 w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center cursor-pointer hover:scale-110 transition shadow-lg">
+                        <label for="avatar-input"
+                            class="absolute bottom-0 right-0 w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center cursor-pointer hover:scale-110 transition shadow-lg">
                             <i data-lucide="camera" class="w-4 h-4"></i>
                             <input type="file" id="avatar-input" class="hidden" accept="image/*">
                         </label>
@@ -141,15 +174,19 @@
                         <input type="text" id="full-name" class="input-field" placeholder="e.g. John Doe">
                     </div>
                     <div class="space-y-2">
-                        <label class="text-xs font-black uppercase tracking-widest text-slate-400">Email Address (Auth)</label>
+                        <label class="text-xs font-black uppercase tracking-widest text-slate-400">Email Address
+                            (Auth)</label>
                         <input type="email" id="email" class="input-field opacity-60 cursor-not-allowed" disabled>
                     </div>
                     <div class="md:col-span-2 space-y-2">
-                        <label class="text-xs font-black uppercase tracking-widest text-slate-400">Bio / Headline</label>
-                        <textarea id="bio" rows="3" class="input-field" placeholder="Briefly describe yourself..."></textarea>
+                        <label class="text-xs font-black uppercase tracking-widest text-slate-400">Bio /
+                            Headline</label>
+                        <textarea id="bio" rows="3" class="input-field"
+                            placeholder="Briefly describe yourself..."></textarea>
                     </div>
                     <div class="md:col-span-2 pt-4">
-                        <button type="submit" class="w-full md:w-auto px-10 py-4 bg-primary text-white rounded-2xl font-bold hover:shadow-xl transition flex items-center justify-center gap-2">
+                        <button type="submit"
+                            class="w-full md:w-auto px-10 py-4 bg-primary text-white rounded-2xl font-bold hover:shadow-xl transition flex items-center justify-center gap-2">
                             Save Changes <i data-lucide="save" class="w-4 h-4"></i>
                         </button>
                     </div>
@@ -159,33 +196,45 @@
             <!-- Career Tab -->
             <div id="view-career" class="hidden p-8 md:p-12 space-y-12">
                 <section class="space-y-6">
-                    <h3 class="text-xl font-bold flex items-center gap-2"><i data-lucide="target" class="text-primary"></i> Target Career Goal</h3>
+                    <h3 class="text-xl font-bold flex items-center gap-2"><i data-lucide="target"
+                            class="text-primary"></i> Target Career Goal</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-2">
-                            <label class="text-xs font-black uppercase tracking-widest text-slate-400">Target Role</label>
-                            <input type="text" id="target-role" class="input-field" placeholder="e.g. Full Stack Developer">
+                            <label class="text-xs font-black uppercase tracking-widest text-slate-400">Target
+                                Role</label>
+                            <input type="text" id="target-role" class="input-field"
+                                placeholder="e.g. Full Stack Developer">
                         </div>
                         <div class="md:col-span-2 space-y-2">
-                            <label class="text-xs font-black uppercase tracking-widest text-slate-400">Role Description (AI context)</label>
-                            <textarea id="role-description" rows="3" class="input-field" placeholder="What does this role mean to you?"></textarea>
+                            <label class="text-xs font-black uppercase tracking-widest text-slate-400">Role Description
+                                (AI context)</label>
+                            <textarea id="role-description" rows="3" class="input-field"
+                                placeholder="What does this role mean to you?"></textarea>
                         </div>
                     </div>
                 </section>
 
                 <section class="space-y-6">
-                    <h3 class="text-xl font-bold flex items-center gap-2"><i data-lucide="award" class="text-secondary"></i> My Skill Inventory</h3>
-                    <div class="flex flex-wrap gap-3 p-6 bg-slate-50 dark:bg-white/5 rounded-3xl border border-dashed border-slate-200 dark:border-white/10" id="skills-list">
+                    <h3 class="text-xl font-bold flex items-center gap-2"><i data-lucide="award"
+                            class="text-secondary"></i> My Skill Inventory</h3>
+                    <div class="flex flex-wrap gap-3 p-6 bg-slate-50 dark:bg-white/5 rounded-3xl border border-dashed border-slate-200 dark:border-white/10"
+                        id="skills-list">
                         <!-- Skills populated here -->
                     </div>
-                    
+
                     <div class="flex flex-col sm:flex-row gap-4">
-                        <input type="text" id="new-skill-input" class="input-field flex-1" placeholder="Add a new skill (e.g. Python)">
-                        <button id="add-skill-btn" class="px-8 py-4 bg-dark text-white rounded-2xl font-bold hover:bg-black transition">Add Skill</button>
+                        <input type="text" id="new-skill-input" class="input-field flex-1"
+                            placeholder="Add a new skill (e.g. Python)">
+                        <button id="add-skill-btn"
+                            class="px-8 py-4 bg-dark text-white rounded-2xl font-bold hover:bg-black transition">Add
+                            Skill</button>
                     </div>
                 </section>
 
                 <div class="pt-6">
-                    <button id="save-career-btn" class="w-full md:w-auto px-10 py-4 bg-primary text-white rounded-2xl font-bold transition">Update Career Path</button>
+                    <button id="save-career-btn"
+                        class="w-full md:w-auto px-10 py-4 bg-primary text-white rounded-2xl font-bold transition">Update
+                        Career Path</button>
                 </div>
             </div>
 
@@ -193,14 +242,21 @@
             <div id="view-account" class="hidden p-8 md:p-12 space-y-8">
                 <div class="p-8 rounded-[2rem] bg-slate-50 dark:bg-white/5 space-y-6">
                     <h3 class="font-bold">Security</h3>
-                    <p class="text-sm text-slate-500">Changing passwords and two-factor authentication management is handled via secure email link.</p>
-                    <button onclick="resetPassword()" class="px-6 py-3 bg-white dark:bg-white/10 border border-slate-200 dark:border-white/10 rounded-xl text-sm font-bold hover:shadow-md transition">Request Password Reset</button>
+                    <p class="text-sm text-slate-500">Changing passwords and two-factor authentication management is
+                        handled via secure email link.</p>
+                    <button onclick="resetPassword()"
+                        class="px-6 py-3 bg-white dark:bg-white/10 border border-slate-200 dark:border-white/10 rounded-xl text-sm font-bold hover:shadow-md transition">Request
+                        Password Reset</button>
                 </div>
 
-                <div class="p-8 rounded-[2rem] bg-red-50 dark:bg-red-500/5 border border-red-100 dark:border-red-500/10 space-y-6">
+                <div
+                    class="p-8 rounded-[2rem] bg-red-50 dark:bg-red-500/5 border border-red-100 dark:border-red-500/10 space-y-6">
                     <h3 class="font-bold text-red-600">Danger Zone</h3>
-                    <p class="text-sm text-red-500/80">Deleting your account is permanent. All your analysis, roadmap data, and project history will be wiped.</p>
-                    <button id="delete-account-btn" class="px-6 py-3 bg-red-600 text-white rounded-xl text-sm font-bold hover:bg-red-700 transition">Delete Account Forever</button>
+                    <p class="text-sm text-red-500/80">Deleting your account is permanent. All your analysis, roadmap
+                        data, and project history will be wiped.</p>
+                    <button id="delete-account-btn"
+                        class="px-6 py-3 bg-red-600 text-white rounded-xl text-sm font-bold hover:bg-red-700 transition">Delete
+                        Account Forever</button>
                 </div>
             </div>
         </div>
@@ -267,12 +323,12 @@
             const { data: { user } } = await db.auth.getUser();
             if (!user) { window.location.href = 'login.html'; return; }
             currentUser = user;
-            
+
             document.getElementById('email').value = user.email;
 
             // Fetch Profile
             const { data: profile, error: profileError } = await db.from('profiles').select('*').eq('id', user.id).single();
-            
+
             if (profile) {
                 document.getElementById('full-name').value = profile.full_name || '';
                 document.getElementById('bio').value = profile.bio || '';
@@ -340,14 +396,14 @@
             const fPath = `${currentUser.id}/${Date.now()}.${fExt}`;
 
             const { data, error: uploadError } = await db.storage.from('avatars').upload(fPath, file);
-            
+
             if (uploadError) { showToast('Upload failed.', 'error'); return; }
 
             const { data: urlData } = db.storage.from('avatars').getPublicUrl(fPath);
             const avatar_url = urlData.publicUrl;
 
             await db.from('profiles').update({ avatar_url }).eq('id', currentUser.id);
-            
+
             const preview = document.getElementById('avatar-preview');
             preview.src = avatar_url;
             preview.classList.remove('hidden');
@@ -395,7 +451,7 @@
             });
             if (!error) showToast('Reset link sent to your email!');
         };
-        
+
         document.getElementById('delete-account-btn').onclick = () => {
             if (confirm("Are you absolutely sure? This cannot be undone.")) {
                 showToast("Account deletion request initiated...", "error");
@@ -406,4 +462,5 @@
         init();
     </script>
 </body>
+
 </html>

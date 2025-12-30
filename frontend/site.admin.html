@@ -1,15 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard | Diverse Loopers</title>
-    
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="icon" type="image/png"
+        href="/https://diverseloopers.com/my-favicon/favicon.ico, enter /my-favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml"
+        href="/https://diverseloopers.com/my-favicon/favicon.ico, enter /my-favicon/favicon.svg" />
+    <link rel="shortcut icon"
+        href="/https://diverseloopers.com/my-favicon/favicon.ico, enter /my-favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180"
+        href="/https://diverseloopers.com/my-favicon/favicon.ico, enter /my-favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="DLPT" />
+    <link rel="manifest"
+        href="/https://diverseloopers.com/my-favicon/favicon.ico, enter /my-favicon/site.webmanifest" />
     <!-- Scripts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -31,18 +43,37 @@
     </script>
 
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
         .sidebar-link.active {
             background-color: #4f46e5;
             color: white;
             box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4);
         }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
-        
-        #dialog-overlay { display: none; }
-        #message-box, #confirm-box { display: none; }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+
+        #dialog-overlay {
+            display: none;
+        }
+
+        #message-box,
+        #confirm-box {
+            display: none;
+        }
 
         /* Mobile specific behavior */
         @media (max-width: 1023px) {
@@ -50,12 +81,14 @@
                 transition: transform 0.3s ease-in-out;
                 transform: translateX(-100%);
             }
+
             .sidebar-open {
                 transform: translateX(0);
             }
         }
     </style>
 </head>
+
 <body class="bg-[#f1f5f9] text-slate-900 h-screen flex overflow-hidden">
 
     <!-- Sidebar Overlay (Mobile Only) -->
@@ -63,29 +96,35 @@
 
     <!-- Custom Dialogs -->
     <div id="dialog-overlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100]"></div>
-    <div id="message-box" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-[2rem] shadow-2xl z-[101] w-[90%] max-w-sm text-center">
+    <div id="message-box"
+        class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-[2rem] shadow-2xl z-[101] w-[90%] max-w-sm text-center">
         <div class="w-16 h-16 bg-blue-50 text-primary rounded-full flex items-center justify-center mx-auto mb-6">
             <i data-lucide="bell" class="w-8 h-8"></i>
         </div>
         <h4 class="text-xl font-bold mb-2">Notification</h4>
         <p id="message-box-text" class="text-slate-500 text-sm mb-8"></p>
-        <button id="message-box-close-btn" class="w-full py-3 bg-primary text-white rounded-xl font-bold hover:bg-indigo-700 transition">Understood</button>
+        <button id="message-box-close-btn"
+            class="w-full py-3 bg-primary text-white rounded-xl font-bold hover:bg-indigo-700 transition">Understood</button>
     </div>
 
-    <div id="confirm-box" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-[2rem] shadow-2xl z-[101] w-[90%] max-w-sm text-center">
+    <div id="confirm-box"
+        class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-[2rem] shadow-2xl z-[101] w-[90%] max-w-sm text-center">
         <div class="w-16 h-16 bg-red-50 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
             <i data-lucide="alert-triangle" class="w-8 h-8"></i>
         </div>
         <h4 id="confirm-box-title" class="text-xl font-bold mb-2">Confirm Action</h4>
         <p id="confirm-box-text" class="text-slate-500 text-sm mb-8"></p>
         <div class="flex gap-3">
-            <button id="confirm-cancel-btn" class="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200 transition">Cancel</button>
-            <button id="confirm-ok-btn" class="flex-1 py-3 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition">Confirm</button>
+            <button id="confirm-cancel-btn"
+                class="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200 transition">Cancel</button>
+            <button id="confirm-ok-btn"
+                class="flex-1 py-3 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition">Confirm</button>
         </div>
     </div>
 
     <!-- Sidebar -->
-    <aside id="sidebar" class="w-72 bg-white border-r border-slate-200 flex flex-col fixed lg:static inset-y-0 left-0 z-[70] sidebar-transition lg:transform-none">
+    <aside id="sidebar"
+        class="w-72 bg-white border-r border-slate-200 flex flex-col fixed lg:static inset-y-0 left-0 z-[70] sidebar-transition lg:transform-none">
         <div class="p-8 flex items-center justify-between">
             <div class="flex items-center gap-3">
                 <img src="logo2.png" alt="Diverse Loopers" class="h-10 w-auto rounded-lg">
@@ -95,27 +134,33 @@
                 <i data-lucide="x"></i>
             </button>
         </div>
-        
+
         <nav class="flex-1 px-4 space-y-2 mt-4 custom-scrollbar overflow-y-auto">
-            <button onclick="switchView('dashboard')" id="nav-dashboard" class="sidebar-link active w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-semibold hover:bg-slate-50 transition text-left">
+            <button onclick="switchView('dashboard')" id="nav-dashboard"
+                class="sidebar-link active w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-semibold hover:bg-slate-50 transition text-left">
                 <i data-lucide="layout-grid" class="w-5 h-5"></i> Dashboard
             </button>
-            <button onclick="switchView('events')" id="nav-events" class="sidebar-link w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-semibold hover:bg-slate-50 transition text-left">
+            <button onclick="switchView('events')" id="nav-events"
+                class="sidebar-link w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-semibold hover:bg-slate-50 transition text-left">
                 <i data-lucide="calendar" class="w-5 h-5"></i> Events
             </button>
-            <button onclick="switchView('courses')" id="nav-courses" class="sidebar-link w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-semibold hover:bg-slate-50 transition text-left">
+            <button onclick="switchView('courses')" id="nav-courses"
+                class="sidebar-link w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-semibold hover:bg-slate-50 transition text-left">
                 <i data-lucide="book-open" class="w-5 h-5"></i> Courses
             </button>
-            <button onclick="switchView('users')" id="nav-users" class="sidebar-link w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-semibold hover:bg-slate-50 transition text-left">
+            <button onclick="switchView('users')" id="nav-users"
+                class="sidebar-link w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-semibold hover:bg-slate-50 transition text-left">
                 <i data-lucide="users" class="w-5 h-5"></i> Users
             </button>
-            <button onclick="switchView('skills')" id="nav-skills" class="sidebar-link w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-semibold hover:bg-slate-50 transition text-left">
+            <button onclick="switchView('skills')" id="nav-skills"
+                class="sidebar-link w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-semibold hover:bg-slate-50 transition text-left">
                 <i data-lucide="sparkles" class="w-5 h-5"></i> Skills
             </button>
         </nav>
 
         <div class="p-6 mt-auto border-t border-slate-100">
-            <button id="logout-button" class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-50 text-red-600 rounded-xl font-bold hover:bg-red-100 transition">
+            <button id="logout-button"
+                class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-50 text-red-600 rounded-xl font-bold hover:bg-red-100 transition">
                 <i data-lucide="log-out" class="w-4 h-4"></i> Logout
             </button>
         </div>
@@ -123,14 +168,16 @@
 
     <!-- Main Content -->
     <main id="main-scroll-area" class="flex-1 flex flex-col h-screen overflow-y-auto custom-scrollbar relative">
-        
+
         <!-- Mobile Header (Hidden on Desktop) -->
-        <header class="lg:hidden bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center sticky top-0 z-[55]">
+        <header
+            class="lg:hidden bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center sticky top-0 z-[55]">
             <div class="flex items-center gap-2">
                 <img src="logo2.png" class="h-8 w-auto">
                 <span class="font-bold text-primary italic">Admin</span>
             </div>
-            <button id="open-sidebar" class="p-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-600 hover:bg-slate-100">
+            <button id="open-sidebar"
+                class="p-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-600 hover:bg-slate-100">
                 <i data-lucide="menu"></i>
             </button>
         </header>
@@ -140,10 +187,12 @@
             <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-2">
                 <div>
                     <h1 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Executive Dashboard</h1>
-                    <p class="text-slate-500 font-medium text-sm md:text-base">Overview of the Diverse Loopers ecosystem</p>
+                    <p class="text-slate-500 font-medium text-sm md:text-base">Overview of the Diverse Loopers ecosystem
+                    </p>
                 </div>
                 <div class="text-left md:text-right w-full md:w-auto">
-                    <p id="current-date" class="text-[10px] md:text-sm font-bold text-slate-400 uppercase tracking-widest"></p>
+                    <p id="current-date"
+                        class="text-[10px] md:text-sm font-bold text-slate-400 uppercase tracking-widest"></p>
                 </div>
             </div>
 
@@ -173,8 +222,11 @@
                 </div>
                 <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden p-6">
                     <h2 class="text-lg font-bold mb-6">Registration Trends</h2>
-                    <div id="chart-grid" class="h-48 flex items-end justify-between gap-2 border-b border-slate-100 pb-2 mb-4"></div>
-                    <div id="chart-labels" class="flex justify-between text-[10px] font-bold text-slate-400 uppercase tracking-tighter px-1"></div>
+                    <div id="chart-grid"
+                        class="h-48 flex items-end justify-between gap-2 border-b border-slate-100 pb-2 mb-4"></div>
+                    <div id="chart-labels"
+                        class="flex justify-between text-[10px] font-bold text-slate-400 uppercase tracking-tighter px-1">
+                    </div>
                 </div>
             </div>
         </div>
@@ -182,39 +234,47 @@
         <!-- EVENTS VIEW -->
         <div id="events-view" class="p-4 md:p-8 hidden space-y-8">
             <h1 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Events Management</h1>
-            
+
             <div class="bg-white rounded-[2rem] p-6 md:p-8 shadow-sm border border-slate-100">
                 <h2 id="event-form-title" class="text-xl font-bold mb-6">Create New Event</h2>
                 <form id="event-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <input type="hidden" id="event-id">
                     <div class="space-y-1">
                         <label class="text-xs font-bold text-slate-500 uppercase">Event Title</label>
-                        <input type="text" id="event-title" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition">
+                        <input type="text" id="event-title" required
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition">
                     </div>
                     <div class="space-y-1">
                         <label class="text-xs font-bold text-slate-500 uppercase">Date & Time</label>
-                        <input type="datetime-local" id="event-date" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition text-sm">
+                        <input type="datetime-local" id="event-date" required
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition text-sm">
                     </div>
                     <div class="md:col-span-2 space-y-1">
                         <label class="text-xs font-bold text-slate-500 uppercase">Brief Description</label>
-                        <textarea id="event-description" rows="3" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition"></textarea>
+                        <textarea id="event-description" rows="3" required
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition"></textarea>
                     </div>
                     <div class="space-y-1">
                         <label class="text-xs font-bold text-slate-500 uppercase">Banner (Upload)</label>
-                        <input type="file" id="event-image-upload" accept="image/*" class="w-full px-4 py-2 text-xs bg-slate-50 rounded-xl border border-dashed border-slate-300">
+                        <input type="file" id="event-image-upload" accept="image/*"
+                            class="w-full px-4 py-2 text-xs bg-slate-50 rounded-xl border border-dashed border-slate-300">
                         <input type="hidden" id="event-media-url">
                     </div>
                     <div class="space-y-1">
                         <label class="text-xs font-bold text-slate-500 uppercase">Registration Link</label>
-                        <input type="url" id="event-join-link" placeholder="https://..." class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition">
+                        <input type="url" id="event-join-link" placeholder="https://..."
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition">
                     </div>
                     <div class="md:col-span-2 space-y-1">
                         <label class="text-xs font-bold text-slate-500 uppercase">Venue / Location</label>
-                        <input type="text" id="event-location" placeholder="Online / Campus" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition">
+                        <input type="text" id="event-location" placeholder="Online / Campus"
+                            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition">
                     </div>
                     <div class="md:col-span-2 flex gap-3 pt-4">
-                        <button type="submit" id="event-submit-btn" class="flex-1 py-4 bg-primary text-white rounded-xl font-bold hover:bg-indigo-700 transition shadow-lg">Publish</button>
-                        <button type="button" id="event-cancel-btn" onclick="resetEventForm()" style="display:none;" class="px-8 py-4 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200 transition">Cancel</button>
+                        <button type="submit" id="event-submit-btn"
+                            class="flex-1 py-4 bg-primary text-white rounded-xl font-bold hover:bg-indigo-700 transition shadow-lg">Publish</button>
+                        <button type="button" id="event-cancel-btn" onclick="resetEventForm()" style="display:none;"
+                            class="px-8 py-4 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200 transition">Cancel</button>
                     </div>
                 </form>
             </div>
@@ -227,7 +287,8 @@
                                 <th class="px-6 py-4 text-xs font-black uppercase text-slate-400">Title</th>
                                 <th class="px-6 py-4 text-xs font-black uppercase text-slate-400">Schedule</th>
                                 <th class="px-6 py-4 text-xs font-black uppercase text-slate-400">Location</th>
-                                <th class="px-6 py-4 text-xs font-black uppercase text-slate-400 text-right">Actions</th>
+                                <th class="px-6 py-4 text-xs font-black uppercase text-slate-400 text-right">Actions
+                                </th>
                             </tr>
                         </thead>
                         <tbody id="events-table-body" class="divide-y divide-slate-100 font-medium"></tbody>
@@ -239,40 +300,53 @@
         <!-- COURSES VIEW -->
         <div id="courses-view" class="p-4 md:p-8 hidden space-y-8">
             <h1 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Courses Management</h1>
-            
+
             <div class="bg-white rounded-[2rem] p-6 md:p-10 border border-slate-100 shadow-sm">
                 <h2 id="course-form-title" class="text-xl font-extrabold mb-8 text-slate-900">Configure New Course</h2>
                 <form id="course-form" class="space-y-6">
                     <input type="hidden" id="course-id">
                     <div class="grid md:grid-cols-2 gap-6">
                         <div class="space-y-1">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Course Title</label>
-                            <input type="text" id="course-title" required class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition">
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Course
+                                Title</label>
+                            <input type="text" id="course-title" required
+                                class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition">
                         </div>
                         <div class="space-y-1">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Status</label>
-                            <select id="course-is-live" class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition">
+                            <label
+                                class="text-[10px] font-black uppercase tracking-widest text-slate-400">Status</label>
+                            <select id="course-is-live"
+                                class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition">
                                 <option value="false">Coming Soon</option>
                                 <option value="true">Live</option>
                             </select>
                         </div>
                         <div class="md:col-span-2 space-y-1">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Description</label>
-                            <textarea id="course-desc" rows="4" required class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition"></textarea>
+                            <label
+                                class="text-[10px] font-black uppercase tracking-widest text-slate-400">Description</label>
+                            <textarea id="course-desc" rows="4" required
+                                class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition"></textarea>
                         </div>
                         <div class="space-y-1">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Thumbnail</label>
-                            <input type="file" id="course-image" accept="image/*" class="w-full px-4 py-2.5 bg-slate-50 border border-dashed border-slate-300 rounded-2xl text-xs">
+                            <label
+                                class="text-[10px] font-black uppercase tracking-widest text-slate-400">Thumbnail</label>
+                            <input type="file" id="course-image" accept="image/*"
+                                class="w-full px-4 py-2.5 bg-slate-50 border border-dashed border-slate-300 rounded-2xl text-xs">
                             <input type="hidden" id="course-image-url">
                         </div>
                         <div class="space-y-1">
-                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Details URL</label>
-                            <input type="url" id="course-link" placeholder="https://..." class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition">
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Details
+                                URL</label>
+                            <input type="url" id="course-link" placeholder="https://..."
+                                class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition">
                         </div>
                     </div>
                     <div class="flex gap-4 pt-4 border-t border-slate-50">
-                        <button type="submit" id="course-save-btn" class="flex-1 py-4 bg-primary text-white rounded-2xl font-black uppercase tracking-widest hover:bg-indigo-700 transition">Save Course</button>
-                        <button type="button" onclick="resetCourseForm()" class="px-8 py-4 bg-slate-100 text-slate-600 rounded-2xl font-black uppercase tracking-widest hover:bg-slate-200 transition">Cancel</button>
+                        <button type="submit" id="course-save-btn"
+                            class="flex-1 py-4 bg-primary text-white rounded-2xl font-black uppercase tracking-widest hover:bg-indigo-700 transition">Save
+                            Course</button>
+                        <button type="button" onclick="resetCourseForm()"
+                            class="px-8 py-4 bg-slate-100 text-slate-600 rounded-2xl font-black uppercase tracking-widest hover:bg-slate-200 transition">Cancel</button>
                     </div>
                 </form>
             </div>
@@ -286,10 +360,11 @@
                 <h1 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Talent Pool</h1>
                 <div class="relative w-full md:w-96">
                     <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
-                    <input type="text" id="search-users" placeholder="Search by name or email..." class="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition text-sm">
+                    <input type="text" id="search-users" placeholder="Search by name or email..."
+                        class="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition text-sm">
                 </div>
             </div>
-            
+
             <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden mb-12">
                 <div class="overflow-x-auto custom-scrollbar">
                     <table class="w-full text-left border-collapse min-w-[700px]">
@@ -299,7 +374,8 @@
                                 <th class="px-6 py-5 text-xs font-black uppercase text-slate-400">Email</th>
                                 <th class="px-6 py-5 text-xs font-black uppercase text-slate-400">Role</th>
                                 <th class="px-6 py-5 text-xs font-black uppercase text-slate-400">Joined</th>
-                                <th class="px-6 py-5 text-xs font-black uppercase text-slate-400 text-right">Actions</th>
+                                <th class="px-6 py-5 text-xs font-black uppercase text-slate-400 text-right">Actions
+                                </th>
                             </tr>
                         </thead>
                         <tbody id="users-table-body" class="divide-y divide-slate-50"></tbody>
@@ -311,11 +387,14 @@
         <!-- SKILLS VIEW -->
         <div id="skills-view" class="p-4 md:p-8 hidden space-y-8">
             <h1 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Skills Taxonomy</h1>
-            
+
             <div class="max-w-2xl bg-white p-6 md:p-10 rounded-[2.5rem] shadow-sm border border-slate-100">
                 <form id="add-skill-form" class="flex flex-col sm:flex-row gap-4">
-                    <input type="text" id="new-skill-input" placeholder="New Skill (e.g. Solidity)" required class="flex-1 px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition">
-                    <button type="submit" class="px-8 py-4 bg-dark text-white rounded-2xl font-bold hover:bg-black transition">Add Skill</button>
+                    <input type="text" id="new-skill-input" placeholder="New Skill (e.g. Solidity)" required
+                        class="flex-1 px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition">
+                    <button type="submit"
+                        class="px-8 py-4 bg-dark text-white rounded-2xl font-bold hover:bg-black transition">Add
+                        Skill</button>
                 </form>
             </div>
 
@@ -392,7 +471,7 @@
             });
             document.getElementById(`${viewName}-view`).classList.remove('hidden');
             document.getElementById(`nav-${viewName}`).classList.add('active');
-            
+
             // Close mobile sidebar if open
             if (window.innerWidth < 1024 && sidebar.classList.contains('sidebar-open')) {
                 toggleSidebar();
@@ -412,7 +491,7 @@
         async function checkAuth() {
             const { data: { user } } = await db.auth.getUser();
             if (!user) { window.location.href = 'shiva_login.html'; return; }
-            
+
             const { data: adminCheck } = await db.from('admin_list').select('user_id').eq('user_id', user.id).limit(1);
             if (!adminCheck || adminCheck.length === 0) {
                 await db.auth.signOut();
@@ -438,7 +517,7 @@
             const { count: uCount } = await db.from('profiles').select('*', { count: 'exact', head: true });
             const { count: aCount } = await db.from('analyses').select('*', { count: 'exact', head: true });
             const { count: eCount } = await db.from('events').select('*', { count: 'exact', head: true });
-            
+
             document.getElementById('total-users').textContent = uCount || 0;
             document.getElementById('total-analyses').textContent = aCount || 0;
             document.getElementById('total-events').textContent = eCount || 0;
@@ -470,7 +549,7 @@
             const grid = document.getElementById('chart-grid');
             const labels = document.getElementById('chart-labels');
             grid.innerHTML = ''; labels.innerHTML = '';
-            
+
             const max = Math.max(...data.map(d => d.count), 1);
             data.slice(-7).forEach(d => {
                 const bar = document.createElement('div');
@@ -478,7 +557,7 @@
                 bar.title = `${d.count} signups`;
                 setTimeout(() => bar.style.height = `${(d.count / max) * 100}%`, 100);
                 grid.appendChild(bar);
-                
+
                 const label = document.createElement('span');
                 label.className = 'flex-1 text-center';
                 label.textContent = d.signup_day.split('-').slice(1).reverse().join('/');
@@ -593,8 +672,8 @@
 
         document.getElementById('search-users').addEventListener('input', (e) => {
             const searchTerm = e.target.value.toLowerCase();
-            const filteredUsers = allUsers.filter(user => 
-                (user.full_name || '').toLowerCase().includes(searchTerm) || 
+            const filteredUsers = allUsers.filter(user =>
+                (user.full_name || '').toLowerCase().includes(searchTerm) ||
                 (user.email || '').toLowerCase().includes(searchTerm)
             );
             renderUsersTable(filteredUsers);
@@ -646,7 +725,7 @@
             tbody.innerHTML = allEvents.map(e => `
                 <tr>
                     <td class="px-6 py-4 font-bold text-slate-900 text-xs md:text-sm">${e.title}</td>
-                    <td class="px-6 py-4 text-slate-500 text-[11px] whitespace-nowrap">${new Date(e.date).toLocaleString([], {dateStyle:'short', timeStyle:'short'})}</td>
+                    <td class="px-6 py-4 text-slate-500 text-[11px] whitespace-nowrap">${new Date(e.date).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}</td>
                     <td class="px-6 py-4 text-slate-500 text-[11px]">${e.location || 'Online'}</td>
                     <td class="px-6 py-4 text-right whitespace-nowrap">
                         <button onclick="editEvent('${e.id}')" class="text-primary font-bold text-[10px] uppercase mr-3">Edit</button>
@@ -710,4 +789,5 @@
         checkAuth();
     </script>
 </body>
+
 </html>
