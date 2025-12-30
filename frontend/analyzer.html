@@ -570,6 +570,9 @@
                 document.getElementById('profile-btn')?.classList.remove('hidden');
                 document.getElementById('footer-auth')?.classList.remove('hidden');
                 document.getElementById('login-btn')?.classList.add('hidden');
+                // show mobile profile button, hide mobile login button
+document.getElementById('mobile-profile-btn')?.classList.remove('hidden');
+document.getElementById('mobile-login-btn')?.classList.add('hidden');
 
                 const { data: profile } = await db.from('profiles').select('*').eq('id', user.id).single();
                 if (profile) {
