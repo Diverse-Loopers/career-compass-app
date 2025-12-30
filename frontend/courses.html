@@ -1,135 +1,72 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Our Courses - Diverse Loopers</title>
+    <title>Our Courses | Diverse Loopers - Bridge the Gap to Industry</title>
+    <meta name="description"
+        content="Explore future-ready technical courses at Diverse Loopers. Industry-aligned programs in Software Dev, Data Science, Cloud, and more.">
+
+    <!-- Fonts & Scripts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@600;700;800&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#db2777',
+                        dark: '#0f172a',
+                        surface: '#f8fafc'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Poppins', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        :root {
-            --color-primary: #3b82f6;
-            --color-secondary: #ec4899;
-            --color-dark: #1e293b;
-            --color-light: #f1f5f9;
-            --color-text: #334155;
-            --color-subtle: #64748b;
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #fff;
-            color: var(--color-text);
-            margin: 0;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1.5rem;
-        }
-
-        .header {
-            background-color: rgba(255, 255, 255, 0.9);
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(12px);
-            border-bottom: 1px solid #e2e8f0;
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
         }
 
-        .navbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+        .hero-gradient {
+            background: radial-gradient(circle at top right, rgba(37, 99, 235, 0.08), transparent),
+                radial-gradient(circle at bottom left, rgba(219, 39, 119, 0.05), transparent);
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            text-decoration: none;
+        .course-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .logo img {
-            height: 50px;
+        .course-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 30px 60px -12px rgba(50, 50, 93, 0.15), 0 18px 36px -18px rgba(0, 0, 0, 0.15);
         }
 
-        .logo-text {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--color-dark);
-            transition: font-size 0.3s;
-            /* Added transition */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease-out;
         }
 
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s;
-            /* Added transition */
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--color-subtle);
-            font-weight: 600;
-            padding: 0.5rem 1rem;
-            border-radius: 50px;
-            transition: color 0.3s, background-color 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .nav-links a:hover {
-            color: var(--color-primary);
-            background-color: #eef2ff;
-        }
-
-        .nav-links a.active {
-            color: var(--color-primary);
-            background-color: #e0e7ff;
-        }
-
-        /* --- New Mobile Menu Button Styling --- */
-        .menu-toggle-btn {
-            display: none;
-            /* Hidden by default on desktop */
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 0.5rem;
-            color: var(--color-dark);
-            z-index: 1001;
-            /* Ensure it's above other header content */
-        }
-
-        .profile-icon-btn {
-            padding: 0.5rem;
-            /* On desktop, keep this inline */
-        }
-
-        .main-content {
-            /* No changes needed here */
-        }
-
-        .animated-header-area {
-            background: var(--color-light);
-            padding: 5rem 0;
-            position: relative;
-            overflow: hidden;
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .circles {
@@ -148,84 +85,12 @@
             list-style: none;
             width: 20px;
             height: 20px;
-            background: rgba(59, 130, 246, 0.2);
-            animation: animate 25s linear infinite;
+            background: rgba(37, 99, 235, 0.1);
+            animation: animateCircles 25s linear infinite;
             bottom: -150px;
         }
 
-        .circles li:nth-child(2) {
-            left: 10%;
-            width: 80px;
-            height: 80px;
-            animation-delay: 2s;
-            animation-duration: 12s;
-            background: rgba(236, 72, 153, 0.2);
-        }
-
-        .circles li:nth-child(3) {
-            left: 70%;
-            width: 20px;
-            height: 20px;
-            animation-delay: 4s;
-        }
-
-        .circles li:nth-child(4) {
-            left: 40%;
-            width: 60px;
-            height: 60px;
-            animation-delay: 0s;
-            animation-duration: 18s;
-            background: rgba(236, 72, 153, 0.15);
-        }
-
-        .circles li:nth-child(5) {
-            left: 65%;
-            width: 20px;
-            height: 20px;
-            animation-delay: 0s;
-        }
-
-        .circles li:nth-child(6) {
-            left: 75%;
-            width: 110px;
-            height: 110px;
-            animation-delay: 3s;
-            background: rgba(59, 130, 246, 0.1);
-        }
-
-        .circles li:nth-child(7) {
-            left: 35%;
-            width: 150px;
-            height: 150px;
-            animation-delay: 7s;
-        }
-
-        .circles li:nth-child(8) {
-            left: 50%;
-            width: 25px;
-            height: 25px;
-            animation-delay: 15s;
-            animation-duration: 45s;
-        }
-
-        .circles li:nth-child(9) {
-            left: 20%;
-            width: 15px;
-            height: 15px;
-            animation-delay: 2s;
-            animation-duration: 35s;
-            background: rgba(236, 72, 153, 0.2);
-        }
-
-        .circles li:nth-child(10) {
-            left: 85%;
-            width: 150px;
-            height: 150px;
-            animation-delay: 0s;
-            animation-duration: 11s;
-        }
-
-        @keyframes animate {
+        @keyframes animateCircles {
             0% {
                 transform: translateY(0) rotate(0deg);
                 opacity: 1;
@@ -239,665 +104,637 @@
             }
         }
 
-        .section-header {
-            text-align: center;
-            margin-bottom: 3rem;
-            position: relative;
-            z-index: 1;
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
         }
 
-        .section-header h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            color: var(--color-dark);
-            margin-bottom: 0.5rem;
-            transition: font-size 0.3s;
-            /* Added transition */
-        }
-
-        .heading {
-            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .section-header .sub-heading {
-            font-size: 1.75rem;
-            font-weight: 600;
-            margin-top: -0.5rem;
-            margin-bottom: 1.5rem;
-            transition: font-size 0.3s;
-            /* Added transition */
-        }
-
-        .section-header p {
-            font-size: 1.1rem;
-            color: var(--color-subtle);
-            max-width: 800px;
-            margin: 0.5rem auto 0;
-            line-height: 1.8;
-        }
-
-        .why-choose-section {
-            padding: 5rem 0;
-        }
-
-        .why-choose-section h3 {
-            text-align: center;
-            font-size: 2.25rem;
-            margin-bottom: 4rem;
-            color: var(--color-dark);
-            transition: font-size 0.3s;
-            /* Added transition */
-        }
-
-        .why-choose-grid {
-            display: grid;
-            /* DEFAULT/DESKTOP: Flexible grid for 4 columns on large screens */
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .why-choose-card {
-            background-color: #fff;
-            border: 1px solid #e2e8f0;
-            padding: 2rem;
-            border-radius: 1rem;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out, box-shadow 0.3s ease-in-out;
-        }
-
-        .why-choose-card.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .why-choose-card:hover {
-            box-shadow: var(--shadow-lg);
-            transform: translateY(-5px);
-        }
-
-        .why-choose-icon-wrapper {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            height: 60px;
-            width: 60px;
-            border-radius: 50%;
-            background-color: #e0e7ff;
-            color: var(--color-primary);
-            margin-bottom: 1.5rem;
-        }
-
-        .why-choose-card h4 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin: 0 0 0.5rem 0;
-            color: var(--color-dark);
-        }
-
-        .why-choose-card p {
-            margin: 0;
-            line-height: 1.7;
-            color: var(--color-subtle);
-        }
-
-        .courses-section {
-            background-color: var(--color-light);
-            padding: 5rem 0;
-        }
-
-        .courses-grid {
-            display: grid;
-            /* Default: Use a minimum width that ensures single column on smaller phones (e.g., 300px min) */
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2.5rem;
-        }
-
-        .course-card {
-            background-color: #fff;
-            border-radius: 0.75rem;
-            box-shadow: var(--shadow-md);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out, box-shadow 0.3s ease-in-out;
-        }
-
-        .course-card.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .course-card:hover {
-            transform: translateY(-8px) scale(1.01);
-            /* Reduced scale slightly for mobile stability */
-            box-shadow: var(--shadow-lg);
-        }
-
-        /* Ensure image text is responsive too */
-        .course-image {
-            height: 200px;
-            overflow: hidden;
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 2.5rem;
-            font-weight: 700;
-            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
-            transition: font-size 0.3s;
-        }
-
-        .course-content {
-            padding: 1.5rem;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .course-category {
-            font-size: 0.8rem;
-            font-weight: 600;
-            padding: 0.3rem 0.8rem;
-            border-radius: 50px;
-            align-self: flex-start;
-            margin-bottom: 1rem;
-            color: #fff;
-        }
-
-        .course-card h3 {
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin: 0 0 0.5rem 0;
-            color: var(--color-dark);
-        }
-
-        .course-card p {
-            font-size: 0.95rem;
-            line-height: 1.6;
-            flex-grow: 1;
-            margin-bottom: 1.5rem;
-        }
-
-        .coming-soon-badge {
-            display: block;
-            text-align: center;
-            background: var(--color-subtle);
-            color: #fff;
-            font-weight: 600;
-            padding: 0.8rem;
-            border-radius: 0.5rem;
-            cursor: not-allowed;
-        }
-
-        .footer {
-            background-color: var(--color-dark);
-            color: var(--color-light);
-            padding: 4rem 0;
-        }
-
-        .footer .container {
-            text-align: center;
-        }
-
-        .footer .logo-text {
-            color: #fff;
-        }
-
-        .footer p {
-            color: var(--color-subtle);
-            margin: 1rem 0 2rem;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .social-links {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .social-links a {
-            color: var(--color-light);
-            transition: color 0.3s, transform 0.3s;
-        }
-
-        .social-links a:hover {
-            color: var(--color-primary);
-            transform: scale(1.1);
-        }
-
-        .footer .copyright {
-            font-size: 0.9rem;
-            color: var(--color-subtle);
-            border-top: 1px solid var(--color-subtle);
-            padding-top: 2rem;
-            margin-top: 2rem;
-        }
-
-
-        /* ======================================= */
-        /* --- MOBILE RESPONSIVENESS (<= 768px) ---*/
-        /* ======================================= */
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 0 1rem;
-            }
-
-            .logo img {
-                height: 40px;
-                /* Smaller logo on mobile */
-            }
-
-            .logo-text {
-                font-size: 1.25rem;
-                /* Smaller text on mobile */
-            }
-
-            /* Show the hamburger menu button */
-            .menu-toggle-btn {
-                display: block;
-            }
-
-            /* Hide the main nav links by default */
-            .nav-links {
-                display: none;
-                flex-direction: column;
-                position: absolute;
-                top: 61px;
-                /* Adjust based on header height */
-                left: 0;
-                width: 100%;
-                background-color: rgba(255, 255, 255, 0.95);
-                backdrop-filter: blur(8px);
-                border-top: 1px solid #e2e8f0;
-                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-                padding: 0.5rem 0;
-            }
-
-            /* State for when the menu is open (toggled by JS) */
-            .nav-links.open {
-                display: flex;
-            }
-
-            .nav-links a {
-                padding: 0.75rem 1.5rem;
-                width: auto;
-                /* Let link fill its container */
-                border-radius: 0;
-                justify-content: flex-start;
-                margin: 0;
-                /* Remove horizontal gaps on mobile */
-            }
-
-            /* Keep active state visual distinctive */
-            .nav-links a.active {
-                background-color: #f0f4ff;
-                border-left: 4px solid var(--color-primary);
-            }
-
-            /* Hide the profile icon in the main list on mobile, as it often looks better outside or hidden */
-            .profile-icon-btn {
-                display: none;
-                /* Removed from the stacking menu to keep it clean */
-            }
-
-            /* --- MOBILE-SPECIFIC: Force 2 cards per row (2x2 layout) on mobile screens only --- */
-            .why-choose-grid {
-                grid-template-columns: repeat(2, 1fr);
-                /* Forces two equal columns for 2x2 layout */
-                gap: 1rem;
-                /* Reduced gap for space */
-            }
-
-            .why-choose-card {
-                padding: 1.5rem 1rem;
-                /* Reduce card padding for tighter fit */
-            }
-        }
-
-        /* Further adjustments for smaller phones (e.g., iPhone SE width) */
-        @media (max-width: 500px) {
-            .animated-header-area {
-                padding: 3rem 0;
-            }
-
-            .section-header h1 {
-                font-size: 2rem;
-                /* Reduce main title further */
-            }
-
-            .section-header .sub-heading {
-                font-size: 1.15rem;
-                /* Reduce sub-heading further */
-            }
-
-            .section-header p {
-                font-size: 0.95rem;
-            }
-
-            .why-choose-section {
-                padding: 3rem 0;
-            }
-
-            .why-choose-section h3 {
-                font-size: 1.75rem;
-                margin-bottom: 2rem;
-            }
-
-            /* The .why-choose-grid inherits the 2-column layout from the 768px media query. */
-
-            .courses-grid {
-                grid-template-columns: 1fr;
-                /* Course cards still collapse to one column for tighter fit */
-            }
-
-            .course-image {
-                font-size: 2rem;
-            }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
     </style>
 </head>
 
-<body>
-    <header class="header">
-        <div class="container">
-            <nav class="navbar">
-                <a href="index.html" class="logo">
-                    <img src="logo2.png" alt="Diverse Loopers Logo"
-                        onerror="this.onerror=null; this.src='https://placehold.co/50x50/3b82f6/ffffff?text=DL';">
-                    <span class="logo-text">Diverse Loopers</span>
+<body class="bg-white font-sans text-slate-800 selection:bg-primary selection:text-white flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass-nav">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <a href="index.html" class="flex items-center gap-2">
+                    <img src="DIVERSE LOOPERS (1) bg.png" alt="DL" class="h-10 w-auto" style="
+    height: 65px;
+">
                 </a>
 
-                <!-- New hamburger button for mobile -->
-                <button class="menu-toggle-btn" id="menu-toggle-btn" aria-label="Toggle navigation menu">
-                    <svg id="menu-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <line x1="3" y1="12" x2="21" y2="12"></line>
-                        <line x1="3" y1="6" x2="21" y2="6"></line>
-                        <line x1="3" y1="18" x2="21" y2="18"></line>
-                    </svg>
-                    <svg id="close-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </button>
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="index.html" class="text-slate-600 hover:text-primary font-semibold transition">Home</a>
+                    <a href="courses.html" class="text-primary font-bold transition">Courses</a>
 
-                <div class="nav-links" id="nav-links">
-                    <a href="#" id="go-back-btn" title="Go Back">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <line x1="19" y1="12" x2="5" y2="12"></line>
-                            <polyline points="12 19 5 12 12 5"></polyline>
-                        </svg>
-                        <span>Back</span>
-                    </a>
-                    <a href="index.html">Home</a>
-                    <a href="courses.html" class="active">Courses</a>
-                    <a href="profile.html" class="profile-icon-btn" title="View Profile">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                            <circle cx="12" cy="7" r="4"></circle>
-                        </svg>
-                        <span class="mobile-only">Profile</span> <!-- Added a span for mobile menu clarity -->
+                    <!-- Conditional Nav Links (Desktop) -->
+                    <a href="login.html" id="nav-login-btn"
+                        class="px-5 py-2.5 bg-primary text-white rounded-full font-semibold hover:bg-blue-700 transition shadow-lg shadow-blue-200">Login</a>
+                    <a href="profile.html" id="nav-profile-btn"
+                        class="hidden w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition shadow-sm border border-slate-200">
+                        <i data-lucide="user" class="w-5 h-5"></i>
                     </a>
                 </div>
-            </nav>
-        </div>
-    </header>
 
-    <main class="main-content">
-        <div class="animated-header-area">
-            <div class="container">
-                <div class="section-header">
-                    <h1 class="heading">Our Upcoming Courses</h1>
-                    <h2 class="sub-heading">Future-Ready Skills. Real-World Impact.</h2>
-                    <p>At Diverse Loopers, we don’t just teach — we prepare you for the future of work. Our upcoming
-                        expert-led programs are designed to bridge the gap between academic learning and real industry
-                        demands, equipping you with the most in-demand technical skills, hands-on experience, and career
-                        pathways that employers truly value.</p>
-                </div>
+                <button id="mobile-menu-toggle" class="md:hidden p-2 text-slate-600"><i data-lucide="menu"></i></button>
             </div>
+        </div>
+
+        <!-- Mobile Menu Overlay -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-slate-100 px-6 py-8 space-y-4">
+            <a href="index.html" class="block text-lg font-bold text-slate-700">Home</a>
+            <a href="courses.html" class="block text-lg font-bold text-primary">Courses</a>
+            <hr class="border-slate-100">
+            <!-- Conditional Nav Links (Mobile) -->
+            <a href="login.html" id="mobile-login-link" class="block text-lg font-bold text-slate-700">Login</a>
+            <a href="profile.html" id="mobile-profile-link" class="hidden block text-lg font-bold text-slate-700">My
+                Profile</a>
+        </div>
+    </nav>
+
+    <main class="pt-20 flex-grow">
+        <!-- Hero Area -->
+        <section class="relative py-24 md:py-32 overflow-hidden hero-gradient">
             <ul class="circles">
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
-                <li></li>
+                <li style="left: 25%; width: 80px; height: 80px; animation-delay: 0s;"></li>
+                <li style="left: 10%; width: 20px; height: 20px; animation-delay: 2s; animation-duration: 12s;"></li>
+                <li style="left: 70%; width: 20px; height: 20px; animation-delay: 4s;"></li>
+                <li style="left: 40%; width: 60px; height: 60px; animation-delay: 0s; animation-duration: 18s;"></li>
             </ul>
-        </div>
 
-        <div class="why-choose-section">
-            <div class="container">
-                <h3 class="heading">Why Choose Diverse Loopers?</h3>
-                <div class="why-choose-grid">
-                    <div class="why-choose-card">
-                        <div class="why-choose-icon-wrapper">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                                <line x1="3" y1="9" x2="21" y2="9"></line>
-                                <line x1="9" y1="21" x2="9" y2="9"></line>
-                            </svg>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+                <span
+                    class="inline-block py-1 px-4 rounded-full bg-blue-50 text-primary text-xs font-bold tracking-widest uppercase mb-6 fade-in">Knowledge
+                    Ecosystem</span>
+                <h1 class="text-4xl md:text-7xl font-heading font-black text-slate-900 leading-tight mb-6 fade-in">
+                    A New Model of <span
+                        class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Learning.</span>
+                </h1>
+                <p class="text-lg md:text-xl text-slate-500 max-w-3xl mx-auto leading-relaxed fade-in">
+                    Our programs are structured career pathways designed to take you from fundamentals to real-world
+                    contribution. Build proof of capability, not just certificates.
+                </p>
+            </div>
+        </section>
+
+        <!-- New Learning Model Section -->
+        <section class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid lg:grid-cols-2 gap-16 items-center">
+                    <div class="fade-in">
+                        <h2 class="text-3xl font-heading font-black text-slate-900 mb-6">Built for Real Careers</h2>
+                        <p class="text-slate-600 mb-8 leading-relaxed">Instead of memorizing concepts, learners build
+                            proof of capability through an industry-embedded ecosystem.</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div class="flex items-start gap-3">
+                                <div class="p-2 bg-blue-50 text-primary rounded-lg"><i data-lucide="milestone"
+                                        class="w-4 h-4"></i></div>
+                                <p class="text-sm font-semibold text-slate-700">Structured Milestones</p>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="p-2 bg-pink-50 text-secondary rounded-lg"><i data-lucide="briefcase"
+                                        class="w-4 h-4"></i></div>
+                                <p class="text-sm font-semibold text-slate-700">Industry Projects</p>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="p-2 bg-green-50 text-green-600 rounded-lg"><i data-lucide="user-check"
+                                        class="w-4 h-4"></i></div>
+                                <p class="text-sm font-semibold text-slate-700">Practitioner Mentors</p>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="p-2 bg-orange-50 text-orange-600 rounded-lg"><i data-lucide="zap"
+                                        class="w-4 h-4"></i></div>
+                                <p class="text-sm font-semibold text-slate-700">Hybrid Hustle Access</p>
+                            </div>
                         </div>
-                        <h4>Industry-Aligned Curriculum</h4>
-                        <p>Learn the skills that companies are actively hiring for right now.</p>
                     </div>
-                    <div class="why-choose-card">
-                        <div class="why-choose-icon-wrapper">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <polyline points="16 18 22 12 16 6"></polyline>
-                                <polyline points="8 6 2 12 8 18"></polyline>
-                            </svg>
+                    <div class="bg-slate-50 p-8 rounded-[3rem] border border-slate-100 fade-in shadow-inner">
+                        <div class="space-y-6">
+                            <div
+                                class="bg-white p-4 rounded-2xl flex items-center gap-4 shadow-sm border border-slate-100">
+                                <span
+                                    class="w-8 h-8 flex items-center justify-center bg-blue-100 text-primary rounded-full font-bold text-xs">1</span>
+                                <p class="text-sm font-medium">Guided learning with structured milestones</p>
+                            </div>
+                            <div
+                                class="bg-white p-4 rounded-2xl flex items-center gap-4 shadow-sm border border-slate-100">
+                                <span
+                                    class="w-8 h-8 flex items-center justify-center bg-pink-100 text-secondary rounded-full font-bold text-xs">2</span>
+                                <p class="text-sm font-medium">Portfolio-building & documentation support</p>
+                            </div>
+                            <div
+                                class="bg-white p-4 rounded-2xl flex items-center gap-4 shadow-sm border border-slate-100">
+                                <span
+                                    class="w-8 h-8 flex items-center justify-center bg-green-100 text-green-600 rounded-full font-bold text-xs">3</span>
+                                <p class="text-sm font-medium">Interview prep & role-specific guidance</p>
+                            </div>
                         </div>
-                        <h4>Hands-On Projects</h4>
-                        <p>Build a portfolio of real-world projects that will prove your expertise.</p>
-                    </div>
-                    <div class="why-choose-card">
-                        <div class="why-choose-icon-wrapper">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                            </svg>
-                        </div>
-                        <h4>Career-Oriented Training</h4>
-                        <p>Get comprehensive support, from interview prep to job opportunities.</p>
-                    </div>
-                    <div class="why-choose-card">
-                        <div class="why-choose-icon-wrapper">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="9" cy="7" r="4"></circle>
-                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                            </svg>
-                        </div>
-                        <h4>Mentorship from Experts</h4>
-                        <p>Receive direct guidance and insights from professionals in the field.</p>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div class="courses-section">
-            <div class="container">
-                <div class="section-header" style="margin-bottom: 4rem;">
-                    <!-- Removed H1/H2 here as they were already in the animated header -->
-                    <p>Explore our upcoming courses below and be among the first to gain access to the tools, projects,
-                        and mentorship that will transform your career.</p>
+        <!-- Learning Tracks (Aspire & Sprint) -->
+        <section class="py-24 bg-surface border-y border-slate-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16 fade-in">
+                    <h2 class="text-3xl md:text-5xl font-heading font-black text-slate-900 mb-6">Choose Your Learning
+                        Path</h2>
+                    <p class="text-slate-500 max-w-2xl mx-auto">Every learner starts at a different stage. We created
+                        two tracks designed for different journeys.</p>
                 </div>
 
-                <div id="courses-grid" class="courses-grid">
-                    <!-- Course cards will be dynamically inserted here -->
+                <div class="grid md:grid-cols-2 gap-10 mb-20">
+                    <!-- Track 1: Aspire -->
+                    <div
+                        class="bg-white p-10 rounded-[3rem] border border-slate-200 fade-in flex flex-col hover:border-primary transition duration-500">
+                        <div
+                            class="w-16 h-16 bg-blue-50 text-primary rounded-3xl flex items-center justify-center mb-8">
+                            <i data-lucide="compass" class="w-10 h-10"></i>
+                        </div>
+                        <h3 class="text-3xl font-heading font-bold text-slate-900 mb-4">Aspire</h3>
+                        <p class="text-sm font-bold text-primary uppercase tracking-widest mb-6">Foundation +
+                            Exploration</p>
+                        <p class="text-slate-500 mb-8 leading-relaxed">Best for 1st/2nd year students and beginners who
+                            want clarity before choosing a specialization.</p>
+                        <ul class="space-y-4 mb-10 flex-grow">
+                            <li class="flex items-center gap-3 text-sm font-medium text-slate-700"><i
+                                    data-lucide="check" class="text-primary w-5 h-5"></i> Fundamentals of programming
+                            </li>
+                            <li class="flex items-center gap-3 text-sm font-medium text-slate-700"><i
+                                    data-lucide="check" class="text-primary w-5 h-5"></i> Logical problem-solving</li>
+                            <li class="flex items-center gap-3 text-sm font-medium text-slate-700"><i
+                                    data-lucide="check" class="text-primary w-5 h-5"></i> Exposure to multiple tech
+                                domains</li>
+                            <li class="flex items-center gap-3 text-sm font-medium text-slate-700"><i
+                                    data-lucide="check" class="text-primary w-5 h-5"></i> Guided mini-projects</li>
+                        </ul>
+                        <div class="p-6 bg-slate-50 rounded-2xl italic text-xs text-slate-500">
+                            "Aspire creates clarity before commitment."
+                        </div>
+                    </div>
+
+                    <!-- Track 2: Sprint -->
+                    <div
+                        class="bg-white p-10 rounded-[3rem] border border-slate-200 fade-in flex flex-col hover:border-secondary transition duration-500">
+                        <div
+                            class="w-16 h-16 bg-pink-50 text-secondary rounded-3xl flex items-center justify-center mb-8">
+                            <i data-lucide="rocket" class="w-10 h-10"></i>
+                        </div>
+                        <h3 class="text-3xl font-heading font-bold text-slate-900 mb-4">Sprint</h3>
+                        <p class="text-sm font-bold text-secondary uppercase tracking-widest mb-6">Job-Ready
+                            Acceleration</p>
+                        <p class="text-slate-500 mb-8 leading-relaxed">Best for graduates and job-seekers preparing for
+                            internships or professional career transitions.</p>
+                        <ul class="space-y-4 mb-10 flex-grow">
+                            <li class="flex items-center gap-3 text-sm font-medium text-slate-700"><i
+                                    data-lucide="check" class="text-secondary w-5 h-5"></i> Specialization-based
+                                learning</li>
+                            <li class="flex items-center gap-3 text-sm font-medium text-slate-700"><i
+                                    data-lucide="check" class="text-secondary w-5 h-5"></i> Live business-driven
+                                projects</li>
+                            <li class="flex items-center gap-3 text-sm font-medium text-slate-700"><i
+                                    data-lucide="check" class="text-secondary w-5 h-5"></i> Portfolio & GitHub readiness
+                            </li>
+                            <li class="flex items-center gap-3 text-sm font-medium text-slate-700"><i
+                                    data-lucide="check" class="text-secondary w-5 h-5"></i> Mock interviews & career
+                                mentorship</li>
+                        </ul>
+                        <div class="p-6 bg-slate-50 rounded-2xl italic text-xs text-slate-500">
+                            "Move from knowledge to work-ready contribution."
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Comparison Table -->
+                <div class="fade-in overflow-hidden rounded-[2rem] border border-slate-200 shadow-sm bg-white">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="bg-slate-50">
+                                <tr>
+                                    <th class="px-8 py-6 text-xs font-black uppercase text-slate-400">Track</th>
+                                    <th class="px-8 py-6 text-xs font-black uppercase text-slate-400">Best For</th>
+                                    <th class="px-8 py-6 text-xs font-black uppercase text-slate-400">Primary Goal</th>
+                                    <th class="px-8 py-6 text-xs font-black uppercase text-slate-400">Style</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 font-medium text-sm">
+                                <tr class="hover:bg-blue-50 transition duration-300">
+                                    <td class="px-8 py-6 text-primary font-bold">Aspire</td>
+                                    <td class="px-8 py-6">Beginners, early-year students</td>
+                                    <td class="px-8 py-6">Explore & build basics</td>
+                                    <td class="px-8 py-6">Steady and guided</td>
+                                </tr>
+                                <tr class="hover:bg-pink-50 transition duration-300">
+                                    <td class="px-8 py-6 text-secondary font-bold">Sprint</td>
+                                    <td class="px-8 py-6">Final-year, graduates, job-seekers</td>
+                                    <td class="px-8 py-6">Become job-ready & specialize</td>
+                                    <td class="px-8 py-6">Fast-paced and focused</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
+
+        <!-- Program Structure (4 Pillars) -->
+        <section class="py-24 bg-white overflow-hidden">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16 fade-in">
+                    <h2 class="text-3xl font-heading font-black text-slate-900 mb-4">How Learning Happens</h2>
+                    <p class="text-slate-500">Every program is structured across four high-impact pillars.</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Pillar 1 -->
+                    <div class="p-8 bg-slate-50 rounded-[2.5rem] border border-slate-100 fade-in text-center">
+                        <div
+                            class="w-12 h-12 bg-white text-primary rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm">
+                            1</div>
+                        <h4 class="font-bold text-lg text-slate-900 mb-3">Learn</h4>
+                        <p class="text-sm text-slate-500">Concepts explained through practical, industry-driven
+                            sessions.</p>
+                    </div>
+                    <!-- Pillar 2 -->
+                    <div class="p-8 bg-slate-50 rounded-[2.5rem] border border-slate-100 fade-in text-center">
+                        <div
+                            class="w-12 h-12 bg-white text-primary rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm">
+                            2</div>
+                        <h4 class="font-bold text-lg text-slate-900 mb-3">Apply</h4>
+                        <p class="text-sm text-slate-500">Hands-on tasks, challenges, and guided assignments.</p>
+                    </div>
+                    <!-- Pillar 3 -->
+                    <div class="p-8 bg-slate-50 rounded-[2.5rem] border border-slate-100 fade-in text-center">
+                        <div
+                            class="w-12 h-12 bg-white text-primary rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm">
+                            3</div>
+                        <h4 class="font-bold text-lg text-slate-900 mb-3">Build</h4>
+                        <p class="text-sm text-slate-500">Capstone projects and case studies added to your portfolio.
+                        </p>
+                    </div>
+                    <!-- Pillar 4 -->
+                    <div class="p-8 bg-slate-50 rounded-[2.5rem] border border-slate-100 fade-in text-center">
+                        <div
+                            class="w-12 h-12 bg-white text-primary rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-sm">
+                            4</div>
+                        <h4 class="font-bold text-lg text-slate-900 mb-3">Contribute</h4>
+                        <p class="text-sm text-slate-500">Opportunities to engage in Hybrid Hustle real-world projects.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Outcomes Section -->
+        <section class="py-24 bg-surface border-t border-slate-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div
+                    class="bg-primary p-12 md:p-20 rounded-[4rem] text-white overflow-hidden relative fade-in shadow-2xl">
+                    <div
+                        class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2">
+                    </div>
+                    <div class="relative z-10 grid lg:grid-cols-2 gap-12 items-center">
+                        <div>
+                            <h2 class="text-4xl font-heading font-black mb-6">What You Will Gain</h2>
+                            <p class="text-blue-100 mb-8 leading-relaxed">Diverse Loopers ensures that learning becomes
+                                measurable, visible, and career-oriented from day one.</p>
+                            <a href="#courses-grid"
+                                class="inline-flex px-8 py-4 bg-white text-primary rounded-2xl font-bold hover:shadow-xl transition">Start
+                                Your Journey</a>
+                        </div>
+                        <div class="grid grid-cols-1 gap-4">
+                            <div class="flex items-center gap-4 bg-white/10 p-4 rounded-2xl">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-blue-200"></i>
+                                <span class="text-sm font-semibold">Strong foundations and specialization clarity</span>
+                            </div>
+                            <div class="flex items-center gap-4 bg-white/10 p-4 rounded-2xl">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-blue-200"></i>
+                                <span class="text-sm font-semibold">Real project portfolio instead of only
+                                    certificates</span>
+                            </div>
+                            <div class="flex items-center gap-4 bg-white/10 p-4 rounded-2xl">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-blue-200"></i>
+                                <span class="text-sm font-semibold">Exposure to tools used in real companies</span>
+                            </div>
+                            <div class="flex items-center gap-4 bg-white/10 p-4 rounded-2xl">
+                                <i data-lucide="check-circle" class="w-5 h-5 text-blue-200"></i>
+                                <span class="text-sm font-semibold">Improved interview readiness & confidence</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Courses Grid (Primary Focus) -->
+        <section class="py-24 bg-white" id="courses-section">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-4">
+                    <div class="fade-in">
+                        <h2 class="text-3xl font-heading font-black text-slate-900 mb-2">Available Paths</h2>
+                        <p class="text-slate-500">Our latest domain-specific programs.</p>
+                    </div>
+                    <!-- Category Filter Placeholder -->
+                    <div id="category-filters" class="flex flex-wrap gap-2 fade-in"></div>
+                </div>
+
+                <div id="courses-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+                    <!-- Skeleton Loader -->
+                    <div class="animate-pulse bg-slate-50 rounded-[2.5rem] h-96 border border-slate-100"></div>
+                    <div class="animate-pulse bg-slate-50 rounded-[2.5rem] h-96 border border-slate-100"></div>
+                    <div class="animate-pulse bg-slate-50 rounded-[2.5rem] h-96 border border-slate-100"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final CTA: Career Compass -->
+        <section class="py-24 bg-slate-50">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center fade-in">
+                <div
+                    class="w-20 h-20 bg-primary/10 text-primary rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-sm">
+                    <i data-lucide="compass" class="w-10 h-10"></i>
+                </div>
+                <h2 class="text-3xl font-heading font-black text-slate-900 mb-6">Not Sure Where to Start?</h2>
+                <p class="text-slate-500 text-lg mb-10 leading-relaxed">
+                    Use our Career Compass to discover your strengths, your ideal tech track, and the program that best
+                    fits your journey.
+                </p>
+                <a href="career-analyzer.html"
+                    class="inline-flex px-12 py-5 bg-slate-900 text-white rounded-2xl font-bold text-lg hover:bg-black transition shadow-2xl shadow-slate-200 flex items-center gap-3">
+                    Explore Career Compass <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </a>
+            </div>
+        </section>
     </main>
 
-    <footer class="footer">
-        <div class="container">
-            <a href="index.html" class="logo" style="justify-content: center;">
-                <img src="DIVERSE LOOPERS (1) bg.png" alt="Diverse Loopers Logo"
-                    onerror="this.onerror=null; this.src='https://placehold.co/50x50/3b82f6/ffffff?text=DL';">
-                <span class="logo-text">Diverse Loopers</span>
-            </a>
-            <p>Empowering the next generation of tech talent with practical, hands-on learning experiences.</p>
-            <div class="social-links">
-                <a href="#" title="Twitter"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <path
-                            d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z">
-                        </path>
-                    </svg></a>
-                <a href="#" title="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
-                        <rect x="2" y="9" width="4" height="12"></rect>
-                        <circle cx="4" cy="4" r="2"></circle>
-                    </svg></a>
-                <a href="#" title="GitHub"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <path
-                            d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
-                        </path>
-                    </svg></a>
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-white pt-20 pb-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+                <!-- Branding -->
+                <div class="col-span-1 lg:col-span-1">
+                    <img src="Diverse Loopers Black BG (2).png" alt="Diverse Loopers" class="h-12 w-auto mb-6">
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                        Empowering talents for tomorrow through structured, future-ready career pathways and
+                        real industry exposure.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="https://www.linkedin.com/company/105277450"
+                            class="w-8 h-8 bg-white/5 rounded-full flex items-center justify-center hover:bg-primary transition"><i
+                                data-lucide="linkedin" class="w-4 h-4"></i></a>
+                        <a href="https://www.instagram.com/diverseloopers/"
+                            class="w-8 h-8 bg-white/5 rounded-full flex items-center justify-center hover:bg-primary transition"><i
+                                data-lucide="instagram" class="w-4 h-4"></i></a>
+                        <a href="#"
+                            class="w-8 h-8 bg-white/5 rounded-full flex items-center justify-center hover:bg-primary transition">
+                            <i data-lucide="twitter" class="w-4 h-4"></i>
+                        </a>
+                        <a href="https://chat.whatsapp.com/B6XJSoLC2Hg7Wgg5lHRfSf"
+                            class="w-8 h-8 bg-white/5 rounded-full flex items-center justify-center hover:bg-primary transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                                <path
+                                    d="M16.7 13.4c-.3-.2-1.7-.8-2-1-.3-.2-.5-.2-.7.2s-.8 1-1 1.2c-.2.2-.4.2-.7.1-.3-.1-1.2-.4-2.2-1.3-1-1-1.3-1.9-1.4-2.2-.1-.3 0-.5.2-.7.2-.2.6-.7.8-1 .2-.3.1-.5 0-.7-.1-.2-.7-1.7-.9-2.1-.2-.4-.4-.3-.7-.3-.3 0-.6 0-.9.3-.3.3-1.1 1.1-1.1 2.6 0 1.5.9 3 1.1 3.2.1.2 2.1 3.2 5.1 4.4 1.9.8 2.6.9 3.5.8.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.3.1-1.4-.1-.1-.3-.2-.6-.4z" />
+                                <path d="M21 12a9 9 0 1 0-16.5 5.2L3 21l3.8-1.5A9 9 0 0 0 21 12z" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Navigation -->
+                <div>
+                    <h4 class="font-bold mb-6 text-white uppercase tracking-wider text-xs">Quick Navigation</h4>
+                    <ul class="space-y-4 text-slate-400 text-sm font-medium">
+                        <li><a href="aboutus-std.html" class="hover:text-white transition">About Us</a></li>
+                        <li><a href="mailto:contact@diverseloopers.com" class="hover:text-white transition">Contact
+                                Us</a></li>
+                        <li><a href="index.html#programs" class="hover:text-white transition">Programs</a></li>
+                        <li><a href="index.html#hybrid-hustle" class="hover:text-white transition">Hybrid Hustle</a>
+                        </li>
+                        <li><a href="index.html#events" class="hover:text-white transition">Events</a></li>
+                        <li><a href="analyzer.html" class="hover:text-white transition">Path Analyzer</a></li>
+                        <li><a href="career-analyzer.html" class="hover:text-white transition">Career Analyzer</a></li>
+                    </ul>
+                </div>
+
+                <!-- Specializations -->
+                <div>
+                    <h4 class="font-bold mb-6 text-white uppercase tracking-wider text-xs">Specializations</h4>
+                    <ul class="space-y-4 text-slate-400 text-sm font-medium">
+                        <li><a href="index.html" class="hover:text-white transition">For Students</a></li>
+                        <li><a href="home-uni.html" class="hover:text-white transition">For Universities</a></li>
+                        <li><a href="home-bus.html" class="hover:text-white transition">For Businesses</a></li>
+                        <li><a href="#" class="hover:text-white transition">Placement Support</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div>
+                    <h4 class="font-bold mb-6 text-white uppercase tracking-wider text-xs">Get In Touch</h4>
+                    <ul class="space-y-4 text-slate-400 text-sm">
+                        <li class="flex gap-3"><i data-lucide="mail" class="w-4 h-4 text-primary"></i>
+                            contact@diverseloopers.com</li>
+                        <li class="flex gap-3"><i data-lucide="phone" class="w-4 h-4 text-primary"></i> +91
+                            98393 50961</li>
+                    </ul>
+
+                    <!-- Auth Section in Footer -->
+                    <div id="footer-auth" class="mt-8 pt-6 border-t border-white/10 hidden">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div id="footer-user-avatar"
+                                class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-xs font-bold uppercase text-white">
+                                U</div>
+                            <div>
+                                <p id="footer-user-name" class="text-xs font-bold text-white"></p>
+                                <p id="footer-user-email" class="text-[10px] text-slate-500"></p>
+                            </div>
+                        </div>
+                        <button id="logout-btn-footer"
+                            class="text-xs text-red-400 hover:text-red-300 font-bold uppercase tracking-widest transition">Sign
+                            Out</button>
+                    </div>
+                </div>
             </div>
-            <div class="copyright">
-                &copy; 2024 Diverse Loopers. All Rights Reserved.
+
+            <div
+                class="pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] md:text-xs text-slate-500 font-medium">
+                <p>&copy; 2024 Diverse Loopers. All Rights Reserved.</p>
+                <div class="flex gap-8">
+                    <a href="#" class="hover:text-white transition">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition">Terms & Conditions</a>
+                </div>
+                <p class="text-slate-600">Hybrid Hustle&reg; is a registered program concept.</p>
             </div>
         </div>
     </footer>
 
-
     <script type="module">
-        // Data unchanged
-        const coursesData = [
-            { category: 'Software Development', title: 'Full-Stack Web Development', description: 'Master HTML, CSS, JavaScript, React, and Node.js to build complete web applications from scratch.', color: '#3b82f6', imageText: 'Full-Stack', imageVisual: 'linear-gradient(45deg, #3b82f6, #60a5fa)' },
-            { category: 'Software Development', title: 'Advanced Front-End Frameworks', description: 'Dive deep into modern frameworks like React, Vue, and Svelte. Learn state management and advanced component design.', color: '#3b82f6', imageText: 'Front-End', imageVisual: 'linear-gradient(45deg, #10b981, #34d399)' },
-            { category: 'Software Development', title: 'Back-End Engineering with Python', description: 'Build robust and scalable server-side applications using Python, Django, and Flask. Master REST APIs and databases.', color: '#3b82f6', imageText: 'Back-End', imageVisual: 'linear-gradient(45deg, #1f2937, #4b5563)' },
-            { category: 'Mobile Development', title: 'iOS App Development with Swift', description: 'Learn to build beautiful and powerful applications for iPhone and iPad using Swift and SwiftUI.', color: '#1e293b', imageText: 'iOS Dev', imageVisual: 'linear-gradient(45deg, #334155, #64748b)' },
-            { category: 'Mobile Development', title: 'Android App Mastery with Kotlin', description: 'Go from beginner to pro in Android development. Master Kotlin, Jetpack Compose, and modern app architecture.', color: '#16a34a', imageText: 'Android', imageVisual: 'linear-gradient(45deg, #22c55e, #4ade80)' },
-            { category: 'Game Development', title: 'Unity Game Development Bootcamp', description: 'Build your first 2D and 3D games. Learn the fundamentals of game design, mechanics, and C# programming with Unity.', color: '#6d28d9', imageText: 'Game Dev', imageVisual: 'linear-gradient(45deg, #7c3aed, #a78bfa)' },
-            { category: 'Data Science & ML', title: 'Data Science and Machine Learning', description: 'Analyze data, build predictive models, and implement ML algorithms using Python, Pandas, and Scikit-learn.', color: '#ec4899', imageText: 'Data Science', imageVisual: 'linear-gradient(45deg, #db2777, #f472b6)' },
-            { category: 'Data Science & ML', title: 'AI Engineering & Deep Learning', description: 'Master neural networks, computer vision, and NLP. Build and deploy advanced AI models with TensorFlow and PyTorch.', color: '#ec4899', imageText: 'AI & ML', imageVisual: 'linear-gradient(45deg, #d946ef, #e879f9)' },
-            { category: 'Cloud & DevOps', title: 'The Complete DevOps & CI/CD Course', description: 'Master Docker, Kubernetes, Jenkins, Git, and Ansible. Automate your development pipeline and deploy scalable apps.', color: '#f97316', imageText: 'DevOps', imageVisual: 'linear-gradient(45deg, #ea580c, #f97316)' },
-            { category: 'Cloud & DevOps', title: 'Cloud Engineering on AWS', description: 'Become an expert in cloud infrastructure. Learn to design, deploy, and manage scalable systems on Amazon Web Services.', color: '#f97316', imageText: 'Cloud', imageVisual: 'linear-gradient(45deg, #f59e0b, #facc15)' },
-            { category: 'Cybersecurity', title: 'Cybersecurity Analyst Training', description: 'Learn to identify threats, secure networks, and protect data. A practical guide to becoming a cybersecurity professional.', color: '#ef4444', imageText: 'Security', imageVisual: 'linear-gradient(45deg, #dc2626, #ef4444)' },
-            { category: 'Product Management', title: 'Product Management Fundamentals', description: 'Understand the product lifecycle from idea to launch. Learn user research, roadmapping, and agile methodologies.', color: '#10b981', imageText: 'Product', imageVisual: 'linear-gradient(45deg, #059669, #10b981)' },
-            { category: 'IT & Infrastructure', title: 'Network Administration Essentials', description: 'Master the fundamentals of networking, including TCP/IP, DNS, and routing, to manage modern IT infrastructure.', color: '#64748b', imageText: 'Networking', imageVisual: 'linear-gradient(45deg, #475569, #64748b)' },
-            { category: 'IT & Infrastructure', title: 'Systems Administrator (SysAdmin)', description: 'Learn to manage and maintain enterprise-level IT systems, including servers, operating systems, and user accounts.', color: '#64748b', imageText: 'SysAdmin', imageVisual: 'linear-gradient(45deg, #4b5563, #9ca3af)' },
-            { category: 'Hardware & Embedded', title: 'Embedded Systems with IoT', description: 'Design and program microcontroller-based systems. Connect your devices to the Internet of Things (IoT).', color: '#0891b2', imageText: 'IoT', imageVisual: 'linear-gradient(45deg, #0e7490, #22d3ee)' },
-            { category: 'Hardware & Embedded', title: 'VLSI Design Engineering', description: 'An in-depth course on Very Large Scale Integration circuit design, from logic gates to complex chip architecture.', color: '#0891b2', imageText: 'VLSI', imageVisual: 'linear-gradient(45deg, #0d9488, #2dd4bf)' }
-        ];
+        lucide.createIcons();
 
-        function createCourseCard(course) {
-            const card = document.createElement('div');
-            card.className = 'course-card';
+        // --- Supabase Config ---
+        const SUPABASE_URL = 'https://tjqsmkaiajdpotmafqvw.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqcXNta2FpYWpkcG90bWFmcXZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU5ODA3NDIsImV4cCI6MjA3MTU1Njc0Mn0.9710q9W5EFfCagj340AizUSKiOXYApy0xkTFszFjO8o';
+        const { createClient } = supabase;
+        const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-            card.innerHTML = `
-                <div class="course-image" style="background-image: ${course.imageVisual};">
-                    ${course.imageText}
-                </div>
-                <div class="course-content">
-                    <span class="course-category" style="background-color: ${course.color};">${course.category}</span>
-                    <h3>${course.title}</h3>
-                    <p>${course.description}</p>
-                    <div class="coming-soon-badge">Coming Soon</div>
-                </div>
-            `;
-            return card;
+        async function init() {
+            const grid = document.getElementById('courses-grid');
+
+            try {
+                const { data: courses, error } = await db.from('courses').select('*').order('category', { ascending: true });
+
+                if (error || !courses.length) {
+                    grid.innerHTML = `<div class="col-span-full py-20 text-center text-slate-400 font-bold">New learning paths are currently being co-created. Stay tuned!</div>`;
+                    return;
+                }
+
+                renderCourses(courses);
+                renderFilters(courses);
+                setupAnimations();
+                setupAuthUI();
+            } catch (err) {
+                console.error(err);
+                grid.innerHTML = `<div class="col-span-full py-20 text-center text-red-400 font-bold">Failed to load courses. Please try again later.</div>`;
+            }
         }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const grid = document.getElementById('courses-grid');
-            coursesData.forEach(course => {
-                grid.appendChild(createCourseCard(course));
-            });
+        async function setupAuthUI() {
+            const { data: { session } } = await db.auth.getSession();
+            updateAllAuthUI(session);
 
-            // Intersection Observer for scroll animations (Why Choose & Course Cards)
-            const animatedElements = document.querySelectorAll('.course-card, .why-choose-card');
+            db.auth.onAuthStateChange((_event, session) => {
+                updateAllAuthUI(session);
+            });
+        }
+
+        function updateAllAuthUI(session) {
+            // Header Elements
+            const navLoginBtn = document.getElementById('nav-login-btn');
+            const navProfileBtn = document.getElementById('nav-profile-btn');
+            const mobileLoginLink = document.getElementById('mobile-login-link');
+            const mobileProfileLink = document.getElementById('mobile-profile-link');
+
+            // Footer Elements
+            const footerAuth = document.getElementById('footer-auth');
+            const userName = document.getElementById('footer-user-name');
+            const userEmail = document.getElementById('footer-user-email');
+
+            if (session?.user) {
+                // Update Header
+                if (navLoginBtn) navLoginBtn.classList.add('hidden');
+                if (navProfileBtn) navProfileBtn.classList.remove('hidden');
+                if (mobileLoginLink) mobileLoginLink.classList.add('hidden');
+                if (mobileProfileLink) mobileProfileLink.classList.remove('hidden');
+
+                // Update Footer
+                if (footerAuth) footerAuth.classList.remove('hidden');
+                if (userName) userName.textContent = session.user.user_metadata?.full_name || 'Welcome Back';
+                if (userEmail) userEmail.textContent = session.user.email;
+            } else {
+                // Update Header
+                if (navLoginBtn) navLoginBtn.classList.remove('hidden');
+                if (navProfileBtn) navProfileBtn.classList.add('hidden');
+                if (mobileLoginLink) mobileLoginLink.classList.remove('hidden');
+                if (mobileProfileLink) mobileProfileLink.classList.add('hidden');
+
+                // Update Footer
+                if (footerAuth) footerAuth.classList.add('hidden');
+            }
+        }
+
+        document.getElementById('logout-btn-footer')?.addEventListener('click', async () => {
+            await db.auth.signOut();
+            window.location.reload();
+        });
+
+        function renderCourses(courses) {
+            const grid = document.getElementById('courses-grid');
+            grid.innerHTML = courses.map(course => `
+                <div class="course-card bg-white rounded-[2.5rem] border border-slate-100 overflow-hidden flex flex-col group h-full shadow-sm" data-category="${course.category}">
+                    <!-- Image Area -->
+                    <div class="h-56 relative flex items-center justify-center overflow-hidden" 
+                         style="background: ${course.image_visual || course.color || 'linear-gradient(45deg, #2563eb, #db2777)'};">
+                        
+                        ${course.image_url
+                    ? `<img src="${course.image_url}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">`
+                    : `<span class="text-white text-3xl font-black italic tracking-tighter drop-shadow-lg">${course.image_text || course.title[0]}</span>`
+                }
+
+                        <!-- Badge -->
+                        <div class="absolute top-6 left-6">
+                            <span class="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-lg" 
+                                  style="background-color: white; color: ${course.color || '#2563eb'};">
+                                ${course.category}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="p-8 flex-grow flex flex-col">
+                        <h3 class="text-xl font-heading font-bold text-slate-900 mb-4 line-clamp-2">${course.title}</h3>
+                        <p class="text-sm text-slate-500 leading-relaxed mb-8 line-clamp-3">${course.description}</p>
+                        
+                        <div class="mt-auto">
+                            ${course.is_live
+                    ? `<a href="${course.details_link || '#'}" 
+                                      class="block w-full py-4 text-center bg-slate-900 text-white rounded-2xl font-bold hover:bg-black transition shadow-xl shadow-slate-100 flex items-center justify-center gap-2">
+                                      View Details <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                                   </a>`
+                    : `<div class="block w-full py-4 text-center bg-slate-100 text-slate-400 rounded-2xl font-bold uppercase tracking-widest text-[10px] cursor-not-allowed">
+                                      Coming Soon
+                                   </div>`
+                }
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function renderFilters(courses) {
+            const categories = ['All', ...new Set(courses.map(c => c.category))];
+            const filterContainer = document.getElementById('category-filters');
+            filterContainer.innerHTML = categories.map(cat => `
+                <button onclick="filterCourses('${cat}')" 
+                        class="px-5 py-2 rounded-full text-xs font-bold border border-slate-200 hover:border-primary hover:text-primary transition-all duration-300">
+                    ${cat}
+                </button>
+            `).join('');
+        }
+
+        window.filterCourses = (category) => {
+            const cards = document.querySelectorAll('.course-card');
+            cards.forEach(card => {
+                if (category === 'All' || card.dataset.category === category) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function setupAnimations() {
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
-                        entry.target.classList.add('is-visible');
-                        observer.unobserve(entry.target); // Stop observing once visible
+                        entry.target.classList.add('visible');
                     }
                 });
-            }, {
-                threshold: 0.1
-            });
-            animatedElements.forEach(card => {
-                observer.observe(card);
-            });
+            }, { threshold: 0.1 });
 
-            // Go Back Button functionality
-            const backBtn = document.getElementById('go-back-btn');
-            backBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                history.back();
-            });
+            document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+        }
 
-            // --- Mobile Menu Toggle Logic (CRITICAL FIX) ---
-            const menuToggleBtn = document.getElementById('menu-toggle-btn');
-            const navLinks = document.getElementById('nav-links');
-            const menuIcon = document.getElementById('menu-icon');
-            const closeIcon = document.getElementById('close-icon');
+        // --- Mobile Menu ---
+        const toggleBtn = document.getElementById('mobile-menu-toggle');
+        const menuOverlay = document.getElementById('mobile-menu');
+        toggleBtn.onclick = () => menuOverlay.classList.toggle('hidden');
 
-            menuToggleBtn.addEventListener('click', () => {
-                const isMenuOpen = navLinks.classList.toggle('open');
-
-                // Toggle the icons for accessibility/visual feedback
-                if (isMenuOpen) {
-                    menuIcon.style.display = 'none';
-                    closeIcon.style.display = 'block';
-                } else {
-                    menuIcon.style.display = 'block';
-                    closeIcon.style.display = 'none';
-                }
-            });
-
-            // Close menu if a link is clicked (mobile experience improvement)
-            navLinks.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', () => {
-                    if (window.innerWidth <= 768) {
-                        navLinks.classList.remove('open');
-                        menuIcon.style.display = 'block';
-                        closeIcon.style.display = 'none';
-                    }
-                });
-            });
-        });
+        init();
     </script>
 </body>
 

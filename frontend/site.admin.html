@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Diverse Loopers</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Scripts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4f46e5',
+                        secondary: '#db2777',
+                        dark: '#0f172a',
+                        surface: '#f8fafc'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .sidebar-link.active {
+            background-color: #4f46e5;
+            color: white;
+            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4);
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+        
+        #dialog-overlay { display: none; }
+        #message-box, #confirm-box { display: none; }
+
+        /* Mobile specific behavior */
+        @media (max-width: 1023px) {
+            .sidebar-transition {
+                transition: transform 0.3s ease-in-out;
+                transform: translateX(-100%);
+            }
+            .sidebar-open {
+                transform: translateX(0);
+            }
+        }
+    </style>
+</head>
+<body class="bg-[#f1f5f9] text-slate-900 h-screen flex overflow-hidden">
+
+    <!-- Sidebar Overlay (Mobile Only) -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[60] hidden lg:hidden"></div>
+
+    <!-- Custom Dialogs -->
+    <div id="dialog-overlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100]"></div>
+    <div id="message-box" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-[2rem] shadow-2xl z-[101] w-[90%] max-w-sm text-center">
+        <div class="w-16 h-16 bg-blue-50 text-primary rounded-full flex items-center justify-center mx-auto mb-6">
+            <i data-lucide="bell" class="w-8 h-8"></i>
+        </div>
+        <h4 class="text-xl font-bold mb-2">Notification</h4>
+        <p id="message-box-text" class="text-slate-500 text-sm mb-8"></p>
+        <button id="message-box-close-btn" class="w-full py-3 bg-primary text-white rounded-xl font-bold hover:bg-indigo-700 transition">Understood</button>
+    </div>
+
+    <div id="confirm-box" class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-[2rem] shadow-2xl z-[101] w-[90%] max-w-sm text-center">
+        <div class="w-16 h-16 bg-red-50 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
+            <i data-lucide="alert-triangle" class="w-8 h-8"></i>
+        </div>
+        <h4 id="confirm-box-title" class="text-xl font-bold mb-2">Confirm Action</h4>
+        <p id="confirm-box-text" class="text-slate-500 text-sm mb-8"></p>
+        <div class="flex gap-3">
+            <button id="confirm-cancel-btn" class="flex-1 py-3 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200 transition">Cancel</button>
+            <button id="confirm-ok-btn" class="flex-1 py-3 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition">Confirm</button>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-72 bg-white border-r border-slate-200 flex flex-col fixed lg:static inset-y-0 left-0 z-[70] sidebar-transition lg:transform-none">
+        <div class="p-8 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <img src="logo2.png" alt="Diverse Loopers" class="h-10 w-auto rounded-lg">
+                <span class="font-black tracking-tight text-xl uppercase italic text-primary">DL Admin</span>
+            </div>
+            <button id="close-sidebar" class="lg:hidden p-2 text-slate-400 hover:text-slate-900">
+                <i data-lucide="x"></i>
+            </button>
+        </div>
+        
+        <nav class="flex-1 px-4 space-y-2 mt-4 custom-scrollbar overflow-y-auto">
+            <button onclick="switchView('dashboard')" id="nav-dashboard" class="sidebar-link active w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-semibold hover:bg-slate-50 transition text-left">
+                <i data-lucide="layout-grid" class="w-5 h-5"></i> Dashboard
+            </button>
+            <button onclick="switchView('events')" id="nav-events" class="sidebar-link w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-semibold hover:bg-slate-50 transition text-left">
+                <i data-lucide="calendar" class="w-5 h-5"></i> Events
+            </button>
+            <button onclick="switchView('courses')" id="nav-courses" class="sidebar-link w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-semibold hover:bg-slate-50 transition text-left">
+                <i data-lucide="book-open" class="w-5 h-5"></i> Courses
+            </button>
+            <button onclick="switchView('users')" id="nav-users" class="sidebar-link w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-semibold hover:bg-slate-50 transition text-left">
+                <i data-lucide="users" class="w-5 h-5"></i> Users
+            </button>
+            <button onclick="switchView('skills')" id="nav-skills" class="sidebar-link w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-semibold hover:bg-slate-50 transition text-left">
+                <i data-lucide="sparkles" class="w-5 h-5"></i> Skills
+            </button>
+        </nav>
+
+        <div class="p-6 mt-auto border-t border-slate-100">
+            <button id="logout-button" class="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-50 text-red-600 rounded-xl font-bold hover:bg-red-100 transition">
+                <i data-lucide="log-out" class="w-4 h-4"></i> Logout
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main id="main-scroll-area" class="flex-1 flex flex-col h-screen overflow-y-auto custom-scrollbar relative">
+        
+        <!-- Mobile Header (Hidden on Desktop) -->
+        <header class="lg:hidden bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center sticky top-0 z-[55]">
+            <div class="flex items-center gap-2">
+                <img src="logo2.png" class="h-8 w-auto">
+                <span class="font-bold text-primary italic">Admin</span>
+            </div>
+            <button id="open-sidebar" class="p-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-600 hover:bg-slate-100">
+                <i data-lucide="menu"></i>
+            </button>
+        </header>
+
+        <!-- DASHBOARD VIEW -->
+        <div id="dashboard-view" class="p-4 md:p-8 space-y-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-2">
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Executive Dashboard</h1>
+                    <p class="text-slate-500 font-medium text-sm md:text-base">Overview of the Diverse Loopers ecosystem</p>
+                </div>
+                <div class="text-left md:text-right w-full md:w-auto">
+                    <p id="current-date" class="text-[10px] md:text-sm font-bold text-slate-400 uppercase tracking-widest"></p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                <div class="bg-white p-4 md:p-6 rounded-3xl border border-slate-100 shadow-sm">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Students</p>
+                    <p id="total-users" class="text-2xl md:text-4xl font-black text-primary">0</p>
+                </div>
+                <div class="bg-white p-4 md:p-6 rounded-3xl border border-slate-100 shadow-sm">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Analyses</p>
+                    <p id="total-analyses" class="text-2xl md:text-4xl font-black text-secondary">0</p>
+                </div>
+                <div class="bg-white p-4 md:p-6 rounded-3xl border border-slate-100 shadow-sm">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Avg Match</p>
+                    <p id="avg-match" class="text-2xl md:text-4xl font-black text-green-500">0%</p>
+                </div>
+                <div class="bg-white p-4 md:p-6 rounded-3xl border border-slate-100 shadow-sm">
+                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Events</p>
+                    <p id="total-events" class="text-2xl md:text-4xl font-black text-orange-500">0</p>
+                </div>
+            </div>
+
+            <div class="grid lg:grid-cols-2 gap-8 mt-8">
+                <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden p-6">
+                    <h2 class="text-lg font-bold mb-6">Recent Activity</h2>
+                    <ul id="activity-feed" class="space-y-6"></ul>
+                </div>
+                <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden p-6">
+                    <h2 class="text-lg font-bold mb-6">Registration Trends</h2>
+                    <div id="chart-grid" class="h-48 flex items-end justify-between gap-2 border-b border-slate-100 pb-2 mb-4"></div>
+                    <div id="chart-labels" class="flex justify-between text-[10px] font-bold text-slate-400 uppercase tracking-tighter px-1"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EVENTS VIEW -->
+        <div id="events-view" class="p-4 md:p-8 hidden space-y-8">
+            <h1 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Events Management</h1>
+            
+            <div class="bg-white rounded-[2rem] p-6 md:p-8 shadow-sm border border-slate-100">
+                <h2 id="event-form-title" class="text-xl font-bold mb-6">Create New Event</h2>
+                <form id="event-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <input type="hidden" id="event-id">
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-slate-500 uppercase">Event Title</label>
+                        <input type="text" id="event-title" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-slate-500 uppercase">Date & Time</label>
+                        <input type="datetime-local" id="event-date" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition text-sm">
+                    </div>
+                    <div class="md:col-span-2 space-y-1">
+                        <label class="text-xs font-bold text-slate-500 uppercase">Brief Description</label>
+                        <textarea id="event-description" rows="3" required class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition"></textarea>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-slate-500 uppercase">Banner (Upload)</label>
+                        <input type="file" id="event-image-upload" accept="image/*" class="w-full px-4 py-2 text-xs bg-slate-50 rounded-xl border border-dashed border-slate-300">
+                        <input type="hidden" id="event-media-url">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-xs font-bold text-slate-500 uppercase">Registration Link</label>
+                        <input type="url" id="event-join-link" placeholder="https://..." class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition">
+                    </div>
+                    <div class="md:col-span-2 space-y-1">
+                        <label class="text-xs font-bold text-slate-500 uppercase">Venue / Location</label>
+                        <input type="text" id="event-location" placeholder="Online / Campus" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition">
+                    </div>
+                    <div class="md:col-span-2 flex gap-3 pt-4">
+                        <button type="submit" id="event-submit-btn" class="flex-1 py-4 bg-primary text-white rounded-xl font-bold hover:bg-indigo-700 transition shadow-lg">Publish</button>
+                        <button type="button" id="event-cancel-btn" onclick="resetEventForm()" style="display:none;" class="px-8 py-4 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200 transition">Cancel</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden mb-12">
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left border-collapse min-w-[600px]">
+                        <thead class="bg-slate-50">
+                            <tr>
+                                <th class="px-6 py-4 text-xs font-black uppercase text-slate-400">Title</th>
+                                <th class="px-6 py-4 text-xs font-black uppercase text-slate-400">Schedule</th>
+                                <th class="px-6 py-4 text-xs font-black uppercase text-slate-400">Location</th>
+                                <th class="px-6 py-4 text-xs font-black uppercase text-slate-400 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="events-table-body" class="divide-y divide-slate-100 font-medium"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- COURSES VIEW -->
+        <div id="courses-view" class="p-4 md:p-8 hidden space-y-8">
+            <h1 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Courses Management</h1>
+            
+            <div class="bg-white rounded-[2rem] p-6 md:p-10 border border-slate-100 shadow-sm">
+                <h2 id="course-form-title" class="text-xl font-extrabold mb-8 text-slate-900">Configure New Course</h2>
+                <form id="course-form" class="space-y-6">
+                    <input type="hidden" id="course-id">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Course Title</label>
+                            <input type="text" id="course-title" required class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Status</label>
+                            <select id="course-is-live" class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition">
+                                <option value="false">Coming Soon</option>
+                                <option value="true">Live</option>
+                            </select>
+                        </div>
+                        <div class="md:col-span-2 space-y-1">
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Description</label>
+                            <textarea id="course-desc" rows="4" required class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition"></textarea>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Thumbnail</label>
+                            <input type="file" id="course-image" accept="image/*" class="w-full px-4 py-2.5 bg-slate-50 border border-dashed border-slate-300 rounded-2xl text-xs">
+                            <input type="hidden" id="course-image-url">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Details URL</label>
+                            <input type="url" id="course-link" placeholder="https://..." class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition">
+                        </div>
+                    </div>
+                    <div class="flex gap-4 pt-4 border-t border-slate-50">
+                        <button type="submit" id="course-save-btn" class="flex-1 py-4 bg-primary text-white rounded-2xl font-black uppercase tracking-widest hover:bg-indigo-700 transition">Save Course</button>
+                        <button type="button" onclick="resetCourseForm()" class="px-8 py-4 bg-slate-100 text-slate-600 rounded-2xl font-black uppercase tracking-widest hover:bg-slate-200 transition">Cancel</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pb-12" id="courses-grid-display"></div>
+        </div>
+
+        <!-- USERS VIEW -->
+        <div id="users-view" class="p-4 md:p-8 hidden space-y-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <h1 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Talent Pool</h1>
+                <div class="relative w-full md:w-96">
+                    <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400"></i>
+                    <input type="text" id="search-users" placeholder="Search by name or email..." class="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition text-sm">
+                </div>
+            </div>
+            
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden mb-12">
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left border-collapse min-w-[700px]">
+                        <thead class="bg-slate-50 border-b border-slate-100">
+                            <tr>
+                                <th class="px-6 py-5 text-xs font-black uppercase text-slate-400">Talent</th>
+                                <th class="px-6 py-5 text-xs font-black uppercase text-slate-400">Email</th>
+                                <th class="px-6 py-5 text-xs font-black uppercase text-slate-400">Role</th>
+                                <th class="px-6 py-5 text-xs font-black uppercase text-slate-400">Joined</th>
+                                <th class="px-6 py-5 text-xs font-black uppercase text-slate-400 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="users-table-body" class="divide-y divide-slate-50"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SKILLS VIEW -->
+        <div id="skills-view" class="p-4 md:p-8 hidden space-y-8">
+            <h1 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Skills Taxonomy</h1>
+            
+            <div class="max-w-2xl bg-white p-6 md:p-10 rounded-[2.5rem] shadow-sm border border-slate-100">
+                <form id="add-skill-form" class="flex flex-col sm:flex-row gap-4">
+                    <input type="text" id="new-skill-input" placeholder="New Skill (e.g. Solidity)" required class="flex-1 px-5 py-4 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition">
+                    <button type="submit" class="px-8 py-4 bg-dark text-white rounded-2xl font-bold hover:bg-black transition">Add Skill</button>
+                </form>
+            </div>
+
+            <div class="bg-white rounded-3xl border border-slate-100 shadow-sm p-6 md:p-8 mb-12">
+                <div id="skills-list" class="flex flex-wrap gap-3"></div>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        lucide.createIcons();
+        document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+        const SUPABASE_URL = 'https://tjqsmkaiajdpotmafqvw.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqcXNta2FpYWpkcG90bWFmcXZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU5ODA3NDIsImV4cCI6MjA3MTU1Njc0Mn0.9710q9W5EFfCagj340AizUSKiOXYApy0xkTFszFjO8o';
+        const { createClient } = supabase;
+        const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let allUsers = [];
+        let allSkills = [];
+        let allEvents = [];
+        let allCourses = [];
+
+        // --- Mobile Menu Interaction ---
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        const openBtn = document.getElementById('open-sidebar');
+        const closeBtn = document.getElementById('close-sidebar');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('sidebar-open');
+            overlay.classList.toggle('hidden');
+        }
+
+        openBtn.onclick = toggleSidebar;
+        closeBtn.onclick = toggleSidebar;
+        overlay.onclick = toggleSidebar;
+
+        // --- Custom Dialog Logic ---
+        window.showMessageBox = (message) => {
+            document.getElementById('message-box-text').textContent = message;
+            document.getElementById('dialog-overlay').style.display = 'block';
+            document.getElementById('message-box').style.display = 'block';
+        };
+
+        window.closeMsg = () => {
+            document.getElementById('dialog-overlay').style.display = 'none';
+            document.getElementById('message-box').style.display = 'none';
+            document.getElementById('confirm-box').style.display = 'none';
+        };
+        document.getElementById('message-box-close-btn').onclick = closeMsg;
+
+        window.showConfirmBox = (title, message, onConfirm) => {
+            document.getElementById('confirm-box-title').textContent = title;
+            document.getElementById('confirm-box-text').textContent = message;
+            document.getElementById('dialog-overlay').style.display = 'block';
+            document.getElementById('confirm-box').style.display = 'block';
+
+            document.getElementById('confirm-ok-btn').onclick = () => {
+                onConfirm();
+                closeMsg();
+            };
+            document.getElementById('confirm-cancel-btn').onclick = closeMsg;
+        };
+
+        // --- View Logic ---
+        window.switchView = (viewName) => {
+            const sections = ['dashboard', 'events', 'users', 'skills', 'courses'];
+            sections.forEach(s => {
+                const view = document.getElementById(`${s}-view`);
+                const nav = document.getElementById(`nav-${s}`);
+                if (view) view.classList.add('hidden');
+                if (nav) nav.classList.remove('active');
+            });
+            document.getElementById(`${viewName}-view`).classList.remove('hidden');
+            document.getElementById(`nav-${viewName}`).classList.add('active');
+            
+            // Close mobile sidebar if open
+            if (window.innerWidth < 1024 && sidebar.classList.contains('sidebar-open')) {
+                toggleSidebar();
+            }
+
+            // Scroll to top of main area
+            document.getElementById('main-scroll-area').scrollTop = 0;
+
+            if (viewName === 'dashboard') { loadDashboardStats(); loadActivityFeed(); loadSignupChartData(); }
+            if (viewName === 'users') loadAllUsers();
+            if (viewName === 'skills') loadAllSkills();
+            if (viewName === 'events') loadAllEvents();
+            if (viewName === 'courses') loadAllCourses();
+        };
+
+        // --- Auth Guard ---
+        async function checkAuth() {
+            const { data: { user } } = await db.auth.getUser();
+            if (!user) { window.location.href = 'shiva_login.html'; return; }
+            
+            const { data: adminCheck } = await db.from('admin_list').select('user_id').eq('user_id', user.id).limit(1);
+            if (!adminCheck || adminCheck.length === 0) {
+                await db.auth.signOut();
+                window.location.href = 'shiva_login.html';
+                return;
+            }
+            switchView('dashboard');
+        }
+
+        // --- Image Upload Helpers ---
+        async function uploadImage(file, bucket, prefix) {
+            if (!file) return null;
+            const fExt = file.name.split('.').pop();
+            const fPath = `${prefix}/${Date.now()}-${Math.random().toString(36).substring(7)}.${fExt}`;
+            const { data, error } = await db.storage.from(bucket).upload(fPath, file);
+            if (error) { showMessageBox('Upload Error: ' + error.message); return null; }
+            const { data: url } = db.storage.from(bucket).getPublicUrl(fPath);
+            return url.publicUrl;
+        }
+
+        // --- DASHBOARD ---
+        async function loadDashboardStats() {
+            const { count: uCount } = await db.from('profiles').select('*', { count: 'exact', head: true });
+            const { count: aCount } = await db.from('analyses').select('*', { count: 'exact', head: true });
+            const { count: eCount } = await db.from('events').select('*', { count: 'exact', head: true });
+            
+            document.getElementById('total-users').textContent = uCount || 0;
+            document.getElementById('total-analyses').textContent = aCount || 0;
+            document.getElementById('total-events').textContent = eCount || 0;
+
+            const { data: avg } = await db.from('analyses').select('match_percentage');
+            if (avg?.length) {
+                const sum = avg.reduce((a, b) => a + (b.match_percentage || 0), 0);
+                document.getElementById('avg-match').textContent = `${Math.round(sum / avg.length)}%`;
+            }
+        }
+
+        async function loadActivityFeed() {
+            const { data } = await db.from('profiles').select('full_name, created_at').order('created_at', { ascending: false }).limit(5);
+            const feed = document.getElementById('activity-feed');
+            feed.innerHTML = (data || []).map(item => `
+                <li class="flex items-start gap-4">
+                    <div class="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center flex-shrink-0 text-primary font-bold text-xs uppercase">${(item.full_name || 'U')[0]}</div>
+                    <div>
+                        <p class="text-xs md:text-sm font-bold text-slate-800">${item.full_name || 'A talent'} <span class="font-normal text-slate-500">joined.</span></p>
+                        <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">${new Date(item.created_at).toLocaleTimeString()}</p>
+                    </div>
+                </li>
+            `).join('');
+        }
+
+        async function loadSignupChartData() {
+            const { data, error } = await db.rpc('get_daily_user_signups');
+            if (error || !data) return;
+            const grid = document.getElementById('chart-grid');
+            const labels = document.getElementById('chart-labels');
+            grid.innerHTML = ''; labels.innerHTML = '';
+            
+            const max = Math.max(...data.map(d => d.count), 1);
+            data.slice(-7).forEach(d => {
+                const bar = document.createElement('div');
+                bar.className = 'flex-1 bg-primary rounded-t-lg transition-all duration-700 h-0 hover:bg-indigo-400 cursor-help';
+                bar.title = `${d.count} signups`;
+                setTimeout(() => bar.style.height = `${(d.count / max) * 100}%`, 100);
+                grid.appendChild(bar);
+                
+                const label = document.createElement('span');
+                label.className = 'flex-1 text-center';
+                label.textContent = d.signup_day.split('-').slice(1).reverse().join('/');
+                labels.appendChild(label);
+            });
+        }
+
+        // --- COURSE MANAGEMENT ---
+        async function loadAllCourses() {
+            const { data } = await db.from('courses').select('*').order('created_at', { ascending: false });
+            allCourses = data || [];
+            const grid = document.getElementById('courses-grid-display');
+            grid.innerHTML = allCourses.map(c => `
+                <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden flex flex-col group">
+                    <div class="h-40 bg-slate-100 relative overflow-hidden">
+                        <img src="${c.image_url || 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3'}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                        <span class="absolute top-4 right-4 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${c.is_live ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'}">
+                            ${c.is_live ? 'Live' : 'Draft'}
+                        </span>
+                    </div>
+                    <div class="p-6 flex-grow">
+                        <h4 class="text-base md:text-lg font-bold text-slate-900 mb-2 line-clamp-1">${c.title}</h4>
+                        <p class="text-xs text-slate-500 line-clamp-2 mb-6 font-medium">${c.description}</p>
+                        <div class="flex gap-2">
+                            <button onclick="editCourse('${c.id}')" class="flex-1 py-2 bg-indigo-50 text-primary rounded-xl text-xs font-bold hover:bg-primary hover:text-white transition">Edit</button>
+                            <button onclick="deleteCourse('${c.id}')" class="px-4 py-2 bg-red-50 text-red-600 rounded-xl text-xs font-bold hover:bg-red-600 hover:text-white transition">Del</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.editCourse = (id) => {
+            const c = allCourses.find(item => item.id === id);
+            if (!c) return;
+            document.getElementById('course-id').value = c.id;
+            document.getElementById('course-title').value = c.title;
+            document.getElementById('course-is-live').value = c.is_live.toString();
+            document.getElementById('course-desc').value = c.description;
+            document.getElementById('course-link').value = c.details_link || '';
+            document.getElementById('course-image-url').value = c.image_url || '';
+            document.getElementById('course-form-title').textContent = "Update Course Details";
+            document.getElementById('course-save-btn').textContent = "Apply Changes";
+            document.getElementById('main-scroll-area').scrollTop = 0;
+        };
+
+        window.resetCourseForm = () => {
+            document.getElementById('course-form').reset();
+            document.getElementById('course-id').value = '';
+            document.getElementById('course-form-title').textContent = "Configure New Course";
+            document.getElementById('course-save-btn').textContent = "Sync Course Data";
+        };
+
+        document.getElementById('course-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('course-save-btn');
+            btn.disabled = true; btn.textContent = "Processing...";
+            const id = document.getElementById('course-id').value;
+            const file = document.getElementById('course-image').files[0];
+            let imageUrl = document.getElementById('course-image-url').value;
+            if (file) imageUrl = await uploadImage(file, 'course-images', 'main');
+            const payload = {
+                title: document.getElementById('course-title').value,
+                description: document.getElementById('course-desc').value,
+                is_live: document.getElementById('course-is-live').value === 'true',
+                details_link: document.getElementById('course-link').value,
+                image_url: imageUrl
+            };
+            const { error } = id ? await db.from('courses').update(payload).eq('id', id) : await db.from('courses').insert([payload]);
+            if (error) showMessageBox('Database Error: ' + error.message);
+            else { showMessageBox(id ? 'Course updated!' : 'Course added.'); resetCourseForm(); loadAllCourses(); }
+            btn.disabled = false;
+        };
+
+        window.deleteCourse = (id) => {
+            showConfirmBox('Delete Course', 'Are you sure?', async () => {
+                await db.from('courses').delete().eq('id', id);
+                loadAllCourses();
+            });
+        };
+
+        // --- USER MGMT ---
+        async function loadAllUsers() {
+            const { data } = await db.from('profiles').select('id, full_name, email, role, created_at').order('created_at', { ascending: false });
+            allUsers = data || [];
+            renderUsersTable(allUsers);
+        }
+
+        function renderUsersTable(users) {
+            const tbody = document.getElementById('users-table-body');
+            tbody.innerHTML = users.map(u => `
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="px-6 py-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 bg-indigo-50 rounded-xl flex items-center justify-center text-primary font-black text-[10px] uppercase flex-shrink-0">${(u.full_name || 'U')[0]}</div>
+                            <p class="font-bold text-slate-900 text-xs md:text-sm truncate max-w-[120px]">${u.full_name || 'Anonymous'}</p>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-slate-600 text-[11px] md:text-sm font-medium truncate max-w-[150px]">${u.email || 'N/A'}</td>
+                    <td class="px-6 py-4">
+                        <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest ${u.role === 'admin' ? 'bg-primary text-white' : 'bg-slate-100 text-slate-500'}">
+                            ${u.role || 'User'}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-slate-500 text-[11px] whitespace-nowrap">${new Date(u.created_at).toLocaleDateString()}</td>
+                    <td class="px-6 py-4 text-right">
+                        <button onclick="handleDeleteUser('${u.id}', '${u.full_name}')" class="text-red-500 hover:text-red-700 font-bold text-[10px] uppercase tracking-widest">Del</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        document.getElementById('search-users').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredUsers = allUsers.filter(user => 
+                (user.full_name || '').toLowerCase().includes(searchTerm) || 
+                (user.email || '').toLowerCase().includes(searchTerm)
+            );
+            renderUsersTable(filteredUsers);
+        });
+
+        window.handleDeleteUser = (id, name) => {
+            showConfirmBox('Remove User', `Delete ${name}?`, async () => {
+                await db.from('profiles').delete().eq('id', id);
+                loadAllUsers();
+            });
+        };
+
+        // --- SKILLS LOGIC ---
+        async function loadAllSkills() {
+            const { data } = await db.from('user_skills').select('*').order('skill_name', { ascending: true });
+            allSkills = data || [];
+            const list = document.getElementById('skills-list');
+            list.innerHTML = allSkills.map(s => `
+                <div class="flex items-center gap-2 px-4 py-2 bg-slate-50 border border-slate-200 rounded-xl group transition hover:border-red-200">
+                    <span class="text-xs md:text-sm font-bold text-slate-700">${s.skill_name}</span>
+                    <button onclick="deleteSkill('${s.id}')" class="text-slate-300 hover:text-red-500 transition"><i data-lucide="x-circle" class="w-4 h-4"></i></button>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        window.deleteSkill = (id) => {
+            showConfirmBox('Delete Skill', 'Delete this skill?', async () => {
+                await db.from('user_skills').delete().eq('id', id);
+                loadAllSkills();
+            });
+        };
+
+        document.getElementById('add-skill-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const input = document.getElementById('new-skill-input');
+            const name = input.value.trim();
+            if (!name) return;
+            const { error } = await db.from('user_skills').insert([{ skill_name: name }]);
+            if (error) showMessageBox('Error: Already exists.');
+            else { input.value = ''; loadAllSkills(); }
+        };
+
+        // --- EVENTS LOGIC ---
+        async function loadAllEvents() {
+            const { data } = await db.from('events').select('*').order('date', { ascending: true });
+            allEvents = data || [];
+            const tbody = document.getElementById('events-table-body');
+            tbody.innerHTML = allEvents.map(e => `
+                <tr>
+                    <td class="px-6 py-4 font-bold text-slate-900 text-xs md:text-sm">${e.title}</td>
+                    <td class="px-6 py-4 text-slate-500 text-[11px] whitespace-nowrap">${new Date(e.date).toLocaleString([], {dateStyle:'short', timeStyle:'short'})}</td>
+                    <td class="px-6 py-4 text-slate-500 text-[11px]">${e.location || 'Online'}</td>
+                    <td class="px-6 py-4 text-right whitespace-nowrap">
+                        <button onclick="editEvent('${e.id}')" class="text-primary font-bold text-[10px] uppercase mr-3">Edit</button>
+                        <button onclick="deleteEvent('${e.id}')" class="text-red-500 font-bold text-[10px] uppercase">Del</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        window.editEvent = (id) => {
+            const e = allEvents.find(item => item.id === id);
+            document.getElementById('event-id').value = e.id;
+            document.getElementById('event-title').value = e.title;
+            document.getElementById('event-date').value = new Date(e.date).toISOString().slice(0, 16);
+            document.getElementById('event-description').value = e.description;
+            document.getElementById('event-media-url').value = e.media_url || '';
+            document.getElementById('event-join-link').value = e.join_link || '';
+            document.getElementById('event-location').value = e.location || '';
+            document.getElementById('event-form-title').textContent = "Update Event";
+            document.getElementById('event-cancel-btn').style.display = 'inline-block';
+            document.getElementById('main-scroll-area').scrollTop = 0;
+        };
+
+        window.deleteEvent = (id) => {
+            showConfirmBox('Delete Event', 'Delete this event?', async () => {
+                await db.from('events').delete().eq('id', id);
+                loadAllEvents();
+            });
+        };
+
+        document.getElementById('event-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('event-id').value;
+            const file = document.getElementById('event-image-upload').files[0];
+            let url = document.getElementById('event-media-url').value;
+            if (file) url = await uploadImage(file, 'events-images', 'banners');
+            const payload = {
+                title: document.getElementById('event-title').value,
+                date: document.getElementById('event-date').value,
+                description: document.getElementById('event-description').value,
+                media_url: url,
+                join_link: document.getElementById('event-join-link').value,
+                location: document.getElementById('event-location').value
+            };
+            const { error } = id ? await db.from('events').update(payload).eq('id', id) : await db.from('events').insert([payload]);
+            if (!error) { showMessageBox('Synced.'); window.resetEventForm(); loadAllEvents(); }
+        };
+
+        window.resetEventForm = () => {
+            document.getElementById('event-form').reset();
+            document.getElementById('event-id').value = '';
+            document.getElementById('event-form-title').textContent = "Create New Event";
+            document.getElementById('event-cancel-btn').style.display = 'none';
+        }
+
+        document.getElementById('logout-button').onclick = async () => {
+            await db.auth.signOut();
+            window.location.href = 'shiva_login.html';
+        };
+
+        checkAuth();
+    </script>
+</body>
+</html>

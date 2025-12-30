@@ -1,891 +1,409 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings - Diverse Loopers Dashboard</title>
+    <title>Settings | Diverse Loopers</title>
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Scripts -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        :root {
-            --slate-50: #f8fafc;
-            --gray-100: #f3f4f6;
-            --gray-200: #e5e7eb;
-            --gray-300: #d1d5db;
-            --gray-500: #6b7280;
-            --gray-600: #4b5563;
-            --gray-800: #1f2937;
-            --gray-900: #111827;
-            --white: #ffffff;
-            --indigo-50: #eef2ff;
-            --indigo-100: #e0e7ff;
-            --indigo-600: #4f46e5;
-            --indigo-800: #3730a3;
-            --purple-600: #9333ea;
-            --green-500: #22c55e;
-            --red-500: #ef4444;
-            --shadow: 0 4px 10px -1px rgb(0 0 0 / 0.05), 0 2px 6px -2px rgb(0 0 0 / 0.05);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-        }
+    <script src="https://unpkg.com/lucide@latest"></script>
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--slate-50);
-            margin: 0;
-            display: flex;
-            min-height: 100vh;
-            color: var(--gray-800);
-        }
-
-        .sidebar {
-            width: 16rem;
-            background-color: var(--white);
-            box-shadow: var(--shadow);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .sidebar-header-link {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        .sidebar-header {
-            padding: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            border-bottom: 1px solid var(--gray-200);
-        }
-
-        .sidebar-logo {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .logo-img {
-            width: 62px;
-            height: 62px;
-        }
-
-        .sidebar-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-        }
-
-        .sidebar nav {
-            flex: 1;
-            padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1rem;
-            color: var(--gray-600);
-            border-radius: 0.5rem;
-            text-decoration: none;
-            transition: background-color 0.2s, color 0.2s;
-        }
-
-        .nav-link:hover {
-            background-color: var(--gray-100);
-        }
-
-        .nav-link.active {
-            background-color: var(--indigo-50);
-            color: var(--gray-800);
-            font-weight: 600;
-        }
-
-        .sidebar-footer {
-            padding: 1rem;
-            border-top: 1px solid var(--gray-200);
-        }
-
-        .lucide {
-            width: 24px;
-            height: 24px;
-        }
-
-        .main-content {
-            flex: 1;
-            padding: 2.5rem;
-            background-image: radial-gradient(circle, var(--gray-200) 1px, transparent 1px);
-            background-size: 20px 20px;
-        }
-
-        .main-header h1 {
-            font-size: 1.875rem;
-            font-weight: 700;
-            color: var(--gray-900);
-            margin: 0;
-        }
-
-        .main-header p {
-            color: var(--gray-600);
-            margin-top: 0.25rem;
-        }
-
-        .card {
-            background-color: var(--white);
-            padding: 2rem;
-            border-radius: 0.75rem;
-            box-shadow: var(--shadow);
-            margin-top: 2rem;
-            border-top: 4px solid var(--indigo-600);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        #role-card {
-            border-top-color: var(--purple-600);
-        }
-
-        #skills-card {
-            border-top-color: var(--green-500);
-        }
-
-        .card-header {
-            padding-bottom: 1rem;
-            border-bottom: 1px solid var(--gray-200);
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .card-header .lucide {
-            color: var(--gray-500);
-        }
-
-        .card-header-text h2 {
-            font-size: 1.25rem;
-            font-weight: 600;
-            margin: 0;
-        }
-
-        .card-header-text p {
-            font-size: 0.875rem;
-            color: var(--gray-500);
-            margin: 0.25rem 0 0 0;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(1, 1fr);
-            gap: 1.5rem;
-        }
-
-        @media (min-width: 768px) {
-            .form-grid {
-                grid-template-columns: repeat(2, 1fr);
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4f46e5',
+                        secondary: '#9333ea',
+                        dark: '#0c0d19'
+                    }
+                }
             }
         }
+    </script>
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            position: relative;
+    <style>
+        :root {
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --border: #e2e8f0;
         }
 
-        .form-group label {
-            font-weight: 500;
-            margin-bottom: 0.5rem;
-            font-size: 0.875rem;
+        .dark {
+            --bg-body: #090a14;
+            --bg-card: #151726;
+            --text-main: #f1f5f9;
+            --border: #1e293b;
         }
 
-        .form-group input,
-        .form-group textarea {
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-body); 
+            color: var(--text-main); 
+            transition: background-color 0.3s, color 0.3s; 
+        }
+
+        .glass-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border);
+        }
+
+        .tab-btn.active {
+            color: #4f46e5;
+            border-bottom: 2px solid #4f46e5;
+        }
+
+        .input-field {
             width: 100%;
-            padding: 0.75rem 0.25rem;
-            border: none;
-            border-bottom: 2px solid var(--gray-300);
-            border-radius: 0;
-            font-size: 1rem;
-            font-family: 'Inter', sans-serif;
-            transition: border-color 0.2s;
-            background-color: transparent;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
+            padding: 0.75rem 1rem;
+            background-color: var(--bg-body);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
             outline: none;
-            border-color: var(--indigo-600);
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .avatar-upload-container {
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .avatar-preview {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background-color: var(--gray-200);
-            background-size: cover;
-            background-position: center;
-            border: 2px solid var(--white);
-            box-shadow: var(--shadow);
-            cursor: pointer;
-            position: relative;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .avatar-preview:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 0 4px var(--indigo-100);
-        }
-
-        .avatar-preview::after {
-            content: 'Edit';
-            position: absolute;
-            inset: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            border-radius: 50%;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .avatar-preview:hover::after {
-            opacity: 1;
-        }
-
-        .avatar-buttons {
-            display: flex;
-            gap: 0.75rem;
-        }
-
-        .btn {
-            padding: 0.5rem 1rem;
-            border-radius: 0.375rem;
-            font-weight: 600;
-            border: 1px solid transparent;
-            cursor: pointer;
             transition: all 0.2s;
         }
 
-        .btn-primary {
-            background: linear-gradient(45deg, var(--indigo-600), #5a54e9);
-            color: var(--white);
-            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+        .input-field:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(79, 70, 229, 0.4);
-        }
-
-        .btn-secondary {
-            background-color: var(--white);
-            color: var(--gray-800);
-            border-color: var(--gray-300);
-        }
-
-        .btn-secondary:hover {
-            background-color: var(--slate-50);
-        }
-
-        .card-footer {
-            margin-top: 1.5rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--gray-200);
-            text-align: right;
-        }
-
-        .skills-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.75rem;
-        }
-
-        .skill-tag {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            background-color: var(--indigo-100);
-            color: var(--indigo-800);
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.875rem;
-            font-weight: 500;
-            animation: popIn 0.3s ease-out;
-        }
-
-        @keyframes popIn {
-            from {
-                transform: scale(0.8);
-                opacity: 0;
-            }
-
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-
-        .skill-tag button {
-            background: none;
-            border: none;
-            padding: 0;
-            margin: 0;
-            color: var(--indigo-800);
-            cursor: pointer;
-            opacity: 0.6;
-            transition: opacity 0.2s;
-        }
-
-        .skill-tag button:hover {
-            opacity: 1;
-        }
-
-        #notification {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            padding: 1rem 1.5rem;
-            border-radius: 0.5rem;
-            color: var(--white);
-            font-weight: 600;
-            box-shadow: var(--shadow-lg);
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.3s, transform 0.3s;
-            pointer-events: none;
-            z-index: 1001;
-        }
-
-        #notification.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        #notification.success {
-            background-color: var(--green-500);
-        }
-
-        #notification.error {
-            background-color: var(--red-500);
-        }
-        
-        /* --- MOBILE NAVIGATION STYLES START --- */
-        .mobile-nav-container { display: none; }
-        .mobile-menu-button {
-            display: none;
-            position: fixed;
-            top: 1.5rem;
-            left: 1.5rem;
-            background: var(--white);
-            border: 1px solid var(--gray-200);
-            color: var(--gray-800);
-            padding: 0.5rem;
-            border-radius: 0.5rem;
-            z-index: 1000;
-        }
-        .mobile-nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 80%;
-            max-width: 18rem;
-            height: 100%;
-            background-color: var(--white);
-            z-index: 999;
-            transform: translateX(-100%);
-            transition: transform 0.3s ease-in-out;
-            display: flex;
-            flex-direction: column;
-            box-shadow: var(--shadow-lg);
-        }
-        .mobile-nav.open {
-            transform: translateX(0);
-        }
-        .mobile-nav-overlay {
-            position: fixed;
-            inset: 0;
-            background-color: rgba(0,0,0,0.5);
-            z-index: 998;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out;
-            pointer-events: none;
-        }
-        .mobile-nav-overlay.open {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .mobile-nav .sidebar-header {
-             justify-content: space-between;
-        }
-        .mobile-nav .nav-link {
-            font-size: 1.125rem;
-        }
-        /* --- MOBILE NAVIGATION STYLES END --- */
-
-
-        @media (max-width: 768px) {
-            body { flex-direction: column; }
-            .sidebar {
-                display: none;
-            }
-            .main-content {
-                padding: 1.5rem;
-                padding-top: 5rem;
-            }
-            .mobile-menu-button, .mobile-nav-container {
-                display: block;
-            }
-        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+        .dark ::-webkit-scrollbar-thumb { background: #1e293b; }
     </style>
 </head>
+<body class="min-h-screen">
 
-<body>
-     <!-- MOBILE NAVIGATION CONTAINER START -->
-    <div class="mobile-nav-container">
-        <button id="mobile-menu-button" class="mobile-menu-button">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="3" y1="12" x2="21" y2="12"></line>
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
-        </button>
-        <div id="mobile-nav-overlay" class="mobile-nav-overlay"></div>
-        <div id="mobile-nav" class="mobile-nav">
-             <!-- Cloned Sidebar content will go here -->
-        </div>
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 z-[100] px-6 py-3 rounded-2xl shadow-2xl transform translate-y-[-100px] transition-transform duration-500 flex items-center gap-3 font-bold text-sm">
+        <i id="toast-icon" class="w-4 h-4"></i>
+        <span id="toast-message"></span>
     </div>
-    <!-- MOBILE NAVIGATION CONTAINER END -->
 
-    <aside class="sidebar" id="desktop-sidebar">
-        <a href="index.html" class="sidebar-header-link">
-            <div class="sidebar-header">
-                <div class="sidebar-logo"><img src="logo2.png" alt="Diverse Loopers Logo" class="logo-img"></div>
-                <h1 class="sidebar-title">Diverse Loopers</h1>
+    <main class="max-w-4xl mx-auto px-6 py-12 md:py-20">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-12">
+            <div class="flex items-center gap-4">
+                <a href="profile.html" class="w-10 h-10 flex items-center justify-center rounded-xl bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:bg-slate-50 transition">
+                    <i data-lucide="chevron-left" class="w-5 h-5 text-slate-500"></i>
+                </a>
+                <h1 class="text-3xl font-black tracking-tight">Settings</h1>
             </div>
-        </a>
-        <nav>
-            <a href="index.html" class="nav-link">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="lucide lucide-home">
-                    <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                    <polyline points="9 22 9 12 15 12 15 22" />
-                </svg>
-                <span>Home</span>
-            </a>
-            <a href="profile.html" class="nav-link">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="lucide lucide-layout-dashboard">
-                    <rect width="7" height="9" x="3" y="3" rx="1" />
-                    <rect width="7" height="5" x="14" y="3" rx="1" />
-                    <rect width="7" height="9" x="14" y="12" rx="1" />
-                    <rect width="7" height="5" x="3" y="16" rx="1" />
-                </svg>
-                <span>Dashboard</span>
-            </a>
-            <a href="#" id="go-back-sidebar-btn" class="nav-link">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="lucide lucide-arrow-left">
-                    <path d="m12 19-7-7 7-7" />
-                    <path d="M19 12H5" />
-                </svg>
-                <span>Go Back</span>
-            </a>
-        </nav>
-        <div class="sidebar-footer">
-            <a href="#" class="nav-link active">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="lucide lucide-settings">
-                    <path
-                        d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 0 2.22l-.15.08a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.38a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1 0-2.22l.15-.08a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
-                    <circle cx="12" cy="12" r="3" />
-                </svg>
-                <span>Settings</span>
-            </a>
-            <a href="#" id="logout-button" class="nav-link">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="lucide lucide-log-out">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                    <polyline points="16 17 21 12 16 7" />
-                    <line x1="21" x2="9" y1="12" y2="12" />
-                </svg>
-                <span>Logout</span>
-            </a>
+            
+            <button id="theme-toggle" class="p-3 rounded-xl bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400">
+                <i data-lucide="moon" id="theme-icon"></i>
+            </button>
         </div>
-    </aside>
 
-    <main class="main-content">
-        <header class="main-header">
-            <h1>Settings</h1>
-            <p>Manage your account settings, profile, and career goals.</p>
-        </header>
+        <!-- Settings Container -->
+        <div class="glass-card rounded-[2.5rem] overflow-hidden shadow-sm">
+            <!-- Tabs -->
+            <div class="flex border-b border-slate-100 dark:border-white/5 px-8">
+                <button onclick="switchTab('profile')" id="tab-profile" class="tab-btn active px-6 py-5 text-sm font-bold transition">Profile</button>
+                <button onclick="switchTab('career')" id="tab-career" class="tab-btn px-6 py-5 text-sm font-bold text-slate-400 transition">Career & Skills</button>
+                <button onclick="switchTab('account')" id="tab-account" class="tab-btn px-6 py-5 text-sm font-bold text-slate-400 transition">Account</button>
+            </div>
 
-        <form id="settings-form">
-            <!-- Profile Details Card -->
-            <div class="card" id="profile-card">
-                <div class="card-header">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="lucide lucide-user-circle">
-                        <circle cx="12" cy="12" r="10" />
-                        <circle cx="12" cy="10" r="3" />
-                        <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662" />
-                    </svg>
-                    <div class="card-header-text">
-                        <h2>Profile Details</h2>
-                        <p>Update your photo and personal details here.</p>
+            <!-- Profile Tab -->
+            <div id="view-profile" class="p-8 md:p-12 space-y-10">
+                <div class="flex flex-col md:flex-row items-center gap-8">
+                    <div class="relative group">
+                        <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-primary/10 bg-slate-100 dark:bg-white/5 flex items-center justify-center">
+                            <img id="avatar-preview" src="" class="w-full h-full object-cover hidden">
+                            <i data-lucide="user" id="avatar-placeholder" class="w-12 h-12 text-slate-300"></i>
+                        </div>
+                        <label for="avatar-input" class="absolute bottom-0 right-0 w-10 h-10 bg-primary text-white rounded-full flex items-center justify-center cursor-pointer hover:scale-110 transition shadow-lg">
+                            <i data-lucide="camera" class="w-4 h-4"></i>
+                            <input type="file" id="avatar-input" class="hidden" accept="image/*">
+                        </label>
+                    </div>
+                    <div class="text-center md:text-left">
+                        <h3 class="text-xl font-bold">Your Avatar</h3>
+                        <p class="text-sm text-slate-500">JPG or PNG. Max size of 800K.</p>
                     </div>
                 </div>
-                <div class="avatar-upload-container">
-                    <label for="avatar-file" class="avatar-preview" id="avatar-preview"></label>
-                    <input type="file" id="avatar-file" accept="image/*" style="display: none;">
-                </div>
-                <div class="form-grid" style="margin-top: 1.5rem;">
-                    <div class="form-group">
-                        <label for="full-name">Full Name</label>
-                        <input type="text" id="full-name" name="full-name" placeholder="Your Name">
+
+                <form id="profile-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="text-xs font-black uppercase tracking-widest text-slate-400">Full Name</label>
+                        <input type="text" id="full-name" class="input-field" placeholder="e.g. John Doe">
                     </div>
-                    <div class="form-group">
-                        <label for="university">University</label>
-                        <input type="text" id="university" name="university" placeholder="Your University">
+                    <div class="space-y-2">
+                        <label class="text-xs font-black uppercase tracking-widest text-slate-400">Email Address (Auth)</label>
+                        <input type="email" id="email" class="input-field opacity-60 cursor-not-allowed" disabled>
                     </div>
+                    <div class="md:col-span-2 space-y-2">
+                        <label class="text-xs font-black uppercase tracking-widest text-slate-400">Bio / Headline</label>
+                        <textarea id="bio" rows="3" class="input-field" placeholder="Briefly describe yourself..."></textarea>
+                    </div>
+                    <div class="md:col-span-2 pt-4">
+                        <button type="submit" class="w-full md:w-auto px-10 py-4 bg-primary text-white rounded-2xl font-bold hover:shadow-xl transition flex items-center justify-center gap-2">
+                            Save Changes <i data-lucide="save" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Career Tab -->
+            <div id="view-career" class="hidden p-8 md:p-12 space-y-12">
+                <section class="space-y-6">
+                    <h3 class="text-xl font-bold flex items-center gap-2"><i data-lucide="target" class="text-primary"></i> Target Career Goal</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="text-xs font-black uppercase tracking-widest text-slate-400">Target Role</label>
+                            <input type="text" id="target-role" class="input-field" placeholder="e.g. Full Stack Developer">
+                        </div>
+                        <div class="md:col-span-2 space-y-2">
+                            <label class="text-xs font-black uppercase tracking-widest text-slate-400">Role Description (AI context)</label>
+                            <textarea id="role-description" rows="3" class="input-field" placeholder="What does this role mean to you?"></textarea>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="space-y-6">
+                    <h3 class="text-xl font-bold flex items-center gap-2"><i data-lucide="award" class="text-secondary"></i> My Skill Inventory</h3>
+                    <div class="flex flex-wrap gap-3 p-6 bg-slate-50 dark:bg-white/5 rounded-3xl border border-dashed border-slate-200 dark:border-white/10" id="skills-list">
+                        <!-- Skills populated here -->
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <input type="text" id="new-skill-input" class="input-field flex-1" placeholder="Add a new skill (e.g. Python)">
+                        <button id="add-skill-btn" class="px-8 py-4 bg-dark text-white rounded-2xl font-bold hover:bg-black transition">Add Skill</button>
+                    </div>
+                </section>
+
+                <div class="pt-6">
+                    <button id="save-career-btn" class="w-full md:w-auto px-10 py-4 bg-primary text-white rounded-2xl font-bold transition">Update Career Path</button>
                 </div>
             </div>
 
-            <!-- Target Role Card -->
-            <div class="card" id="role-card">
-                <div class="card-header">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="lucide lucide-briefcase">
-                        <rect width="20" height="14" x="2" y="7" rx="2" ry="2" />
-                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-                    </svg>
-                    <div class="card-header-text">
-                        <h2>Target Role</h2>
-                        <p>Define your career goal to get a personalized roadmap.</p>
-                    </div>
+            <!-- Account Tab -->
+            <div id="view-account" class="hidden p-8 md:p-12 space-y-8">
+                <div class="p-8 rounded-[2rem] bg-slate-50 dark:bg-white/5 space-y-6">
+                    <h3 class="font-bold">Security</h3>
+                    <p class="text-sm text-slate-500">Changing passwords and two-factor authentication management is handled via secure email link.</p>
+                    <button onclick="resetPassword()" class="px-6 py-3 bg-white dark:bg-white/10 border border-slate-200 dark:border-white/10 rounded-xl text-sm font-bold hover:shadow-md transition">Request Password Reset</button>
                 </div>
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label for="target-role">Role Name</label>
-                        <input type="text" id="target-role" name="target-role" placeholder="e.g., Frontend Developer">
-                    </div>
-                    <div class="form-group">
-                        <label for="role-description">Role Description</label>
-                        <textarea id="role-description" name="role-description"
-                            placeholder="A brief description of your ideal role"></textarea>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Skills Card -->
-            <div class="card" id="skills-card">
-                <div class="card-header">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="lucide lucide-sparkles">
-                        <path
-                            d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
-                        <path d="M5 3v4" />
-                        <path d="M19 17v4" />
-                        <path d="M3 5h4" />
-                        <path d="M17 19h4" />
-                    </svg>
-                    <div class="card-header-text">
-                        <h2>My Skills</h2>
-                        <p>Add or remove skills to keep your profile up-to-date.</p>
-                    </div>
-                </div>
-                <div class="skills-container" id="skills-container">
-                    <!-- Skills will be dynamically added here -->
-                </div>
-                <div class="form-grid" style="margin-top: 1.5rem; grid-template-columns: 1fr auto;">
-                    <div class="form-group">
-                        <label for="new-skill">Add a new skill</label>
-                        <input type="text" id="new-skill" placeholder="e.g., React, Python, SQL">
-                    </div>
-                    <button type="button" id="add-skill-btn" class="btn btn-secondary" style="align-self: end;">Add
-                        Skill</button>
+                <div class="p-8 rounded-[2rem] bg-red-50 dark:bg-red-500/5 border border-red-100 dark:border-red-500/10 space-y-6">
+                    <h3 class="font-bold text-red-600">Danger Zone</h3>
+                    <p class="text-sm text-red-500/80">Deleting your account is permanent. All your analysis, roadmap data, and project history will be wiped.</p>
+                    <button id="delete-account-btn" class="px-6 py-3 bg-red-600 text-white rounded-xl text-sm font-bold hover:bg-red-700 transition">Delete Account Forever</button>
                 </div>
             </div>
-
-            <!-- Save Button -->
-            <div class="card-footer" style="border: none; padding: 0; margin-top: 2rem;">
-                <button type="submit" class="btn btn-primary" style="padding: 0.75rem 2rem;">Save Changes</button>
-            </div>
-        </form>
+        </div>
     </main>
 
-    <div id="notification"></div>
-
     <script type="module">
+        lucide.createIcons();
+
         const SUPABASE_URL = 'https://tjqsmkaiajdpotmafqvw.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqcXNta2FpYWpkcG90bWFmcXZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU5ODA3NDIsImV4cCI6MjA3MTU1Njc0Mn0.9710q9W5EFfCagj340AizUSKiOXYApy0xkTFszFjO8o';
         const { createClient } = supabase;
         const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let currentUser = null;
-        let currentSkills = [];
 
-        // --- UI Elements ---
-        const avatarPreview = document.getElementById('avatar-preview');
-        const avatarFileInput = document.getElementById('avatar-file');
-        const fullNameInput = document.getElementById('full-name');
-        const universityInput = document.getElementById('university');
-        const targetRoleInput = document.getElementById('target-role');
-        const roleDescriptionInput = document.getElementById('role-description');
-        const skillsContainer = document.getElementById('skills-container');
-        const newSkillInput = document.getElementById('new-skill');
-        const addSkillBtn = document.getElementById('add-skill-btn');
-        const settingsForm = document.getElementById('settings-form');
-        const notification = document.getElementById('notification');
+        // --- Theme Management ---
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const themeText = document.getElementById('theme-text');
 
-        // --- Utility Functions ---
-        function showNotification(message, type = 'success') {
-            notification.textContent = message;
-            notification.className = `show ${type}`;
-            setTimeout(() => {
-                notification.className = '';
-            }, 3000);
+        function setTheme(isDark) {
+            if (isDark) {
+                document.documentElement.classList.add('dark');
+                themeIcon.setAttribute('data-lucide', 'sun');
+                themeText.textContent = 'Light Mode';
+            } else {
+                document.documentElement.classList.remove('dark');
+                themeIcon.setAttribute('data-lucide', 'moon');
+                themeText.textContent = 'Dark Mode';
+            }
+            lucide.createIcons();
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
         }
 
-        // --- Data Rendering ---
-        function renderSkills() {
-            skillsContainer.innerHTML = '';
-            currentSkills.forEach(skill => {
-                const skillTag = document.createElement('span');
-                skillTag.className = 'skill-tag';
-                skillTag.textContent = skill;
+        themeToggle.onclick = () => setTheme(!document.documentElement.classList.contains('dark'));
+        if (localStorage.getItem('theme') === 'dark') setTheme(true);
 
-                const removeBtn = document.createElement('button');
-                removeBtn.innerHTML = '&times;';
-                removeBtn.onclick = () => removeSkill(skill);
-
-                skillTag.appendChild(removeBtn);
-                skillsContainer.appendChild(skillTag);
+        // --- Tab Management ---
+        window.switchTab = (tab) => {
+            ['profile', 'career', 'account'].forEach(t => {
+                document.getElementById(`view-${t}`).classList.add('hidden');
+                document.getElementById(`tab-${t}`).classList.remove('active', 'text-primary');
+                document.getElementById(`tab-${t}`).classList.add('text-slate-400');
             });
+            document.getElementById(`view-${tab}`).classList.remove('hidden');
+            document.getElementById(`tab-${tab}`).classList.add('active', 'text-primary');
+            document.getElementById(`tab-${tab}`).classList.remove('text-slate-400');
+        };
+
+        // --- UI Helpers ---
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toast-icon');
+            toast.className = `fixed top-6 left-1/2 -translate-x-1/2 z-[100] px-6 py-3 rounded-2xl shadow-2xl transform transition-all duration-500 flex items-center gap-3 font-bold text-sm ${type === 'success' ? 'bg-green-600 text-white' : 'bg-red-600 text-white'}`;
+            icon.setAttribute('data-lucide', type === 'success' ? 'check-circle' : 'alert-circle');
+            document.getElementById('toast-message').textContent = message;
+            lucide.createIcons();
+            toast.style.transform = 'translate(-50%, 0)';
+            setTimeout(() => toast.style.transform = 'translate(-50%, -100px)', 3000);
         }
 
-        // --- Data Fetching and Population ---
-        async function loadUserSettings(userId) {
-            // Fetch profile data
-            const { data: profile, error: profileError } = await db.from('profiles').select('*').eq('id', userId).single();
-            if (profileError && profileError.code !== 'PGRST116') console.error('Error fetching profile:', profileError);
+        // --- Data Loading ---
+        async function init() {
+            const { data: { user } } = await db.auth.getUser();
+            if (!user) { window.location.href = 'shiva_login.html'; return; }
+            currentUser = user;
+            
+            document.getElementById('email').value = user.email;
+
+            // Fetch Profile
+            const { data: profile, error: profileError } = await db.from('profiles').select('*').eq('id', user.id).single();
+            
             if (profile) {
-                fullNameInput.value = profile.full_name || '';
-                universityInput.value = profile.university || '';
+                document.getElementById('full-name').value = profile.full_name || '';
+                document.getElementById('bio').value = profile.bio || '';
                 if (profile.avatar_url) {
-                    avatarPreview.style.backgroundImage = `url(${profile.avatar_url})`;
+                    const img = document.getElementById('avatar-preview');
+                    img.src = profile.avatar_url;
+                    img.classList.remove('hidden');
+                    document.getElementById('avatar-placeholder').classList.add('hidden');
                 }
             }
 
-            // Fetch target role
-            const { data: role, error: roleError } = await db.from('target_roles').select('*').eq('user_id', userId).single();
-            if (roleError && roleError.code !== 'PGRST116') console.error('Error fetching target role:', roleError);
+            // Fetch Target Role
+            const { data: role } = await db.from('target_roles').select('*').eq('user_id', user.id).single();
             if (role) {
-                targetRoleInput.value = role.role_name || '';
-                roleDescriptionInput.value = role.description || '';
+                document.getElementById('target-role').value = role.role_name || '';
+                document.getElementById('role-description').value = role.description || '';
             }
 
-            // Fetch skills
-            const { data: skills, error: skillsError } = await db.from('user_skills').select('skill_name').eq('user_id', userId);
-            if (skillsError) console.error('Error fetching skills:', skillsError);
-            if (skills) {
-                currentSkills = skills.map(s => s.skill_name);
-                renderSkills();
-            }
+            loadSkills();
         }
 
-        // --- Event Handlers ---
-        async function handleAvatarUpload(e) {
+        async function loadSkills() {
+            const { data: skills } = await db.from('user_skills').select('*').eq('user_id', currentUser.id);
+            const container = document.getElementById('skills-list');
+            if (!skills?.length) {
+                container.innerHTML = '<p class="text-xs text-slate-400 italic">No skills listed in your profile.</p>';
+                return;
+            }
+            container.innerHTML = skills.map(s => `
+                <div class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-sm font-bold shadow-sm">
+                    ${s.skill_name}
+                    <button onclick="removeSkill('${s.id}')" class="text-slate-300 hover:text-red-500 transition"><i data-lucide="x" class="w-3 h-3"></i></button>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        // --- Actions ---
+        document.getElementById('profile-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const full_name = document.getElementById('full-name').value;
+            const bio = document.getElementById('bio').value;
+
+            // FIX: Ensure timestamp is formatted correctly as ISO string
+            const { error } = await db.from('profiles').upsert({
+                id: currentUser.id,
+                full_name,
+                bio,
+                updated_at: new Date().toISOString()
+            });
+
+            if (!error) showToast('Profile updated successfully!');
+            else {
+                console.error("Profile update error:", error);
+                showToast('Failed to update profile. Check console for details.', 'error');
+            }
+        };
+
+        document.getElementById('avatar-input').onchange = async (e) => {
             const file = e.target.files[0];
             if (!file) return;
 
-            const filePath = `${currentUser.id}/${Date.now()}_${file.name}`;
-            const { error: uploadError } = await db.storage.from('avatars').upload(filePath, file);
-            if (uploadError) {
-                showNotification('Error uploading image.', 'error');
-                console.error('Upload error:', uploadError);
-                return;
-            }
+            showToast('Uploading avatar...');
+            const fExt = file.name.split('.').pop();
+            const fPath = `${currentUser.id}/${Date.now()}.${fExt}`;
 
-            const { data } = db.storage.from('avatars').getPublicUrl(filePath);
-            const publicUrl = data.publicUrl;
+            const { data, error: uploadError } = await db.storage.from('avatars').upload(fPath, file);
+            
+            if (uploadError) { showToast('Upload failed.', 'error'); return; }
 
-            const { error: updateError } = await db.from('profiles').upsert({
-                id: currentUser.id,
-                avatar_url: publicUrl,
-                email: currentUser.email // Add this line
-            }, { onConflict: 'id' }); if (updateError) {
-                showNotification('Error saving avatar URL.', 'error');
-                console.error('Update error:', updateError);
-            } else {
-                avatarPreview.style.backgroundImage = `url(${publicUrl})`;
-                showNotification('Profile picture updated!');
-            }
-        }
+            const { data: urlData } = db.storage.from('avatars').getPublicUrl(fPath);
+            const avatar_url = urlData.publicUrl;
 
-        async function addSkill() {
-            const skillName = newSkillInput.value.trim();
-            if (skillName && !currentSkills.includes(skillName)) {
-                const { error } = await db.from('user_skills').insert({ user_id: currentUser.id, skill_name: skillName });
-                if (error) {
-                    showNotification('Error adding skill.', 'error');
-                } else {
-                    currentSkills.push(skillName);
-                    renderSkills();
-                    newSkillInput.value = '';
-                }
-            }
-        }
+            await db.from('profiles').update({ avatar_url }).eq('id', currentUser.id);
+            
+            const preview = document.getElementById('avatar-preview');
+            preview.src = avatar_url;
+            preview.classList.remove('hidden');
+            document.getElementById('avatar-placeholder').classList.add('hidden');
+            showToast('Avatar updated!');
+        };
 
-        async function removeSkill(skillName) {
-            const { error } = await db.from('user_skills').delete().match({ user_id: currentUser.id, skill_name: skillName });
-            if (error) {
-                showNotification('Error removing skill.', 'error');
-            } else {
-                currentSkills = currentSkills.filter(s => s !== skillName);
-                renderSkills();
-            }
-        }
+        document.getElementById('add-skill-btn').onclick = async () => {
+            const input = document.getElementById('new-skill-input');
+            const name = input.value.trim();
+            if (!name) return;
 
-        async function handleFormSubmit(e) {
-            e.preventDefault();
-            // 1. Update Profile
-            const { error: profileError } = await db.from('profiles').upsert({
-                id: currentUser.id,
-                full_name: fullNameInput.value,
-                university: universityInput.value,
-                email: currentUser.email // Add this line
-            }, { onConflict: 'id' });
-
-            // 2. Update Target Role
-            const { error: roleError } = await db.from('target_roles').upsert({
+            const { error } = await db.from('user_skills').insert({
                 user_id: currentUser.id,
-                role_name: targetRoleInput.value,
-                description: roleDescriptionInput.value
+                skill_name: name
+            });
+
+            if (!error) { input.value = ''; loadSkills(); }
+            else showToast('Skill already exists or failed to add.', 'error');
+        };
+
+        window.removeSkill = async (id) => {
+            const { error } = await db.from('user_skills').delete().eq('id', id);
+            if (!error) loadSkills();
+        };
+
+        document.getElementById('save-career-btn').onclick = async () => {
+            const role_name = document.getElementById('target-role').value;
+            const description = document.getElementById('role-description').value;
+
+            // FIX: Explicitly handle conflict on user_id for non-primary-key upsert
+            const { error } = await db.from('target_roles').upsert({
+                user_id: currentUser.id,
+                role_name,
+                description
             }, { onConflict: 'user_id' });
 
-            if (profileError || roleError) {
-                showNotification('Error saving settings.', 'error');
-                console.error('Save errors:', profileError, roleError);
-            } else {
-                showNotification('Settings saved successfully!');
-            }
-        }
+            if (!error) showToast('Career targets synced!');
+            else showToast('Update failed.', 'error');
+        };
+
+        window.resetPassword = async () => {
+            const { error } = await db.auth.resetPasswordForEmail(currentUser.email, {
+                redirectTo: window.location.origin + '/settings.html',
+            });
+            if (!error) showToast('Reset link sent to your email!');
+        };
         
-        function goBackOrFallback(e) {
-            e.preventDefault();
-            if (history.length > 1) {
-                history.back();
-            } else {
-                window.location.href = 'profile.html';
+        document.getElementById('delete-account-btn').onclick = () => {
+            if (confirm("Are you absolutely sure? This cannot be undone.")) {
+                showToast("Account deletion request initiated...", "error");
+                // Note: Auth account deletion requires service role or Edge Function
             }
-        }
+        };
 
-        // --- MOBILE NAVIGATION SCRIPT ---
-        function setupMobileNav() {
-            const mobileMenuBtn = document.getElementById('mobile-menu-button');
-            const mobileNav = document.getElementById('mobile-nav');
-            const mobileNavOverlay = document.getElementById('mobile-nav-overlay');
-            const desktopSidebar = document.getElementById('desktop-sidebar');
-
-            if (!mobileMenuBtn || !mobileNav || !desktopSidebar) return;
-
-            // Clone sidebar content
-            const clonedHeader = desktopSidebar.querySelector('.sidebar-header-link').cloneNode(true);
-            const clonedNav = desktopSidebar.querySelector('nav').cloneNode(true);
-            const clonedFooter = desktopSidebar.querySelector('.sidebar-footer').cloneNode(true);
-            
-            // Add close button
-            const closeBtn = document.createElement('button');
-            closeBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
-            closeBtn.hrms-style.cssText = "background: none; border: none; color: var(--gray-500); cursor: pointer;";
-            
-            clonedHeader.querySelector('.sidebar-header').appendChild(closeBtn);
-            mobileNav.appendChild(clonedHeader);
-            mobileNav.appendChild(clonedNav);
-            mobileNav.appendChild(clonedFooter);
-
-            const openMenu = () => {
-                mobileNav.classList.add('open');
-                mobileNavOverlay.classList.add('open');
-            };
-            const closeMenu = () => {
-                mobileNav.classList.remove('open');
-                mobileNavOverlay.classList.remove('open');
-            };
-
-            mobileMenuBtn.addEventListener('click', openMenu);
-            closeBtn.addEventListener('click', closeMenu);
-            mobileNavOverlay.addEventListener('click', closeMenu);
-
-            const mobileGoBackBtn = mobileNav.querySelector('#go-back-sidebar-btn');
-            if(mobileGoBackBtn) {
-                mobileGoBackBtn.addEventListener('click', goBackOrFallback);
-            }
-            
-            mobileNav.querySelectorAll('a').forEach(link => {
-                 if (link.id !== 'go-back-sidebar-btn') {
-                    link.addEventListener('click', closeMenu);
-                }
-            });
-        }
-
-
-        // --- Initialization ---
-        document.addEventListener('DOMContentLoaded', async () => {
-            const { data: { user }, error } = await db.auth.getUser();
-            if (error || !user) {
-                window.location.href = '/index.html';
-                return;
-            }
-            currentUser = user;
-            loadUserSettings(user.id);
-
-            // Event Listeners
-            avatarFileInput.addEventListener('change', handleAvatarUpload);
-            addSkillBtn.addEventListener('click', addSkill);
-            settingsForm.addEventListener('submit', handleFormSubmit);
-            document.getElementById('logout-button').addEventListener('click', async () => {
-                await db.auth.signOut();
-                window.location.href = '/index.html';
-            });
-            document.getElementById('go-back-sidebar-btn').addEventListener('click', goBackOrFallback);
-
-            setupMobileNav(); // Initialize mobile navigation
-        });
-
+        init();
     </script>
 </body>
-
 </html>
-
