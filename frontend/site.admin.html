@@ -490,12 +490,12 @@
         // --- Auth Guard ---
         async function checkAuth() {
             const { data: { user } } = await db.auth.getUser();
-            if (!user) { window.location.href = 'shiva_login.html'; return; }
+            if (!user) { window.location.href = 'admin.html'; return; }
 
             const { data: adminCheck } = await db.from('admin_list').select('user_id').eq('user_id', user.id).limit(1);
             if (!adminCheck || adminCheck.length === 0) {
                 await db.auth.signOut();
-                window.location.href = 'shiva_login.html';
+                window.location.href = 'admin.html';
                 return;
             }
             switchView('dashboard');
@@ -783,7 +783,7 @@
 
         document.getElementById('logout-button').onclick = async () => {
             await db.auth.signOut();
-            window.location.href = 'shiva_login.html';
+            window.location.href = 'admin.html';
         };
 
         checkAuth();

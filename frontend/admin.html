@@ -274,7 +274,7 @@
                 } else if (adminCheck) {
                     // Success: User is authenticated AND authorized!
                     console.log(`Admin access granted for UUID: ${user.id}`);
-                    window.location.href = 'shiva.html'; // Redirect to the dashboard
+                    window.location.href = 'site.admin.html'; // Redirect to the dashboard
                 } else {
                     // Should not happen, but safe fallback
                     await db.auth.signOut();
