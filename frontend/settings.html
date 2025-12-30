@@ -265,7 +265,7 @@
         // --- Data Loading ---
         async function init() {
             const { data: { user } } = await db.auth.getUser();
-            if (!user) { window.location.href = 'shiva_login.html'; return; }
+            if (!user) { window.location.href = 'login.html'; return; }
             currentUser = user;
             
             document.getElementById('email').value = user.email;
