@@ -3,300 +3,51 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale-1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Diverse Loopers</title>
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <!-- 1. Add Supabase JS Library -->
-     <link rel="icon" type="image/png" href="/https://diverseloopers.com/my-favicon/favicon.ico, enter /my-favicon/favicon-96x96.png" sizes="96x96" />
-<link rel="icon" type="image/svg+xml" href="/https://diverseloopers.com/my-favicon/favicon.ico, enter /my-favicon/favicon.svg" />
-<link rel="shortcut icon" href="/https://diverseloopers.com/my-favicon/favicon.ico, enter /my-favicon/favicon.ico" />
-<link rel="apple-touch-icon" sizes="180x180" href="/https://diverseloopers.com/my-favicon/favicon.ico, enter /my-favicon/apple-touch-icon.png" />
-<meta name="apple-mobile-web-app-title" content="DLPT" />
-<link rel="manifest" href="/https://diverseloopers.com/my-favicon/favicon.ico, enter /my-favicon/site.webmanifest" />
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        /* All existing CSS styles remain the same */
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
 
-        :root {
-            --color-primary: #3b82f6;
-            --color-secondary: #ec4899;
-        }
+    <!-- Font Awesome & BoxIcons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/png"
+        href="/https://diverseloopers.com/my-favicon/favicon.ico, enter /my-favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml"
+        href="/https://diverseloopers.com/my-favicon/favicon.ico, enter /my-favicon/favicon.svg" />
+    <link rel="shortcut icon"
+        href="/https://diverseloopers.com/my-favicon/favicon.ico, enter /my-favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180"
+        href="/https://diverseloopers.com/my-favicon/favicon.ico, enter /my-favicon/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="DLPT" />
+    <link rel="manifest"
+        href="/https://diverseloopers.com/my-favicon/favicon.ico, enter /my-favicon/site.webmanifest" />
+
+    <!-- Supabase JS Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
         }
 
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
             background: #0a0a2a;
-            overflow: hidden;
-        }
-
-        .wrapper {
-            position: relative;
-            width: 400px;
-            height: 500px;
-            background: rgba(255, 255, 255, .1);
-            backdrop-filter: blur(30px);
-            border: 2px solid rgba(255, 255, 255, .2);
-            border-radius: 16px;
-            box-shadow: 0 0 50px rgba(0, 0, 0, .2);
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
-            transition: height .3s ease;
+            flex-direction: column;
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+            overflow-x: hidden;
         }
 
-        .wrapper::before,
-        .wrapper::after {
-            content: '';
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            background: var(--color-primary);
-            opacity: 0.5;
-            filter: blur(60px);
-            z-index: -1;
-            animation: moveBlob1 15s infinite linear;
-        }
-
-        .wrapper::after {
-            width: 250px;
-            height: 250px;
-            background: var(--color-secondary);
-            animation: moveBlob2 15s infinite linear;
-            animation-delay: -7.5s;
-        }
-
-        @keyframes moveBlob1 {
-
-            0%,
-            100% {
-                transform: translate(-150%, -150%) scale(1);
-            }
-
-            25% {
-                transform: translate(50%, -150%) scale(1.2);
-            }
-
-            50% {
-                transform: translate(50%, 50%) scale(0.8);
-            }
-
-            75% {
-                transform: translate(-150%, 50%) scale(1.1);
-            }
-        }
-
-        @keyframes moveBlob2 {
-
-            0%,
-            100% {
-                transform: translate(50%, 50%) scale(1);
-            }
-
-            25% {
-                transform: translate(-150%, 50%) scale(0.8);
-            }
-
-            50% {
-                transform: translate(-150%, -150%) scale(1.2);
-            }
-
-            75% {
-                transform: translate(50%, -150%) scale(0.9);
-            }
-        }
-
-
-
-        .wrapper .form-box {
-            width: 100%;
-            padding: 40px;
-        }
-
-
-
-        .wrapper.active-register {
-            height: 550px;
-        }
-
-        .wrapper.active-otp {
-            height: 350px;
-        }
-
-        .wrapper .form-box {
-            width: 100%;
-            padding: 40px;
-            transition: transform .3s ease, opacity .3s ease;
-            position: absolute;
-        }
-
-        .form-box.login {
-            transform: translateX(0);
-            opacity: 1;
-        }
-
-        .wrapper.active-register .form-box.login,
-        .wrapper.active-otp .form-box.login {
-            transform: translateX(-400px);
-            opacity: 0;
-        }
-
-        .form-box.register {
-            transform: translateX(400px);
-            opacity: 0;
-        }
-
-        .wrapper.active-register .form-box.register {
-            transform: translateX(0);
-            opacity: 1;
-        }
-
-        .form-box.otp {
-            transform: translateX(400px);
-            opacity: 0;
-        }
-
-        .wrapper.active-otp .form-box.otp {
-            transform: translateX(0);
-            opacity: 1;
-        }
-
-        .wrapper .form-box.register {
-            position: absolute;
-            transition: none;
-            transform: translateX(400px);
-        }
-
-        .wrapper.active .form-box.register {
-            transition: transform .18s ease;
-            transform: translateX(0);
-        }
-
-        .form-box h2 {
-            font-size: 2em;
-            color: #fff;
-            text-align: center;
-        }
-
-        .input-box {
-            position: relative;
-            width: 100%;
-            height: 50px;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.5);
-            margin: 30px 0;
-        }
-
-        .input-box label {
-            position: absolute;
-            top: 50%;
-            left: 5px;
-            transform: translateY(-50%);
-            font-size: 1em;
-            color: #fff;
-            font-weight: 500;
-            pointer-events: none;
-            transition: .5s;
-        }
-
-        .input-box input:focus~label,
-        .input-box input:valid~label {
-            top: -5px;
-        }
-
-        .input-box input {
-            width: 100%;
-            height: 100%;
-            background: transparent;
-            border: none;
-            outline: none;
-            font-size: 1em;
-            color: #fff;
-            font-weight: 600;
-            padding: 0 35px 0 5px;
-        }
-
-        .input-box .icon {
-            position: absolute;
-            right: 8px;
-            font-size: 1.2em;
-            color: #fff;
-            line-height: 57px;
-        }
-
-        .remember-forgot {
-            font-size: .9em;
-            color: #fff;
-            font-weight: 500;
-            margin: -15px 0 15px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .remember-forgot label input {
-            accent-color: var(--color-primary);
-            margin-right: 3px;
-        }
-
-        .remember-forgot a {
-            color: #fff;
-            text-decoration: none;
-        }
-
-        .remember-forgot a:hover {
-            text-decoration: underline;
-        }
-
-        .btn {
-            width: 100%;
-            height: 45px;
-            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
-            border: none;
-            outline: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1em;
-            color: #fff;
-            font-weight: 600;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .login-register {
-            font-size: .9em;
-            color: #fff;
-            text-align: center;
-            font-weight: 500;
-            margin: 25px 0 10px;
-        }
-
-        .login-register p a {
-            color: #fff;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .login-register p a:hover {
-            text-decoration: underline;
-        }
-
+        /* Nav Links */
         .home-link {
             position: absolute;
             top: 30px;
@@ -307,13 +58,13 @@
             text-decoration: none;
             color: #fff;
             font-weight: 600;
-            font-size: 1.3em;
+            font-size: 1.2em;
             z-index: 10;
         }
 
         .home-link img {
-            width: 50px;
-            height: 50px;
+            width: 130px;
+            height: 58px;
         }
 
         .back-link {
@@ -325,36 +76,275 @@
             gap: 8px;
             text-decoration: none;
             color: #fff;
-            font-weight: 600;
-            font-size: 1.1em;
+            font-weight: 500;
+            font-size: 1em;
             z-index: 10;
             padding: 8px 16px;
-            border: 2px solid rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             border-radius: 50px;
-            transition: background-color 0.3s, border-color 0.3s;
+            transition: all 0.3s ease;
         }
 
         .back-link:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #fff;
         }
 
-        .back-link i {
-            font-size: 1.2em;
+        /* Auth Container */
+        .auth-wrapper {
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+            width: 850px;
+            max-width: 100%;
+            min-height: 550px;
+            margin-top: 40px;
+        }
+
+        .auth-form-box {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            transition: all 0.6s ease-in-out;
+        }
+
+        .login-form-box {
+            left: 0;
+            width: 50%;
+            z-index: 2;
+        }
+
+        .auth-wrapper.panel-active .login-form-box {
+            transform: translateX(100%);
+        }
+
+        .register-form-box {
+            left: 0;
+            width: 50%;
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .auth-wrapper.panel-active .register-form-box {
+            transform: translateX(100%);
+            opacity: 1;
+            z-index: 5;
+            animation: show 0.6s;
+        }
+
+        @keyframes show {
+
+            0%,
+            49.99% {
+                opacity: 0;
+                z-index: 1;
+            }
+
+            50%,
+            100% {
+                opacity: 1;
+                z-index: 5;
+            }
+        }
+
+        /* Sliding Panel */
+        .slide-panel-wrapper {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 50%;
+            height: 100%;
+            overflow: hidden;
+            transition: transform 0.6s ease-in-out;
+            z-index: 100;
+        }
+
+        .auth-wrapper.panel-active .slide-panel-wrapper {
+            transform: translateX(-100%);
+        }
+
+        .slide-panel {
+            background: linear-gradient(135deg, #3b82f6 0%, #ec4899 100%);
+            color: #FFFFFF;
+            position: relative;
+            left: -100%;
+            height: 100%;
+            width: 200%;
+            transform: translateX(0);
+            transition: transform 0.6s ease-in-out;
+        }
+
+        .auth-wrapper.panel-active .slide-panel {
+            transform: translateX(50%);
+        }
+
+        .panel-content {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 0 40px;
+            text-align: center;
+            top: 0;
+            height: 100%;
+            width: 50%;
+            transition: transform 0.6s ease-in-out;
+        }
+
+        .panel-content-left {
+            transform: translateX(-20%);
+        }
+
+        .auth-wrapper.panel-active .panel-content-left {
+            transform: translateX(0);
+        }
+
+        .panel-content-right {
+            right: 0;
+            transform: translateX(0);
+        }
+
+        .auth-wrapper.panel-active .panel-content-right {
+            transform: translateX(20%);
+        }
+
+        /* Typography & Forms */
+        h1 {
+            font-weight: 700;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        p {
+            font-size: 14px;
+            line-height: 20px;
+            margin: 20px 0 30px;
+        }
+
+        span {
+            font-size: 12px;
+            color: #777;
+            margin-bottom: 10px;
+        }
+
+        form {
+            background-color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 0 40px;
+            height: 100%;
+            text-align: center;
+        }
+
+        .input-group {
+            width: 100%;
+            margin: 8px 0;
+            position: relative;
+        }
+
+        input {
+            background-color: #f3f4f6;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 12px 15px;
+            width: 100%;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #3b82f6;
+            background-color: #fff;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+
+        button {
+            border-radius: 25px;
+            border: none;
+            background: linear-gradient(135deg, #3b82f6 0%, #ec4899 100%);
+            color: #FFFFFF;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 12px 45px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        button.transparent-btn {
+            background: transparent;
+            border: 1px solid #FFFFFF;
+            margin-top: 0;
+        }
+
+        .forgot-link {
+            font-size: 13px;
+            color: #666;
+            text-decoration: none;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+            color: #3b82f6;
+        }
+
+        /* Overlays */
+        #otp-overlay,
+        #forgot-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff;
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            text-align: center;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         .message-box {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
+            position: fixed;
+            top: 20px;
+            right: 20px;
             background: #22c55e;
             color: white;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border-radius: 8px;
-            z-index: 100;
+            z-index: 2000;
             opacity: 0;
-            transition: opacity 0.5s;
+            transform: translateY(-20px);
+            transition: all 0.4s ease;
+            pointer-events: none;
             font-weight: 500;
         }
 
@@ -364,77 +354,126 @@
 
         .message-box.show {
             opacity: 1;
+            transform: translateY(0);
+        }
+
+        .mobile-switch {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .auth-wrapper {
+                width: 95%;
+                min-height: 500px;
+            }
+
+            .slide-panel-wrapper {
+                display: none;
+            }
+
+            .login-form-box,
+            .register-form-box {
+                width: 100%;
+                position: relative;
+            }
+
+            .auth-wrapper.panel-active .login-form-box {
+                display: none;
+            }
+
+            .auth-wrapper:not(.panel-active) .register-form-box {
+                display: none;
+            }
+
+            .mobile-switch {
+                display: block;
+                margin-top: 20px;
+            }
+
+            .home-link span {
+                display: none;
+            }
         }
     </style>
 </head>
 
 <body>
+    <a href="index.html" class="home-link">
+        <img src="Diverse Loopers Black BG (2).png" onerror="this.src='https://via.placeholder.com/40?text=DL'"
+            alt="Logo">
+    </a>
     <a href="javascript:history.back()" class="back-link"><i class='bx bx-arrow-back'></i> Back</a>
-    <a href="index.html" class="home-link"><img src="logo2.png" alt="Logo"><span>Diverse Loopers</span></a>
 
-    <div class="wrapper">
-        <div class="form-box login">
-            <h2>Login</h2>
-            <form id="login-form">
-                <div class="input-box">
-                    <span class="icon"><i class='bx bxs-envelope'></i></span>
-                    <input type="email" id="login-email" required>
-                    <label>Email</label>
-                </div>
-                <div class="input-box">
-                    <span class="icon"><i class='bx bxs-lock-alt'></i></span>
-                    <input type="password" id="login-password" required>
-                    <label>Password</label>
-                </div>
-                <div class="remember-forgot">
-                    <label><input type="checkbox"> Remember me</label>
-                    <a href="#">Forgot Password?</a>
-                </div>
-                <button type="submit" class="btn">Login</button>
-                <div class="login-register">
-                    <p>Don't have an account? <a href="#" class="register-link">Sign Up</a></p>
-                </div>
-            </form>
-        </div>
-
-        <div class="form-box register">
-            <h2>Sign Up</h2>
+    <div class="auth-wrapper" id="authWrapper">
+        <div class="auth-form-box register-form-box">
             <form id="register-form">
-                <div class="input-box">
-                    <span class="icon"><i class='bx bxs-user'></i></span>
-                    <input type="text" id="register-username" required>
-                    <label>Username</label>
+                <h1>Create Account</h1>
+                <span>Join our professional community</span>
+                <div class="input-group"><input type="text" id="register-username" placeholder="Username" required />
                 </div>
-                <div class="input-box">
-                    <span class="icon"><i class='bx bxs-envelope'></i></span>
-                    <input type="email" id="register-email" required>
-                    <label>Email</label>
-                </div>
-                <div class="input-box">
-                    <span class="icon"><i class='bx bxs-lock-alt'></i></span>
-                    <input type="password" id="register-password" required>
-                    <label>Password</label>
-                </div>
-                <div class="remember-forgot">
-                    <label><input type="checkbox" required> I agree to the terms & conditions</label>
-                </div>
-                <button type="submit" class="btn">Sign Up</button>
-                <div class="login-register">
-                    <p>Already have an account? <a href="#" class="login-link">Login</a></p>
+                <div class="input-group"><input type="email" id="register-email" placeholder="Email" required /></div>
+                <div class="input-group"><input type="password" id="register-password" placeholder="Password"
+                        required /></div>
+                <button type="submit">Sign Up</button>
+                <div class="mobile-switch">
+                    <p>Already have an account?</p><button type="button" onclick="togglePanel(false)">Sign In</button>
                 </div>
             </form>
         </div>
-        <div class="form-box otp">
-            <h2>Verify OTP</h2>
-            <form id="otp-form">
-                <p style="color: #fff; text-align: center; margin-bottom: 20px;">An OTP has been sent to your email.
-                    Please enter it below.</p>
-                <div class="input-box">
-                    <span class="icon"><i class='bx bxs-key'></i></span>
-                    <input type="text" id="otp-token" required>
-                    <label>OTP Code</label>
+
+        <div class="auth-form-box login-form-box">
+            <form id="login-form">
+                <h1>Sign In</h1>
+                <span>Welcome back to Diverse Loopers</span>
+                <div class="input-group"><input type="email" id="login-email" placeholder="Email" required /></div>
+                <div class="input-group"><input type="password" id="login-password" placeholder="Password" required />
                 </div>
-                <button type="submit" class="btn">Verify</button>
+                <a class="forgot-link" id="forgot-password-trigger">Forgot your password?</a>
+                <button type="submit">Sign In</button>
+                <div class="mobile-switch">
+                    <p>Don't have an account?</p><button type="button" onclick="togglePanel(true)">Sign Up</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="slide-panel-wrapper">
+            <div class="slide-panel">
+                <div class="panel-content panel-content-right">
+                    <h1>Welcome Back!</h1>
+                    <p>Keep connected with us by logging into your account.</p>
+                    <button class="transparent-btn" id="registerBtn">Sign In</button>
+                </div>
+                <div class="panel-content panel-content-left">
+                    <h1>Hello there!</h1>
+                    <p>Start your journey with us and discover your potential.</p>
+                    <button class="transparent-btn" id="loginBtn">Sign Up</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Forgot Password Overlay -->
+        <div id="forgot-overlay">
+            <i class='bx bx-lock-open-alt' style="font-size: 60px; color: #ec4899; margin-bottom: 20px;"></i>
+            <h1>Reset Password</h1>
+            <p>Enter your email address to receive a password reset link.</p>
+            <form id="forgot-form" style="background: transparent; height: auto; padding: 0; width: 300px;">
+                <div class="input-group"><input type="email" id="forgot-email" placeholder="Enter your email"
+                        required /></div>
+                <button type="submit" style="width: 100%;">Send Reset Link</button>
+                <a href="#" onclick="location.reload()" class="forgot-link">Back to Login</a>
+            </form>
+        </div>
+
+        <!-- OTP Overlay -->
+        <div id="otp-overlay">
+            <i class='bx bx-mail-send' style="font-size: 60px; color: #3b82f6; margin-bottom: 20px;"></i>
+            <h1>Verify Email</h1>
+            <p>Enter the code sent to your email.</p>
+            <form id="otp-form" style="background: transparent; height: auto; padding: 0; width: 300px;">
+                <input type="text" id="otp-token" placeholder="000000" required maxlength="6"
+                    style="text-align: center; letter-spacing: 4px; font-weight: bold; font-size: 20px;" />
+                <button type="submit" style="width: 100%;">Verify</button>
+                <a href="#" onclick="location.reload()" class="forgot-link">Back</a>
             </form>
         </div>
     </div>
@@ -442,92 +481,73 @@
     <div id="message-box" class="message-box"></div>
 
     <script>
-        // --- Initialize Supabase Client ---
-        const SUPABASE_URL = 'https://tjqsmkaiajdpotmafqvw.supabase.co'; // <-- Paste your Supabase URL here
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqcXNta2FpYWpkcG90bWFmcXZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU5ODA3NDIsImV4cCI6MjA3MTU1Njc0Mn0.9710q9W5EFfCagj340AizUSKiOXYApy0xkTFszFjO8o'; // <-- Paste your Supabase Anon Key here
+        const SUPABASE_URL = 'https://tjqsmkaiajdpotmafqvw.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqcXNta2FpYWpkcG90bWFmcXZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU5ODA3NDIsImV4cCI6MjA3MTU1Njc0Mn0.9710q9W5EFfCagj340AizUSKiOXYApy0xkTFszFjO8o';
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        const { createClient } = supabase;
-        const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-        // --- DOM Elements ---
-        const wrapper = document.querySelector('.wrapper');
-        const registerLink = document.querySelector('.register-link');
-        const loginLink = document.querySelector('.login-link');
-        const loginForm = document.getElementById('login-form');
-        const registerForm = document.getElementById('register-form');
-        const otpForm = document.getElementById('otp-form');
+        const authWrapper = document.getElementById('authWrapper');
         const messageBox = document.getElementById('message-box');
-        let tempEmailForOtp = ''; // Variable to store email for OTP step
+        let tempEmailForOtp = '';
 
-        // --- UI Functions ---
-        registerLink.addEventListener('click', (e) => { e.preventDefault(); wrapper.className = 'wrapper active-register'; });
-        loginLink.addEventListener('click', (e) => { e.preventDefault(); wrapper.className = 'wrapper'; });
-
-        function showMessage(message, isError = false) {
-            messageBox.textContent = message;
-            messageBox.className = 'message-box show';
-            if (isError) messageBox.classList.add('error');
-            setTimeout(() => messageBox.classList.remove('show'), 3000);
+        function togglePanel(isRegister) {
+            isRegister ? authWrapper.classList.add("panel-active") : authWrapper.classList.remove("panel-active");
         }
 
-        // --- Supabase Auth Logic ---
-        registerForm.addEventListener('submit', async (e) => {
+        document.getElementById('registerBtn').onclick = () => togglePanel(true);
+        document.getElementById('loginBtn').onclick = () => togglePanel(false);
+        document.getElementById('forgot-password-trigger').onclick = () => document.getElementById('forgot-overlay').style.display = 'flex';
+
+        function showMessage(msg, isError = false) {
+            messageBox.textContent = msg;
+            messageBox.className = 'message-box show' + (isError ? ' error' : '');
+            setTimeout(() => messageBox.classList.remove('show'), 5000);
+        }
+
+        // Auth Operations
+        document.getElementById('register-form').onsubmit = async (e) => {
             e.preventDefault();
             const email = document.getElementById('register-email').value;
-            const password = document.getElementById('register-password').value;
-            const username = document.getElementById('register-username').value;
-
-            // This sends the OTP email
-            const { data, error } = await _supabase.auth.signUp({
-                email: email,
-                password: password,
-                options: { data: { username: username } }
+            const { error } = await _supabase.auth.signUp({
+                email,
+                password: document.getElementById('register-password').value,
+                options: { data: { username: document.getElementById('register-username').value } }
             });
+            if (error) showMessage(error.message, true);
+            else { showMessage('Check your email for the code!'); tempEmailForOtp = email; document.getElementById('otp-overlay').style.display = 'flex'; }
+        };
 
-            if (error) {
-                showMessage(`Error: ${error.message}`, true);
-            } else {
-                showMessage('Sign-up initiated! Please check your email for an OTP.');
-                tempEmailForOtp = email; // Store email for verification step
-                wrapper.className = 'wrapper active-otp'; // Switch to OTP form
-            }
-        });
-
-        otpForm.addEventListener('submit', async (e) => {
+        document.getElementById('login-form').onsubmit = async (e) => {
             e.preventDefault();
-            const otp = document.getElementById('otp-token').value;
+            const { error } = await _supabase.auth.signInWithPassword({
+                email: document.getElementById('login-email').value,
+                password: document.getElementById('login-password').value
+            });
+            if (error) showMessage(error.message, true);
+            else { showMessage('Welcome back!'); setTimeout(() => window.location.href = 'profile.html', 1500); }
+        };
 
-            const { data, error } = await _supabase.auth.verifyOtp({
+        document.getElementById('forgot-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('forgot-email').value;
+            const { error } = await _supabase.auth.resetPasswordForEmail(email, {
+                // redirectTo: URL where user will be sent. 
+                // MAKE SURE this URL is added to "Redirect URLs" in your Supabase Dashboard
+                redirectTo: window.location.origin + '/update-password.html'
+            });
+            if (error) showMessage(error.message, true);
+            else showMessage('Reset link sent! Check your inbox.');
+        };
+
+        document.getElementById('otp-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const { error } = await _supabase.auth.verifyOtp({
                 email: tempEmailForOtp,
-                token: otp,
+                token: document.getElementById('otp-token').value,
                 type: 'signup'
             });
-
-            if (error) {
-                showMessage(`Error: ${error.message}`, true);
-            } else {
-                showMessage('Verification successful! Redirecting...');
-                setTimeout(() => { window.location.href = 'profile.html'; }, 1500);
-            }
-        });
-
-        loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
-
-            const { data, error } = await _supabase.auth.signInWithPassword({
-                email: email,
-                password: password,
-            });
-
-            if (error) {
-                showMessage(`Error: ${error.message}`, true);
-            } else {
-                showMessage('Login successful! Redirecting...');
-                setTimeout(() => { window.location.href = 'profile.html'; }, 1500);
-            }
-        });
+            if (error) showMessage(error.message, true);
+            else { showMessage('Verified!'); setTimeout(() => window.location.href = 'profile.html', 1500); }
+        };
     </script>
 </body>
 
