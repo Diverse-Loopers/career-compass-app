@@ -1,17 +1,15 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>HRMS - Employee Dashboard | Diverse Loopers</title>
-
-    <!-- Fonts & Icons -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HRMS - Employee Dashboard</title>
+    <link rel="stylesheet" href="assets/css/employee-style.css">
+    <link rel="stylesheet" href="assets/css/notifications.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/png"
         href="/https://diverseloopers.com/my-favicon/favicon.ico, enter /my-favicon/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml"
@@ -23,438 +21,217 @@
     <meta name="apple-mobile-web-app-title" content="DLPT" />
     <link rel="manifest"
         href="/https://diverseloopers.com/my-favicon/favicon.ico, enter /my-favicon/site.webmanifest" />
-
-    <!-- Scripts -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Supabase -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: '#4f46e5',
-                        secondary: '#db2777',
-                        dark: '#0f172a',
-                        surface: '#f8fafc'
-                    }
-                }
-            }
-        }
-    </script>
-
-    <style>
-        :root {
-            --bg-body: #f1f5f9;
-            --bg-card: #ffffff;
-            --text-main: #0f172a;
-            --border: #e2e8f0;
-        }
-
-        .dark {
-            --bg-body: #090a14;
-            --bg-card: #151726;
-            --text-main: #f1f5f9;
-            --border: #1e293b;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            transition: all 0.3s;
-            overflow-x: hidden;
-        }
-
-        .sidebar {
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        @media (max-width: 1023px) {
-            .sidebar {
-                transform: translateX(-100%);
-                position: fixed;
-                inset-y: 0;
-                left: 0;
-                z-index: 100;
-            }
-
-            .sidebar.active {
-                transform: translateX(0);
-            }
-        }
-
-        .sidebar button.active {
-            background-color: #4f46e5;
-            color: white;
-            box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4);
-        }
-
-        .glass-card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border);
-        }
-
-        .input-field {
-            width: 100%;
-            padding: 0.875rem 1rem;
-            background-color: var(--bg-body);
-            border: 1px solid var(--border);
-            border-radius: 1rem;
-            outline: none;
-            transition: all 0.2s;
-            font-size: 16px;
-        }
-
-        .input-field:focus {
-            border-color: #4f46e5;
-            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
-        }
-
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 4px;
-            height: 4px;
-        }
-
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 10px;
-        }
-
-        .modal-blur {
-            backdrop-filter: blur(12px);
-            background-color: rgba(15, 23, 42, 0.5);
-        }
-
-        .camera-feed {
-            position: relative;
-            width: 100%;
-            max-width: 400px;
-            aspect-ratio: 4/3;
-            background: #000;
-            border-radius: 1.5rem;
-            overflow: hidden;
-            margin: 0 auto;
-        }
-
-        #overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-        }
-
-        .status-badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .status-pending {
-            background-color: #fef3c7;
-            color: #92400e;
-        }
-
-        .status-submitted {
-            background-color: #dcfce7;
-            color: #166534;
-        }
-
-        .status-approved {
-            background-color: #dbeafe;
-            color: #1e40af;
-        }
-
-        .status-rejected {
-            background-color: #fee2e2;
-            color: #991b1b;
-        }
-    </style>
+    <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
 </head>
 
-<body class="h-screen flex overflow-hidden">
+<body class="bg-gray-100">
 
-    <!-- Sidebar Overlay -->
-    <div id="sidebar-overlay" class="fixed inset-0 bg-slate-900/50 z-[90] hidden"></div>
+    <div class="dashboard-container">
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-btn">
+            ☰
+        </button>
 
-    <!-- Sidebar -->
-    <aside id="sidebar" class="sidebar w-72 bg-dark flex flex-col shrink-0">
-        <div class="p-8">
-            <div class="flex items-center gap-3 mb-10">
-                <img src="DIVERSE LOOPERS (1) bg.png" alt="Logo" class="h-10 w-auto rounded-lg bg-white p-1">
-                <span class="font-black text-white italic text-xl tracking-tight">HRMS Panel</span>
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="logo">
+                <img src="assets/images/logo.png" alt="Logo"
+                    style="width: 80%; margin-bottom: 1rem; border-radius: 8px; background: white; padding: 5px;">
+                <br>Employee Panel
             </div>
-
-            <div class="p-5 bg-white/5 rounded-[2rem] border border-white/5 text-center mb-8">
-                <div
-                    class="w-16 h-16 bg-primary/20 rounded-full mx-auto mb-3 flex items-center justify-center text-primary text-xl font-black">
-                    U</div>
-                <h4 id="sidebar-user-name" class="text-white font-bold text-sm">Loading...</h4>
-                <p id="sidebar-user-id" class="text-[10px] text-slate-500 uppercase tracking-widest mt-1 italic">...</p>
+            <div class="user-profile-summary" style="text-align: center; margin-bottom: 2rem; color: #a6a6b7;">
+                <div id="sidebar-user-name" style="font-weight: 600; color: white;">Loading...</div>
+                <div id="sidebar-user-id" style="font-size: 0.8rem;">...</div>
             </div>
-
-            <nav class="nav-links space-y-2">
-                <button onclick="showSection('dashboard')"
-                    class="sidebar-link active w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-slate-400 font-semibold hover:bg-white/5 transition text-left">
-                    <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
-                </button>
-                <button onclick="showSection('tasks')"
-                    class="sidebar-link w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-slate-400 font-semibold hover:bg-white/5 transition text-left">
-                    <i data-lucide="check-square" class="w-5 h-5"></i> My Tasks
-                </button>
-                <button onclick="showSection('leaves')"
-                    class="sidebar-link w-full flex items-center gap-3 px-5 py-4 rounded-2xl text-slate-400 font-semibold hover:bg-white/5 transition text-left">
-                    <i data-lucide="calendar-days" class="w-5 h-5"></i> Apply Leave
-                </button>
+            <nav class="nav-links">
+                <button class="active" onclick="showSection('dashboard')">Dashboard</button>
+                <button onclick="showSection('tasks')">My Tasks</button>
+                <button onclick="showSection('leaves')">Apply Leave</button>
+                <button onclick="logoutUser()" style="margin-top: auto; color: #ef4444;">Logout</button>
             </nav>
-        </div>
+        </aside>
 
-        <div class="p-6 mt-auto border-t border-white/5">
-            <button onclick="logoutUser()"
-                class="w-full flex items-center justify-center gap-2 px-4 py-4 bg-red-500/10 text-red-400 rounded-2xl font-bold hover:bg-red-500/20 transition">
-                <i data-lucide="log-out" class="w-4 h-4"></i> Logout
-            </button>
-        </div>
-    </aside>
+        <!-- Main Content -->
+        <main class="main-content">
 
-    <!-- Main Content -->
-    <main class="main-content flex-1 flex flex-col h-screen overflow-y-auto custom-scrollbar bg-slate-50 dark:bg-dark">
+            <!-- SECTION: DASHBOARD (Attendance & Stats) -->
+            <section id="dashboard-section">
+                <div class="header flex justify-between items-center" style="text-align: left; margin-bottom: 2rem;">
+                    <div>
+                        <h2>Welcome back, <span id="welcome-name">User</span>!</h2>
+                        <p class="text-muted">Here is your daily overview.</p>
+                    </div>
 
-        <!-- Header -->
-        <header
-            class="bg-white dark:bg-dark border-b border-slate-200 dark:border-white/5 px-6 md:px-10 py-5 flex justify-between items-center sticky top-0 z-50 backdrop-blur-md">
-            <div class="flex items-center gap-4">
-                <button id="mobile-menu-btn"
-                    class="lg:hidden p-2.5 bg-slate-100 dark:bg-white/5 rounded-xl text-slate-600">
-                    <i data-lucide="menu"></i>
-                </button>
-                <h1
-                    class="text-lg font-black text-slate-900 dark:text-white uppercase tracking-tighter hidden sm:block">
-                    Command Center</h1>
-            </div>
+                    <div class="flex items-center" style="gap: 15px;">
 
-            <div class="flex items-center gap-4">
-                <div id="attendance-box" class="flex items-center gap-3">
-                    <button id="mark-attendance-btn" onclick="markAttendance()"
-                        class="btn-primary px-5 py-2.5 bg-primary text-white rounded-full text-xs font-black uppercase tracking-widest shadow-lg shadow-primary/20 hover:scale-105 transition flex items-center gap-2">
-                        📷 Mark Attendance
-                    </button>
-                    <p id="attendance-status" class="hidden text-[10px] font-black uppercase text-slate-400"></p>
-                </div>
-
-                <!-- Notifications -->
-                <div class="relative notification-wrapper">
-                    <button id="notif-btn"
-                        class="p-2.5 bg-slate-100 dark:bg-white/5 rounded-xl text-slate-500 hover:text-primary transition relative">
-                        <i data-lucide="bell" class="w-5 h-5"></i>
-                        <span id="notif-count"
-                            class="absolute -top-1 -right-1 w-4 h-4 bg-secondary text-white text-[10px] font-bold rounded-full flex items-center justify-center hidden">0</span>
-                    </button>
-                    <!-- Dropdown -->
-                    <div id="notif-dropdown"
-                        class="absolute right-0 mt-3 w-80 bg-white dark:bg-slate-900 border border-slate-200 dark:border-white/10 rounded-[2rem] shadow-2xl overflow-hidden hidden z-50">
-                        <div
-                            class="p-6 border-b border-slate-100 dark:border-white/5 flex justify-between items-center">
-                            <h4 class="font-bold text-sm">Notifications</h4>
-                            <button onclick="markAllRead()"
-                                class="text-[10px] font-black uppercase text-primary hover:underline tracking-widest">Mark
-                                read</button>
+                        <div id="attendance-box">
+                            <button id="mark-attendance-btn" class="btn-primary" onclick="markAttendance()">📷 Mark
+                                Attendance</button>
+                            <p id="attendance-status" class="text-muted"
+                                style="font-size: 0.9rem; margin-top: 0.5rem; text-align: right;"></p>
                         </div>
-                        <ul id="notif-list" class="max-h-64 overflow-y-auto custom-scrollbar p-2"></ul>
+
+                        <!-- Notification Bell -->
+                        <div class="notification-wrapper" style="position: relative;">
+                            <button id="notif-btn"
+                                style="background:none; border:none; font-size:1.5rem; cursor:pointer;">
+                                🔔 <span id="notif-count" class="badge hidden">0</span>
+                            </button>
+                            <div id="notif-dropdown" class="dropdown-content hidden">
+                                <div class="dropdown-header">Notifications <button onclick="markAllRead()"
+                                        class="mark-read-btn">Mark
+                                        all read</button></div>
+                                <ul id="notif-list">
+                                    <li class="empty-notif">No new notifications</li>
+                                </ul>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
-            </div>
-        </header>
 
-        <!-- DASHBOARD SECTION -->
-        <section id="dashboard-section" class="p-6 md:p-10 space-y-10">
-            <div>
-                <h2 class="text-3xl font-black text-slate-900 dark:text-white">Welcome, <span id="welcome-name"
-                        class="text-primary italic">Employee</span>!</h2>
-                <p class="text-slate-500 font-medium mt-1">Operational Summary & History</p>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="glass-card p-8 rounded-[2.5rem] relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition"><i
-                            data-lucide="clipboard-list" class="w-20 h-20"></i></div>
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Pending Tasks</p>
-                    <span id="stat-pending-tasks" class="text-5xl font-black text-primary">0</span>
-                </div>
-                <div class="glass-card p-8 rounded-[2.5rem] relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition"><i
-                            data-lucide="check-circle" class="w-20 h-20"></i></div>
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Attendance %</p>
-                    <span id="stat-attendance" class="text-5xl font-black text-green-500">0%</span>
-                </div>
-                <div class="glass-card p-8 rounded-[2.5rem] relative overflow-hidden group">
-                    <div class="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition"><i
-                            data-lucide="umbrella" class="w-20 h-20"></i></div>
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-2">Leaves Taken</p>
-                    <span id="stat-leaves" class="text-5xl font-black text-secondary">0</span>
-                </div>
-            </div>
-
-            <div class="space-y-6">
-                <h3 class="text-xl font-bold flex items-center gap-3 text-slate-900 dark:text-white italic"><i
-                        data-lucide="history" class="text-primary w-5 h-5"></i> Recent Log</h3>
-                <div class="glass-card rounded-[2.5rem] overflow-hidden shadow-sm">
-                    <div class="overflow-x-auto no-scrollbar">
-                        <table id="recent-attendance-table" class="w-full text-left border-collapse min-w-[600px]">
-                            <thead class="bg-slate-50 dark:bg-white/5 border-b border-slate-100 dark:border-white/5">
-                                <tr class="text-[10px] font-black uppercase text-slate-400 tracking-widest">
-                                    <th class="px-8 py-5">Date</th>
-                                    <th class="px-8 py-5">Check In</th>
-                                    <th class="px-8 py-5">Status</th>
-                                    <th class="px-8 py-5">Verification</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-100 dark:divide-white/5 font-medium"></tbody>
-                        </table>
+                <div class="card-grid">
+                    <div class="card">
+                        <h3>Tasks Pending</h3>
+                        <div class="stat-value" id="stat-pending-tasks">0</div>
+                    </div>
+                    <div class="card">
+                        <h3>Attendance (This Month)</h3>
+                        <div class="stat-value" id="stat-attendance">0%</div>
+                    </div>
+                    <div class="card">
+                        <h3>Leaves Taken</h3>
+                        <div class="stat-value" id="stat-leaves">0</div>
                     </div>
                 </div>
-            </div>
-        </section>
 
-        <!-- TASKS SECTION -->
-        <section id="tasks-section" class="hidden p-6 md:p-10 space-y-8">
-            <h2 class="text-3xl font-black text-slate-900 dark:text-white italic">Active Tasks</h2>
-            <div class="glass-card rounded-[2.5rem] overflow-hidden">
-                <div class="overflow-x-auto no-scrollbar">
-                    <table id="my-tasks-table" class="w-full text-left border-collapse min-w-[900px]">
-                        <thead
-                            class="bg-slate-50 dark:bg-white/5 border-b border-slate-100 dark:border-white/5 text-[10px] font-black uppercase text-slate-400 tracking-widest">
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Recent Attendance</h3>
+                <div class="table-container">
+                    <table id="recent-attendance-table">
+                        <thead>
                             <tr>
-                                <th class="px-8 py-5">Title</th>
-                                <th class="px-8 py-5">Description</th>
-                                <th class="px-8 py-5">Date Assigned</th>
-                                <th class="px-8 py-5">Deadline</th>
-                                <th class="px-8 py-5">Priority</th>
-                                <th class="px-8 py-5">Status</th>
-                                <th class="px-8 py-5">Action</th>
+                                <th>Date</th>
+                                <th>Check In</th>
+                                <th>Status</th>
+                                <th>Verification</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100 dark:divide-white/5"></tbody>
+                        <tbody><!-- JS --></tbody>
                     </table>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- LEAVES SECTION -->
-        <section id="leaves-section" class="hidden p-6 md:p-10 space-y-8">
-            <div class="flex justify-between items-center">
-                <h2 class="text-3xl font-black text-slate-900 dark:text-white italic">Leave Applications</h2>
-                <button onclick="openLeaveModal()"
-                    class="px-8 py-3.5 bg-primary text-white rounded-2xl font-bold shadow-lg shadow-primary/20 transition hover:bg-indigo-700">+
-                    Apply Leave</button>
-            </div>
-            <div class="glass-card rounded-[2.5rem] overflow-hidden">
-                <div class="overflow-x-auto no-scrollbar">
-                    <table id="my-leaves-table" class="w-full text-left border-collapse min-w-[800px]">
-                        <thead
-                            class="bg-slate-50 dark:bg-white/5 border-b border-slate-100 dark:border-white/5 text-[10px] font-black uppercase text-slate-400 tracking-widest">
+            <!-- SECTION: TASKS -->
+            <section id="tasks-section" class="hidden">
+                <h2>My Tasks</h2>
+                <div class="table-container">
+                    <table id="my-tasks-table">
+                        <thead>
                             <tr>
-                                <th class="px-8 py-5">Start Date</th>
-                                <th class="px-8 py-5">End Date</th>
-                                <th class="px-8 py-5">Reason</th>
-                                <th class="px-8 py-5">Status</th>
-                                <th class="px-8 py-5">Remarks</th>
+                                <th>Title</th>
+                                <th>Description</th>
+                                <th>Date Assigned</th>
+                                <th>Deadline</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100 dark:divide-white/5"></tbody>
+                        <tbody><!-- JS --></tbody>
                     </table>
                 </div>
-            </div>
-        </section>
-    </main>
+            </section>
 
-    <!-- MODAL: APPLY LEAVE -->
-    <div id="apply-leave-modal" class="fixed inset-0 z-[110] modal-blur items-center justify-center p-4 hidden">
-        <div
-            class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-[2.5rem] p-8 md:p-10 shadow-2xl overflow-hidden border border-slate-100 dark:border-white/5">
-            <h2 class="text-2xl font-black mb-6 italic">Request Leave</h2>
-            <form id="apply-leave-form" onsubmit="handleApplyLeave(event)" class="space-y-5 text-left">
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="space-y-1">
-                        <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Start
-                            Date</label>
-                        <input type="date" id="leave-start" required class="input-field">
-                    </div>
-                    <div class="space-y-1">
-                        <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest">End Date</label>
-                        <input type="date" id="leave-end" required class="input-field">
-                    </div>
+            <!-- SECTION: LEAVES -->
+            <section id="leaves-section" class="hidden">
+                <div class="flex items-center justify-between" style="margin-bottom: 1.5rem;">
+                    <h2>Leave Applications</h2>
+                    <button class="btn-primary" style="width: auto;" onclick="openLeaveModal()">+ Apply Leave</button>
                 </div>
-                <div class="space-y-1">
-                    <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Reason</label>
-                    <textarea id="leave-reason" rows="3" required class="input-field"
-                        placeholder="Provide context..."></textarea>
+                <div class="table-container">
+                    <table id="my-leaves-table">
+                        <thead>
+                            <tr>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Reason</th>
+                                <th>Status</th>
+                                <th>Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody><!-- JS --></tbody>
+                    </table>
                 </div>
-                <div class="flex gap-4 pt-4">
-                    <button type="submit"
-                        class="flex-1 py-4 bg-primary text-white rounded-2xl font-bold shadow-lg">Submit</button>
-                    <button type="button" onclick="closeModal('apply-leave-modal')"
-                        class="px-8 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold">Cancel</button>
-                </div>
-            </form>
-        </div>
+            </section>
+
+        </main>
     </div>
 
     <!-- MODAL: SUBMIT TASK -->
-    <div id="submit-task-modal" class="fixed inset-0 z-[110] modal-blur items-center justify-center p-4 hidden">
-        <div
-            class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-[2.5rem] p-8 md:p-10 shadow-2xl overflow-hidden border border-slate-100 dark:border-white/5">
-            <h2 class="text-2xl font-black mb-2 italic">Task Submission</h2>
-            <p class="text-xs text-slate-400 mb-8">Mark your progress for review.</p>
-            <form id="submit-task-form" onsubmit="handleSubmitTask(event)" class="space-y-5 text-left">
+    <div id="submit-task-modal" class="modal hidden">
+        <div class="modal-content" style="text-align: left;">
+            <h2 style="margin-bottom: 1rem;">Submit Task</h2>
+            <form id="submit-task-form" onsubmit="handleSubmitTask(event)">
                 <input type="hidden" id="submit-task-id">
-                <div class="space-y-1">
-                    <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest">Notes / Links</label>
-                    <textarea id="submission-link" rows="4" required class="input-field"
-                        placeholder="Paste Drive/GitHub link or describe work..."></textarea>
+                <div class="input-group">
+                    <label>Submission Link / Notes</label>
+                    <textarea id="submission-link" rows="4" placeholder="Paste drive link or describe work..."
+                        required></textarea>
                 </div>
-                <div class="flex gap-4 pt-4">
-                    <button type="submit" class="flex-1 py-4 bg-primary text-white rounded-2xl font-bold">Mark
-                        Completed</button>
-                    <button type="button" onclick="closeModal('submit-task-modal')"
-                        class="px-8 py-4 bg-slate-100 text-slate-600 rounded-2xl font-bold">Cancel</button>
+                <div class="flex" style="gap: 1rem;">
+                    <button type="submit" class="btn-primary">Submit</button>
+                    <button type="button" class="btn-secondary"
+                        onclick="closeModal('submit-task-modal')">Cancel</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- MODAL: CAMERA (BIOMETRIC) -->
-    <div id="camera-modal" class="fixed inset-0 z-[120] modal-blur items-center justify-center p-4 hidden">
-        <div
-            class="bg-white dark:bg-slate-900 w-full max-w-md rounded-[3rem] p-10 shadow-2xl text-center border border-slate-100 dark:border-white/5">
-            <h2 class="text-xl font-black mb-6 italic">Identity Verification</h2>
-            <div class="camera-feed border-4 border-slate-100 dark:border-white/5">
-                <video id="video" width="400" height="300" autoplay muted class="w-full h-full object-cover"></video>
+    <!-- MODAL: APPLY LEAVE -->
+    <div id="apply-leave-modal" class="modal hidden">
+        <div class="modal-content" style="text-align: left;">
+            <h2 style="margin-bottom: 1rem;">Apply for Leave</h2>
+            <form id="apply-leave-form" onsubmit="handleApplyLeave(event)">
+                <div class="input-group">
+                    <label>Start Date</label>
+                    <input type="date" id="leave-start" required>
+                </div>
+                <div class="input-group">
+                    <label>End Date</label>
+                    <input type="date" id="leave-end" required>
+                </div>
+                <div class="input-group">
+                    <label>Reason</label>
+                    <textarea id="leave-reason" rows="3" required></textarea>
+                </div>
+                <div class="flex" style="gap: 1rem;">
+                    <button type="submit" class="btn-primary">Apply</button>
+                    <button type="button" class="btn-secondary"
+                        onclick="closeModal('apply-leave-modal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Face Verification Modal (Re-used for attendance) -->
+    <div id="camera-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>Verify Attendance</h2>
+            <div class="camera-feed">
+                <video id="video" width="400" height="300" autoplay muted></video>
                 <canvas id="overlay"></canvas>
             </div>
-            <p id="status-msg" class="text-xs font-black uppercase tracking-widest text-slate-400 animate-pulse mt-4">
-                Initializing AI...</p>
-            <div class="flex flex-col gap-3 mt-8">
-                <button id="capture-btn"
-                    class="w-full py-4 bg-primary text-white rounded-2xl font-bold opacity-50 cursor-not-allowed"
-                    disabled>Verify & Check In</button>
-                <button onclick="closeModal('camera-modal')"
-                    class="w-full py-3 text-slate-500 font-bold hover:text-red-500 transition uppercase text-[10px] tracking-widest">Abort
-                    Verification</button>
-            </div>
+            <p id="status-msg">Loading models...</p>
+            <button id="capture-btn" class="btn-secondary" disabled>Verify & Check In</button>
+            <button id="close-modal" class="btn-text" onclick="closeModal('camera-modal')">Cancel</button>
         </div>
     </div>
 
     <script src="assets/js/supabase-config.js"></script>
     <script src="assets/js/utils.js"></script>
     <script src="assets/js/employee.js"></script>
-</body>
-
 </body>
 
 </html>
