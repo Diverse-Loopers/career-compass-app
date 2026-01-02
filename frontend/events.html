@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Details | Diverse Loopers</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- FIX: Added Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        /* --- CSS Reset & Variables --- */
+        :root {
+            --primary-color: #3b82f6; /* Blue */
+            --secondary-color: #ec4899; /* Pink */
+            --dark-bg: #111827;
+            --light-bg: #f9fafb;
+            --text-color: #374151;
+            --heading-color: #111827;
+            --border-color: #e5e7eb;
+            --white: #ffffff;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+            --modal-bg: rgba(0, 0, 0, 0.6);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-color);
+            line-height: 1.6;
+            background-color: var(--white);
+        }
+
+        /* --- Layout Utility --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .section-container {
+            padding: 4rem 0;
+        }
+
+        .bg-light {
+            background-color: var(--light-bg);
+        }
+
+        h1, h2, h3 {
+            color: var(--heading-color);
+            font-weight: 600;
+        }
+
+        /* --- Buttons --- */
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #2563eb;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background-color: #f3f4f6;
+        }
+
+        /* --- 1. Event Banner Area --- */
+        .event-banner {
+            position: relative;
+            height: 70vh; /* Large Hero */
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--white);
+            /* Placeholder background - will be dynamic later */
+            background-image: url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80'); 
+            background-size: cover;
+            background-position: center;
+        }
+
+        .banner-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6); /* Dark overlay for readability */
+            z-index: 1;
+        }
+
+        .banner-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+        }
+
+        .event-tag {
+            background-color: var(--secondary-color);
+            padding: 0.25rem 1rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+
+        .banner-content h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--white);
+            line-height: 1.2;
+        }
+
+        .event-short-desc {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .event-meta {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* --- 2. Gallery & Video --- */
+        .section-heading {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+
+        .section-heading::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background-color: var(--primary-color);
+            margin: 0.5rem auto 0;
+            border-radius: 2px;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, 200px);
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .gallery-item {
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: #ddd; /* Placeholder color */
+            position: relative;
+        }
+
+        .gallery-item.large {
+            grid-column: span 2;
+            grid-row: span 2;
+        }
+
+        .placeholder-img {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #e5e7eb;
+            color: #9ca3af;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .video-container {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .sub-heading {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .video-placeholder {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background-color: #1f2937;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.2rem;
+        }
+
+        .video-placeholder i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.8;
+        }
+
+        /* --- 3. Details Section (Sidebar Layout) --- */
+        .content-wrapper {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 3rem;
+        }
+
+        .main-content .rich-text {
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            color: #4b5563;
+        }
+
+        .highlights-box {
+            background-color: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .highlights-box h3 {
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .highlights-box ul {
+            list-style: none;
+        }
+
+        .highlights-box li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .highlights-box li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        /* Sidebar Cards */
+        .info-card {
+            background-color: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            margin-bottom: 1.5rem;
+        }
+
+        .info-card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.25rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .check-list, .star-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .check-list li {
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .check-list li::before {
+            content: '\f00c'; /* FontAwesome Check */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: var(--secondary-color);
+        }
+
+        .star-list li {
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .star-list li::before {
+            content: '\f005'; /* FontAwesome Star */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            color: #f59e0b; /* Amber/Yellow */
+        }
+
+        /* --- 4. Modal Styles --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--modal-bg);
+            display: none; /* Hidden by default */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-container {
+            background-color: var(--white);
+            width: 90%;
+            max-width: 500px;
+            border-radius: 16px;
+            padding: 2rem;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-container {
+            transform: translateY(0);
+        }
+
+        .close-modal-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #9ca3af;
+            transition: color 0.2s;
+        }
+
+        .close-modal-btn:hover {
+            color: var(--text-color);
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h2 {
+            color: var(--primary-color);
+        }
+
+        .modal-header p {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.3rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .full-width {
+            flex: 1;
+        }
+
+        /* --- Responsive Adjustments --- */
+        @media (max-width: 768px) {
+            .banner-content h1 {
+                font-size: 2rem;
+            }
+
+            .gallery-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+            }
+
+            .gallery-item.large {
+                grid-column: span 1;
+                grid-row: span 1;
+                height: 250px;
+            }
+
+            .gallery-item {
+                height: 200px;
+            }
+
+            .content-wrapper {
+                grid-template-columns: 1fr; /* Stack content and sidebar */
+            }
+
+            .sidebar {
+                order: -1; /* Move sidebar (meta info) to top on mobile? Or keep bottom */
+            }
+            
+            .event-meta {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. Event Banner Area -->
+    <section class="event-banner" id="event-hero">
+        <div class="banner-content container">
+            <!-- Added ID for easier selection -->
+            <span class="event-tag" id="event-status-tag">Upcoming Event</span>
+            <h1 id="event-title">Loading Event...</h1>
+            <p class="event-short-desc" id="event-short-desc">Please wait while we fetch the event details.</p>
+            
+            <div class="event-meta">
+                <div class="meta-item">
+                    <i class="fa-regular fa-calendar"></i>
+                    <span id="event-date">--/--/----</span>
+                </div>
+                <div class="meta-item">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <span id="event-location">---</span>
+                </div>
+            </div>
+
+            <button class="btn-primary" id="open-register-btn">Register Now</button>
+        </div>
+        <!-- Background Image Overlay -->
+        <div class="banner-overlay"></div>
+    </section>
+
+    <!-- 2. Event Gallery Section -->
+    <section class="section-container" id="gallery-section">
+        <div class="container">
+            <h2 class="section-heading">Event Highlights</h2>
+            <!-- Grid Layout for 4 photos -->
+            <div class="gallery-grid">
+                <div class="gallery-item large">
+                    <div class="placeholder-img">Photo 1 (Main)</div>
+                    <!-- In future: <img src="..." alt="..."> -->
+                </div>
+                <div class="gallery-item">
+                    <div class="placeholder-img">Photo 2</div>
+                </div>
+                <div class="gallery-item">
+                    <div class="placeholder-img">Photo 3</div>
+                </div>
+                <div class="gallery-item">
+                    <div class="placeholder-img">Photo 4</div>
+                </div>
+            </div>
+            
+            <!-- Video Section -->
+            <div class="video-container">
+                <h3 class="sub-heading">Event Teaser</h3>
+                <div class="video-placeholder">
+                    <i class="fa-solid fa-play-circle"></i>
+                    <p>Video Placeholder (YouTube/Local)</p>
+                </div>
+                <!-- Future: <iframe ...></iframe> or <video ...></video> -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Event Details Section -->
+    <section class="section-container bg-light" id="details-section">
+        <div class="container content-wrapper">
+            <div class="main-content">
+                <h2 class="section-heading">About the Event</h2>
+                <div id="event-full-desc" class="rich-text">
+                    <p>Loading detailed description...</p>
+                </div>
+
+                <div class="highlights-box">
+                    <h3>Key Highlights</h3>
+                    <!-- Added ID to fetch dynamic highlights -->
+                    <ul id="event-highlights">
+                        <li>Loading highlights...</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="info-card">
+                    <h3>Who Should Attend?</h3>
+                    <!-- Added ID -->
+                    <ul class="check-list" id="who-attend-list">
+                         <li>Loading...</li>
+                    </ul>
+                </div>
+                
+                <div class="info-card">
+                    <h3>What You'll Gain</h3>
+                    <!-- Added ID -->
+                    <ul class="star-list" id="gain-list">
+                        <li>Loading...</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Registration Modal -->
+    <div class="modal-overlay" id="registration-modal">
+        <div class="modal-container">
+            <button class="close-modal-btn" id="close-modal-btn">&times;</button>
+            
+            <div class="modal-header">
+                <h2>Event Registration</h2>
+                <p>Secure your spot for <span id="modal-event-name">this event</span></p>
+            </div>
+
+            <form id="registration-form">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" required placeholder="Enter your full name">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required placeholder="john@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" required placeholder="+91 XXXXX XXXXX">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="organization">College / Organization</label>
+                        <input type="text" id="organization" name="organization" required placeholder="University Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="role">Year / Role</label>
+                        <input type="text" id="role" name="role" required placeholder="e.g. 3rd Year / Developer">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="reason">Why do you want to attend?</label>
+                    <textarea id="reason" name="reason" rows="3" required placeholder="Briefly explain your interest..."></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" id="cancel-btn">Cancel</button>
+                    <button type="submit" class="btn-primary full-width">Submit Registration</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Logic -->
+    <script>
+    // --- Supabase Configuration ---
+    // Replace with your actual project URL and Anon Key
+    const SUPABASE_URL = 'https://tjqsmkaiajdpotmafqvw.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqcXNta2FpYWpkcG90bWFmcXZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU5ODA3NDIsImV4cCI6MjA3MTU1Njc0Mn0.9710q9W5EFfCagj340AizUSKiOXYApy0xkTFszFjO8o';
+    const { createClient } = supabase;
+    const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        
+        // --- 1. DATA LOADING ---
+        const urlParams = new URLSearchParams(window.location.search);
+        const eventId = urlParams.get('id');
+
+        let eventData = {
+            title: "Event Not Found",
+            shortDesc: "Details unavailable.",
+            date: "--/--/----",
+            location: "Unknown",
+            description: "Please return to the events list.",
+            mainImage: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&q=80",
+            gallery: [],
+            video: null,
+            // New Fields default to empty
+            highlights: [],
+            whoShouldAttend: [],
+            whatYouWillGain: [],
+            isPassed: false
+        };
+
+        if (eventId) {
+            try {
+                // Fetch from 'events' table
+                const { data, error } = await _supabase
+                    .from('events')
+                    .select('*')
+                    .eq('id', eventId)
+                    .single();
+
+                if (error) {
+                    console.error("Error fetching event:", error);
+                } else if (data) {
+                    // Calculate if passed
+                    const evtDate = new Date(data.date);
+                    const now = new Date();
+                    const isPassed = evtDate < now;
+
+                    // Map DB fields to local object
+                    eventData = {
+                        title: data.title,
+                        shortDesc: data.description.length > 100 ? data.description.substring(0, 100) + "..." : data.description, 
+                        date: evtDate.toLocaleDateString(),
+                        location: data.location || "Online",
+                        description: data.description, 
+                        mainImage: data.main_media_url || eventData.mainImage,
+                        gallery: data.gallery_urls || [],
+                        video: data.video_url,
+                        // Map New Fields (Arrays)
+                        highlights: data.key_highlights || [],
+                        whoShouldAttend: data.who_should_attend || [],
+                        whatYouWillGain: data.what_you_will_gain || [],
+                        isPassed: isPassed
+                    };
+                }
+            } catch (err) {
+                console.error("Unexpected fetch error:", err);
+            }
+        }
+
+        // --- 2. POPULATE UI ---
+        function renderEvent() {
+            document.getElementById('event-title').textContent = eventData.title;
+            document.getElementById('event-short-desc').textContent = eventData.shortDesc;
+            document.getElementById('event-date').textContent = eventData.date;
+            document.getElementById('event-location').textContent = eventData.location;
+            document.getElementById('event-full-desc').innerHTML = `<p>${eventData.description}</p>`;
+            document.getElementById('modal-event-name').textContent = eventData.title;
+
+            // Handle Passed Events Logic
+            const statusTag = document.getElementById('event-status-tag');
+            const registerBtn = document.getElementById('open-register-btn');
+
+            if (eventData.isPassed) {
+                if(statusTag) {
+                    statusTag.textContent = "Passed Event";
+                    statusTag.style.backgroundColor = "#9ca3af"; // Gray out
+                }
+                if(registerBtn) {
+                    registerBtn.style.display = "none";
+                }
+            } else {
+                 if(statusTag) {
+                    statusTag.textContent = "Upcoming Event";
+                    statusTag.style.backgroundColor = ""; // Reset to default CSS
+                }
+                if(registerBtn) {
+                    registerBtn.style.display = "inline-block";
+                }
+            }
+
+            // Hero Background
+            const heroSection = document.getElementById('event-hero');
+            if(heroSection) {
+                heroSection.style.backgroundImage = `url('${eventData.mainImage}')`;
+            }
+
+            // Gallery Rendering
+            const galleryItems = document.querySelectorAll('.gallery-item .placeholder-img');
+            if (eventData.gallery.length > 0) {
+                 eventData.gallery.forEach((url, index) => {
+                     if (galleryItems[index]) {
+                         galleryItems[index].innerHTML = `<img src="${url}" alt="Gallery ${index+1}" style="width:100%; height:100%; object-fit:cover;">`;
+                     }
+                 });
+            }
+            
+            // Render Dynamic Lists (Highlights, Who Should Attend, Gain)
+            renderList('event-highlights', eventData.highlights);
+            renderList('who-attend-list', eventData.whoShouldAttend);
+            renderList('gain-list', eventData.whatYouWillGain);
+
+            if (eventData.video) {
+                console.log("Video URL available:", eventData.video);
+            }
+        }
+
+        // Helper to render lists
+        function renderList(elementId, items) {
+            const list = document.getElementById(elementId);
+            if (!list) return;
+
+            if (items && items.length > 0) {
+                list.innerHTML = items.map(item => `<li>${item}</li>`).join('');
+            } else {
+                list.innerHTML = `<li style="opacity:0.5; font-style:italic;">Details to be announced.</li>`;
+            }
+        }
+
+        renderEvent();
+
+        // --- 3. MODAL & REGISTRATION LOGIC ---
+        const modal = document.getElementById('registration-modal');
+        const openBtn = document.getElementById('open-register-btn');
+        const closeBtn = document.getElementById('close-modal-btn');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const form = document.getElementById('registration-form');
+
+        if(openBtn) {
+            openBtn.addEventListener('click', () => {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        }
+
+        const closeModal = () => {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        };
+
+        if(closeBtn) closeBtn.addEventListener('click', closeModal);
+        if(cancelBtn) cancelBtn.addEventListener('click', closeModal);
+        if(modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) closeModal();
+            });
+        }
+
+        if(form) {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalText = submitBtn.textContent;
+                
+                submitBtn.textContent = 'Registering...';
+                submitBtn.disabled = true;
+
+                const formData = new FormData(form);
+                const registrationPayload = {
+                    event_id: eventId,
+                    full_name: formData.get('fullName'),
+                    email: formData.get('email'),
+                    phone: formData.get('phone'),
+                    organization: formData.get('organization'),
+                    role: formData.get('role'),
+                    reason: formData.get('reason')
+                };
+
+                try {
+                    const { error } = await _supabase
+                        .from('event_registrations')
+                        .insert([registrationPayload]);
+
+                    if (error) throw error;
+
+                    alert(`Success! ${registrationPayload.full_name}, you are registered for "${eventData.title}".`);
+                    form.reset();
+                    closeModal();
+
+                } catch (err) {
+                    console.error("Registration failed:", err);
+                    alert("Registration failed. Please try again.");
+                } finally {
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                }
+            });
+        }
+    });
+    </script>
+</body>
+</html>

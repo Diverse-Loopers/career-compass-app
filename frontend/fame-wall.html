@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth bg-[#0f172a] text-slate-800">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Wall of Fame | Diverse Loopers</title>
+    <meta name="description" content="Browse the complete history of achievers and top performers at Diverse Loopers, organized week by week.">
+
+    <!-- Fonts & Scripts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4f46e5',
+                        secondary: '#db2777',
+                        dark: '#0f172a',
+                        surface: '#f8fafc'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Poppins', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .glass-nav {
+            background: rgba(15, 23, 42, 0.85); /* Darker for this page */
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Achiever Card Styling (Reused) */
+        .achiever-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 2rem;
+            height: 420px;
+            background: #1e293b;
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .achiever-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s ease;
+            filter: grayscale(100%);
+        }
+
+        .achiever-card:hover .achiever-img {
+            transform: scale(1.05);
+            filter: grayscale(0%);
+        }
+
+        .achiever-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(15, 23, 42, 0.95) 20%, rgba(15, 23, 42, 0.2) 60%, transparent);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1.5rem;
+            transition: all 0.5s ease;
+        }
+
+        .achiever-details {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .achiever-card:hover .achiever-overlay {
+            background: linear-gradient(to top, rgba(15, 23, 42, 1) 50%, rgba(15, 23, 42, 0.6));
+        }
+
+        .achiever-card:hover .achiever-details {
+            max-height: 250px;
+            opacity: 1;
+            margin-top: 1rem;
+        }
+        
+        /* Week Separator Line */
+        .week-line {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .week-line::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(to right, #4f46e5, transparent);
+            margin-left: 1.5rem;
+            opacity: 0.5;
+        }
+
+        /* Form Styles for Dark Mode */
+        .dark-input {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background-color: #1e293b; 
+            border: 1px solid #334155;
+            border-radius: 1rem;
+            outline: none;
+            transition: all 0.2s;
+            font-size: 16px;
+            color: #f8fafc; 
+        }
+        .dark-input::placeholder { color: #64748b; }
+        .dark-input:focus { border-color: #4f46e5; box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1); background-color: #0f172a; }
+        select.dark-input option { background-color: #1e293b; color: #f8fafc; }
+    </style>
+</head>
+
+<body class="font-sans bg-slate-900 text-slate-300 min-h-screen flex flex-col">
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 glass-nav">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <a href="index.html" class="flex-shrink-0 flex items-center gap-2">
+                    <img src="Diverse Loopers Black BG (2).png" onerror="this.src='DIVERSE LOOPERS (1) bg.png'" alt="Diverse Loopers" class="h-10 w-auto">
+                </a>
+
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="skillsynth.html" class="text-slate-300 hover:text-white font-medium transition text-sm">Home</a>
+                    <a href="fame-wall.html" class="text-white font-bold transition text-sm border-b-2 border-primary pb-1">Wall of Fame</a>
+                    <a href="index.html#events" class="text-slate-300 hover:text-white font-medium transition text-sm">Events</a>
+                    <a href="#hiring-form" class="text-slate-300 hover:text-white font-medium transition text-sm">Hire Talent</a>
+                </div>
+
+                <button id="mobile-menu-toggle" class="md:hidden p-2 text-slate-300"><i data-lucide="menu"></i></button>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-900 border-b border-slate-800 p-6 space-y-4 shadow-xl text-center">
+            <a href="skillsynth.html" class="block font-bold text-white">Home</a>
+            <a href="fame-wall.html" class="block font-bold text-primary">Wall of Fame</a>
+            <a href="index.html#events" class="block font-bold text-white">Events</a>
+            <a href="#hiring-form" class="block font-bold text-white">Hire Talent</a>
+        </div>
+    </nav>
+
+    <main class="flex-grow pt-32 pb-20">
+        
+        <!-- Go Back Button -->
+        <div class="max-w-7xl mx-auto px-6 mb-8">
+            <button onclick="window.history.back()" class="flex items-center gap-2 text-slate-400 hover:text-white transition group text-sm font-bold uppercase tracking-widest">
+                <i data-lucide="arrow-left" class="w-4 h-4 group-hover:-translate-x-1 transition-transform"></i>
+                Go Back
+            </button>
+        </div>
+
+        <!-- Header -->
+        <div class="max-w-7xl mx-auto px-6 mb-20 text-center">
+            <span class="inline-block py-1 px-3 rounded-full bg-primary/10 text-primary border border-primary/20 text-[10px] font-black uppercase tracking-widest mb-6 fade-in">
+                Hall of Excellence
+            </span>
+            <h1 class="text-4xl md:text-6xl font-heading font-black text-white mb-6 fade-in">
+                The Full <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">Wall of Fame</span>
+            </h1>
+            <p class="text-slate-400 max-w-2xl mx-auto text-lg fade-in">
+                A chronological archive of brilliance. Every week, we highlight the individuals who went above and beyond.
+            </p>
+        </div>
+
+        <!-- Timeline Container -->
+        <div id="wall-container" class="max-w-7xl mx-auto px-6 space-y-24 min-h-[30vh] mb-32">
+            <!-- Dynamic Content Injected Here -->
+            <div class="text-center py-20">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary mb-4"></div>
+                <p class="text-slate-500 text-sm uppercase tracking-widest">Loading History...</p>
+            </div>
+        </div>
+
+        <!-- Hiring Form Section -->
+        <section id="hiring-form" class="py-12 relative border-t border-slate-800">
+            <div class="max-w-4xl mx-auto px-6">
+                <div class="bg-slate-800/50 backdrop-blur-xl p-8 md:p-12 rounded-[3rem] border border-slate-700 shadow-2xl reveal">
+                    <div class="mb-10 text-center space-y-2">
+                        <h3 class="text-3xl font-heading font-black text-white italic">Hire Talent Requirements</h3>
+                        <p class="text-slate-400 font-medium">See potential here? Share your hiring needs and our team will connect you with these profiles.</p>
+                    </div>
+
+                    <form id="talent-request-form" class="space-y-6 text-left">
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-black uppercase text-slate-500 tracking-widest">Company Name</label>
+                                <input type="text" name="company_name" required class="dark-input" placeholder="Organization">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-black uppercase text-slate-500 tracking-widest">Hiring Contact Person</label>
+                                <input type="text" name="contact_name" required class="dark-input" placeholder="Full Name">
+                            </div>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-black uppercase text-slate-500 tracking-widest">Business Email</label>
+                                <input type="email" name="contact_email" required class="dark-input" placeholder="email@company.com">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-black uppercase text-slate-500 tracking-widest">Contact Number</label>
+                                <input type="tel" name="contact_phone" required class="dark-input" placeholder="+91 ...">
+                            </div>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-black uppercase text-slate-500 tracking-widest">Role / Requirement</label>
+                                <input type="text" name="role_requirement" required class="dark-input" placeholder="e.g. AI Analyst">
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-black uppercase text-slate-500 tracking-widest">Type of Hiring</label>
+                                <select name="hiring_type" required class="dark-input">
+                                    <option value="Internship">Internship</option>
+                                    <option value="Contract">Contract / Project Based</option>
+                                    <option value="Full-Time">Trial to Full-Time</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-black uppercase text-slate-500 tracking-widest">Preferred Skills / Stack</label>
+                            <input type="text" name="preferred_skills" class="dark-input" placeholder="e.g. React, Python, Docker">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-black uppercase text-slate-500 tracking-widest">Additional Notes</label>
+                            <textarea name="notes" rows="4" class="dark-input" placeholder="Any specific requirements..."></textarea>
+                        </div>
+                        
+                        <div class="pt-6">
+                            <button type="submit" class="w-full py-5 bg-primary text-white rounded-3xl font-black text-xl uppercase tracking-widest hover:bg-indigo-600 transition shadow-xl shadow-indigo-900/20">Submit Requirement</button>
+                        </div>
+                        <p class="text-[9px] text-center font-bold text-slate-500 uppercase tracking-wider italic mt-4">
+                            * We respect confidentiality. Your information is used only for collaboration and hiring support.
+                        </p>
+                        <div id="form-msg" class="hidden text-center p-4 rounded-2xl text-sm font-bold mt-4 animate-pulse"></div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 text-white py-12 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <p class="text-xs text-slate-500 font-bold uppercase tracking-widest">&copy; 2024 Diverse Loopers. Celebrating Talent.</p>
+        </div>
+    </footer>
+
+    <script type="module">
+        lucide.createIcons();
+
+        // --- Intersection Observer for Animations ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
+        // Initial observe for static elements
+        document.querySelectorAll('.reveal, .fade-in').forEach(el => observer.observe(el));
+
+        // --- Supabase Setup ---
+        const SUPABASE_URL = 'https://tjqsmkaiajdpotmafqvw.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRqcXNta2FpYWpkcG90bWFmcXZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTU5ODA3NDIsImV4cCI6MjA3MTU1Njc0Mn0.9710q9W5EFfCagj340AizUSKiOXYApy0xkTFszFjO8o';
+        const { createClient } = supabase;
+        const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // --- Mobile Menu ---
+        const mobileToggle = document.getElementById('mobile-menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileToggle.onclick = () => mobileMenu.classList.toggle('hidden');
+
+        // --- Helper: Get Start of Week Date String ---
+        function getWeekLabel(dateString) {
+            const date = new Date(dateString);
+            // Adjust to get the Sunday of that week
+            const day = date.getDay();
+            const diff = date.getDate() - day; // adjust when day is sunday
+            const startOfWeek = new Date(date.setDate(diff));
+            
+            const endOfWeek = new Date(startOfWeek);
+            endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+            const options = { month: 'short', day: 'numeric' };
+            const year = startOfWeek.getFullYear();
+            
+            return `Week of ${startOfWeek.toLocaleDateString('en-US', options)} - ${endOfWeek.toLocaleDateString('en-US', options)}, ${year}`;
+        }
+
+        // --- Main Logic: Load Wall ---
+        async function loadFullWall() {
+            const container = document.getElementById('wall-container');
+            
+            try {
+                // Fetch all records sorted by newest first
+                const { data: records, error } = await _supabase
+                    .from('wall_of_fame')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                if (!records || records.length === 0) {
+                    container.innerHTML = `<div class="text-center py-20 text-slate-500">The wall is currently empty. Greatness takes time!</div>`;
+                    return;
+                }
+
+                // Group by Week
+                const grouped = {};
+                records.forEach(item => {
+                    const weekLabel = getWeekLabel(item.created_at);
+                    if (!grouped[weekLabel]) grouped[weekLabel] = [];
+                    grouped[weekLabel].push(item);
+                });
+
+                // Clear loading state
+                container.innerHTML = '';
+
+                // Render Sections
+                Object.keys(grouped).forEach((week, index) => {
+                    const candidates = grouped[week];
+                    
+                    // Create Section Wrapper
+                    const section = document.createElement('div');
+                    section.className = 'reveal';
+                    
+                    // Header for the Week
+                    section.innerHTML = `
+                        <div class="week-line">
+                            <h2 class="text-2xl md:text-3xl font-heading font-bold text-white flex items-center gap-3">
+                                <span class="bg-primary/20 text-primary w-10 h-10 rounded-lg flex items-center justify-center text-sm font-black border border-primary/30">#${Object.keys(grouped).length - index}</span>
+                                ${week}
+                            </h2>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                            ${candidates.map(c => `
+                                <div class="achiever-card group">
+                                    <img src="${c.image_url || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80'}" class="achiever-img" alt="${c.name}">
+                                    <div class="achiever-overlay">
+                                        <h4 class="text-xl font-heading font-bold text-white">${c.name}</h4>
+                                        <p class="text-[10px] font-bold text-primary uppercase tracking-widest mb-1">${c.role_track}</p>
+                                        
+                                        <div class="achiever-details">
+                                            <p class="text-xs text-slate-300 leading-relaxed mb-4 line-clamp-3">${c.project_description || 'Outstanding contribution to the community.'}</p>
+                                            <div class="flex gap-2">
+                                                ${c.project_link ? `<a href="${c.project_link}" target="_blank" class="flex-1 py-2 bg-white text-slate-900 text-center rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-primary hover:text-white transition">Project</a>` : ''}
+                                                ${c.linkedin_url ? `<a href="${c.linkedin_url}" target="_blank" class="w-9 h-9 flex items-center justify-center bg-white/10 text-white rounded-lg hover:bg-[#0077b5] transition"><i data-lucide="linkedin" class="w-4 h-4"></i></a>` : ''}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                    
+                    container.appendChild(section);
+                });
+
+                // Re-init Icons and Observer for new elements
+                lucide.createIcons();
+                document.querySelectorAll('#wall-container .reveal').forEach(el => observer.observe(el));
+
+            } catch (err) {
+                console.error("Error loading wall:", err);
+                container.innerHTML = `<div class="text-center text-red-400">Failed to load the wall. Please try again later.</div>`;
+            }
+        }
+
+        // --- Hiring Form Submission ---
+        const hiringForm = document.getElementById('talent-request-form');
+        const formMsg = document.getElementById('form-msg');
+
+        if (hiringForm) {
+            hiringForm.onsubmit = async (e) => {
+                e.preventDefault();
+                formMsg.classList.remove('hidden');
+                formMsg.textContent = "Processing talent request...";
+                formMsg.className = "block p-4 rounded-xl text-sm font-bold bg-indigo-900/50 text-indigo-300 animate-pulse mt-4 border border-indigo-800";
+                
+                const formData = new FormData(hiringForm);
+                const payload = Object.fromEntries(formData);
+
+                try {
+                    const { error } = await _supabase.from('hiring_inquiries').insert([payload]);
+                    if (error) throw error;
+                    formMsg.textContent = "Success! Our talent team will contact you shortly.";
+                    formMsg.className = "block p-4 rounded-xl text-sm font-bold bg-green-900/50 text-green-400 mt-4 animate-none border border-green-800";
+                    hiringForm.reset();
+                } catch (err) {
+                    formMsg.textContent = "Submission failed. Please check connection.";
+                    formMsg.className = "block p-4 rounded-xl text-sm font-bold bg-red-900/50 text-red-400 mt-4 animate-none border border-red-800";
+                }
+            };
+        }
+
+        // Start
+        loadFullWall();
+    </script>
+</body>
+</html>

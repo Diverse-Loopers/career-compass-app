@@ -11,17 +11,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
-    <link rel="icon" type="image/png"
-        href="/https://diverseloopers.com/my-favicon/favicon.ico, enter /my-favicon/favicon-96x96.png" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml"
-        href="/https://diverseloopers.com/my-favicon/favicon.ico, enter /my-favicon/favicon.svg" />
-    <link rel="shortcut icon"
-        href="/https://diverseloopers.com/my-favicon/favicon.ico, enter /my-favicon/favicon.ico" />
-    <link rel="apple-touch-icon" sizes="180x180"
-        href="/https://diverseloopers.com/my-favicon/favicon.ico, enter /my-favicon/apple-touch-icon.png" />
-    <meta name="apple-mobile-web-app-title" content="DLPT" />
-    <link rel="manifest"
-        href="/https://diverseloopers.com/my-favicon/favicon.ico, enter /my-favicon/site.webmanifest" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://diverseloopers.com/my-favicon/favicon.ico" />
+
     <!-- Scripts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -148,6 +141,10 @@
                 class="sidebar-link w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-semibold hover:bg-slate-50 transition text-left">
                 <i data-lucide="book-open" class="w-5 h-5"></i> Courses
             </button>
+            <button onclick="switchView('fame')" id="nav-fame"
+                class="sidebar-link w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-semibold hover:bg-slate-50 transition text-left">
+                <i data-lucide="trophy" class="w-5 h-5"></i> Fame Wall
+            </button>
             <button onclick="switchView('users')" id="nav-users"
                 class="sidebar-link w-full flex items-center gap-3 px-4 py-3.5 rounded-2xl text-slate-500 font-semibold hover:bg-slate-50 transition text-left">
                 <i data-lucide="users" class="w-5 h-5"></i> Users
@@ -237,42 +234,97 @@
 
             <div class="bg-white rounded-[2rem] p-6 md:p-8 shadow-sm border border-slate-100">
                 <h2 id="event-form-title" class="text-xl font-bold mb-6">Create New Event</h2>
-                <form id="event-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <form id="event-form" class="space-y-6">
                     <input type="hidden" id="event-id">
-                    <div class="space-y-1">
-                        <label class="text-xs font-bold text-slate-500 uppercase">Event Title</label>
-                        <input type="text" id="event-title" required
-                            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition">
+                    
+                    <!-- Basic Info -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-1">
+                            <label class="text-xs font-bold text-slate-500 uppercase">Event Title</label>
+                            <input type="text" id="event-title" required placeholder="e.g. Weekly Coding Bootcamp"
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-xs font-bold text-slate-500 uppercase">Date & Time</label>
+                            <input type="datetime-local" id="event-date" required
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition text-sm">
+                        </div>
                     </div>
+                    
+                    <!-- Description -->
                     <div class="space-y-1">
-                        <label class="text-xs font-bold text-slate-500 uppercase">Date & Time</label>
-                        <input type="datetime-local" id="event-date" required
-                            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition text-sm">
-                    </div>
-                    <div class="md:col-span-2 space-y-1">
                         <label class="text-xs font-bold text-slate-500 uppercase">Brief Description</label>
-                        <textarea id="event-description" rows="3" required
+                        <textarea id="event-description" rows="3" required placeholder="Describe the agenda..."
                             class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition"></textarea>
                     </div>
-                    <div class="space-y-1">
-                        <label class="text-xs font-bold text-slate-500 uppercase">Banner (Upload)</label>
-                        <input type="file" id="event-image-upload" accept="image/*"
-                            class="w-full px-4 py-2 text-xs bg-slate-50 rounded-xl border border-dashed border-slate-300">
-                        <input type="hidden" id="event-media-url">
+
+                    <!-- Details Sections (Arrays) -->
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div class="space-y-1">
+                            <label class="text-xs font-bold text-slate-500 uppercase">Key Highlights</label>
+                            <textarea id="event-highlights" rows="4" placeholder="• Learn React Basics&#10;• Build a Project"
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition"></textarea>
+                            <p class="text-[10px] text-slate-400">One highlight per line</p>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-xs font-bold text-slate-500 uppercase">Who Should Attend</label>
+                            <textarea id="event-who-attend" rows="4" placeholder="• Beginners&#10;• Students"
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition"></textarea>
+                            <p class="text-[10px] text-slate-400">One category per line</p>
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-xs font-bold text-slate-500 uppercase">What You Will Gain</label>
+                            <textarea id="event-gain" rows="4" placeholder="• Certificate&#10;• Practical Knowledge"
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition"></textarea>
+                            <p class="text-[10px] text-slate-400">One item per line</p>
+                        </div>
                     </div>
-                    <div class="space-y-1">
-                        <label class="text-xs font-bold text-slate-500 uppercase">Registration Link</label>
-                        <input type="url" id="event-join-link" placeholder="https://..."
-                            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition">
+
+                    <!-- Media Section -->
+                    <div class="bg-slate-50 rounded-2xl p-6 border border-slate-100">
+                        <h3 class="text-sm font-bold text-slate-900 mb-4 uppercase tracking-widest">Media Assets</h3>
+                        <div class="grid md:grid-cols-3 gap-6">
+                            <div class="space-y-1">
+                                <label class="text-xs font-bold text-slate-500 uppercase">Main Media (Banner)</label>
+                                <div class="relative">
+                                    <input type="file" id="event-image-upload" accept="image/*"
+                                        class="w-full px-4 py-2 text-xs bg-white rounded-xl border border-dashed border-slate-300">
+                                    <input type="hidden" id="event-main-media-url">
+                                </div>
+                            </div>
+                            <div class="space-y-1">
+                                <label class="text-xs font-bold text-slate-500 uppercase">Video URL</label>
+                                <input type="url" id="event-video-url" placeholder="https://youtube.com/..."
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition bg-white text-sm">
+                            </div>
+                             <div class="space-y-1">
+                                <label class="text-xs font-bold text-slate-500 uppercase">Gallery URLs</label>
+                                <textarea id="event-gallery-urls" rows="2" placeholder="https://img1...&#10;https://img2..."
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition bg-white text-sm"></textarea>
+                                <p class="text-[10px] text-slate-400">One URL per line</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="md:col-span-2 space-y-1">
-                        <label class="text-xs font-bold text-slate-500 uppercase">Venue / Location</label>
-                        <input type="text" id="event-location" placeholder="Online / Campus"
-                            class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition">
+
+                    <!-- Logistics -->
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="space-y-1">
+                            <label class="text-xs font-bold text-slate-500 uppercase">Registration / Join Link</label>
+                            <input type="url" id="event-join-link" placeholder="https://zoom.us/..."
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-xs font-bold text-slate-500 uppercase">Venue / Location</label>
+                            <input type="text" id="event-location" placeholder="Online / Campus Room 302"
+                                class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-primary outline-none transition">
+                        </div>
                     </div>
-                    <div class="md:col-span-2 flex gap-3 pt-4">
+
+                    <div class="flex gap-3 pt-4 border-t border-slate-50 mt-2">
                         <button type="submit" id="event-submit-btn"
-                            class="flex-1 py-4 bg-primary text-white rounded-xl font-bold hover:bg-indigo-700 transition shadow-lg">Publish</button>
+                            class="flex-1 py-4 bg-primary text-white rounded-xl font-bold hover:bg-indigo-700 transition shadow-lg flex justify-center items-center gap-2">
+                            <i data-lucide="save" class="w-4 h-4"></i> Publish Event
+                        </button>
                         <button type="button" id="event-cancel-btn" onclick="resetEventForm()" style="display:none;"
                             class="px-8 py-4 bg-slate-100 text-slate-600 rounded-xl font-bold hover:bg-slate-200 transition">Cancel</button>
                     </div>
@@ -284,6 +336,7 @@
                     <table class="w-full text-left border-collapse min-w-[600px]">
                         <thead class="bg-slate-50">
                             <tr>
+                                <th class="px-6 py-4 text-xs font-black uppercase text-slate-400 w-16">Img</th>
                                 <th class="px-6 py-4 text-xs font-black uppercase text-slate-400">Title</th>
                                 <th class="px-6 py-4 text-xs font-black uppercase text-slate-400">Schedule</th>
                                 <th class="px-6 py-4 text-xs font-black uppercase text-slate-400">Location</th>
@@ -296,6 +349,65 @@
                 </div>
             </div>
         </div>
+
+        <!-- FAME WALL VIEW -->
+        <div id="fame-view" class="p-4 md:p-8 hidden space-y-8">
+            <h1 class="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Wall of Fame</h1>
+
+            <!-- Add Fame Entry Form -->
+            <div class="bg-white rounded-[2rem] p-6 md:p-10 border border-slate-100 shadow-sm">
+                <h2 class="text-xl font-extrabold mb-8 text-slate-900">Add Entry</h2>
+                <form id="fame-form" class="space-y-6">
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Name</label>
+                            <input type="text" id="fame-name" required placeholder="Jane Doe"
+                                class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Role / Track</label>
+                            <input type="text" id="fame-role" required placeholder="Full Stack Developer / Hackathon Winner"
+                                class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition">
+                        </div>
+                        
+                        <div class="md:col-span-2 space-y-1">
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Project Description</label>
+                            <textarea id="fame-project-desc" rows="3" placeholder="Briefly describe what they built..."
+                                class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition"></textarea>
+                        </div>
+
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Project Link</label>
+                            <input type="url" id="fame-project-link" placeholder="https://github.com/..."
+                                class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition">
+                        </div>
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">LinkedIn URL</label>
+                            <input type="url" id="fame-linkedin" placeholder="https://linkedin.com/in/..."
+                                class="w-full px-4 py-3.5 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-primary outline-none transition">
+                        </div>
+                        
+                                                <div class="space-y-1">
+                            <label class="text-[10px] font-black uppercase tracking-widest text-slate-400">Student Photo</label>
+                            <input type="file" id="fame-image-upload" accept="image/*"
+                                class="w-full px-4 py-2.5 bg-slate-50 border border-dashed border-slate-300 rounded-2xl text-xs mb-2">
+                            <input type="text" id="fame-image-url" placeholder="Or enter Image URL directly..." 
+                                class="w-full px-4 py-2 bg-white border border-slate-200 rounded-xl text-xs">
+                        </div>
+                    </div>
+                    <div class="pt-4 border-t border-slate-50">
+                        <button type="submit" id="fame-save-btn"
+                            class="w-full md:w-auto px-8 py-4 bg-yellow-500 text-white rounded-2xl font-black uppercase tracking-widest hover:bg-yellow-600 transition shadow-lg shadow-yellow-200">
+                            Add to Wall
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Fame Grid -->
+            <div id="fame-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+        </div>
+
 
         <!-- COURSES VIEW -->
         <div id="courses-view" class="p-4 md:p-8 hidden space-y-8">
@@ -378,7 +490,7 @@
                                 </th>
                             </tr>
                         </thead>
-                        <tbody id="users-table-body" class="divide-y divide-slate-50"></tbody>
+                        <tbody id="users-table-body" class="divide-y divide-slate-5"></tbody>
                     </table>
                 </div>
             </div>
@@ -417,6 +529,7 @@
         let allSkills = [];
         let allEvents = [];
         let allCourses = [];
+        let allFame = [];
 
         // --- Mobile Menu Interaction ---
         const sidebar = document.getElementById('sidebar');
@@ -462,7 +575,7 @@
 
         // --- View Logic ---
         window.switchView = (viewName) => {
-            const sections = ['dashboard', 'events', 'users', 'skills', 'courses'];
+            const sections = ['dashboard', 'events', 'users', 'skills', 'courses', 'fame'];
             sections.forEach(s => {
                 const view = document.getElementById(`${s}-view`);
                 const nav = document.getElementById(`nav-${s}`);
@@ -485,6 +598,9 @@
             if (viewName === 'skills') loadAllSkills();
             if (viewName === 'events') loadAllEvents();
             if (viewName === 'courses') loadAllCourses();
+            if (viewName === 'fame') loadFameWall();
+            
+            lucide.createIcons();
         };
 
         // --- Auth Guard ---
@@ -723,7 +839,10 @@
             allEvents = data || [];
             const tbody = document.getElementById('events-table-body');
             tbody.innerHTML = allEvents.map(e => `
-                <tr>
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="px-6 py-4">
+                        <img src="${e.main_media_url || 'https://via.placeholder.com/40'}" class="w-10 h-10 rounded-lg object-cover bg-slate-200">
+                    </td>
                     <td class="px-6 py-4 font-bold text-slate-900 text-xs md:text-sm">${e.title}</td>
                     <td class="px-6 py-4 text-slate-500 text-[11px] whitespace-nowrap">${new Date(e.date).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}</td>
                     <td class="px-6 py-4 text-slate-500 text-[11px]">${e.location || 'Online'}</td>
@@ -741,12 +860,23 @@
             document.getElementById('event-title').value = e.title;
             document.getElementById('event-date').value = new Date(e.date).toISOString().slice(0, 16);
             document.getElementById('event-description').value = e.description;
-            document.getElementById('event-media-url').value = e.media_url || '';
+            
+            // New Fields - Handle arrays by joining with newline
+            document.getElementById('event-highlights').value = (e.key_highlights || []).join('\n');
+            document.getElementById('event-who-attend').value = (e.who_should_attend || []).join('\n');
+            document.getElementById('event-gain').value = (e.what_you_will_gain || []).join('\n');
+            document.getElementById('event-gallery-urls').value = (e.gallery_urls || []).join('\n');
+            
+            document.getElementById('event-video-url').value = e.video_url || '';
+            document.getElementById('event-main-media-url').value = e.main_media_url || '';
             document.getElementById('event-join-link').value = e.join_link || '';
             document.getElementById('event-location').value = e.location || '';
+            
             document.getElementById('event-form-title').textContent = "Update Event";
+            document.getElementById('event-submit-btn').innerHTML = `<i data-lucide="check" class="w-4 h-4"></i> Update Event`;
             document.getElementById('event-cancel-btn').style.display = 'inline-block';
             document.getElementById('main-scroll-area').scrollTop = 0;
+            lucide.createIcons();
         };
 
         window.deleteEvent = (id) => {
@@ -758,35 +888,226 @@
 
         document.getElementById('event-form').onsubmit = async (e) => {
             e.preventDefault();
+            const btn = document.getElementById('event-submit-btn');
+            const originalText = btn.innerHTML;
+            btn.disabled = true; btn.textContent = "Publishing...";
+
             const id = document.getElementById('event-id').value;
             const file = document.getElementById('event-image-upload').files[0];
-            let url = document.getElementById('event-media-url').value;
+            let url = document.getElementById('event-main-media-url').value;
+            
             if (file) url = await uploadImage(file, 'events-images', 'banners');
+            
+            // Helper to split text area into array
+            const toArray = (val) => val.split('\n').map(s => s.trim()).filter(s => s !== '');
+
             const payload = {
                 title: document.getElementById('event-title').value,
                 date: document.getElementById('event-date').value,
                 description: document.getElementById('event-description').value,
-                media_url: url,
+                location: document.getElementById('event-location').value,
+                main_media_url: url,
                 join_link: document.getElementById('event-join-link').value,
-                location: document.getElementById('event-location').value
+                video_url: document.getElementById('event-video-url').value,
+                
+                // Array fields
+                key_highlights: toArray(document.getElementById('event-highlights').value),
+                who_should_attend: toArray(document.getElementById('event-who-attend').value),
+                what_you_will_gain: toArray(document.getElementById('event-gain').value),
+                gallery_urls: toArray(document.getElementById('event-gallery-urls').value)
             };
+            
             const { error } = id ? await db.from('events').update(payload).eq('id', id) : await db.from('events').insert([payload]);
-            if (!error) { showMessageBox('Synced.'); window.resetEventForm(); loadAllEvents(); }
+            if (!error) { 
+                showMessageBox(id ? 'Event updated.' : 'Event published successfully!'); 
+                window.resetEventForm(); 
+                loadAllEvents(); 
+            } else {
+                showMessageBox('Error: ' + error.message);
+            }
+            btn.disabled = false; btn.innerHTML = originalText;
         };
 
         window.resetEventForm = () => {
             document.getElementById('event-form').reset();
             document.getElementById('event-id').value = '';
             document.getElementById('event-form-title').textContent = "Create New Event";
+            document.getElementById('event-submit-btn').innerHTML = `<i data-lucide="save" class="w-4 h-4"></i> Publish Event`;
             document.getElementById('event-cancel-btn').style.display = 'none';
+            lucide.createIcons();
         }
 
-        document.getElementById('logout-button').onclick = async () => {
-            await db.auth.signOut();
-            window.location.href = 'admin.html';
-        };
+        // --- FAME WALL LOGIC ---
+       // Helper to prevent XSS attacks by sanitizing user input
+const escapeHtml = (unsafe) => {
+    if (unsafe === null || unsafe === undefined) return "";
+    // Ensure input is a string before replacing
+    return String(unsafe)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+};
 
-        checkAuth();
+// Helper to ensure links have http/https protocol
+const ensureProtocol = (url) => {
+    if (!url) return '';
+    let cleanUrl = url.trim();
+    // If it doesn't start with http:// or https://, add https://
+    if (!cleanUrl.startsWith('http://') && !cleanUrl.startsWith('https://')) {
+        return 'https://' + cleanUrl;
+    }
+    return cleanUrl;
+};
+
+// Helper to fix Google Drive links automatically
+const formatImageUrl = (url) => {
+    if (!url) return 'https://via.placeholder.com/100';
+    let cleanUrl = url.trim();
+    
+    // Fix Google Drive links
+    if (cleanUrl.includes('drive.google.com')) {
+        // Pattern 1: drive.google.com/file/d/FILE_ID/view
+        const fileMatch = cleanUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+        if (fileMatch && fileMatch[1]) {
+            return `https://drive.google.com/uc?export=view&id=${fileMatch[1]}`;
+        }
+        
+        // Pattern 2: drive.google.com/open?id=FILE_ID or uc?id=FILE_ID
+        const idMatch = cleanUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+        if (idMatch && idMatch[1]) {
+            return `https://drive.google.com/uc?export=view&id=${idMatch[1]}`;
+        }
+    }
+    
+    return encodeURI(cleanUrl);
+};
+
+async function loadFameWall() {
+    const { data, error } = await db.from('wall_of_fame').select('*').order('created_at', { ascending: false });
+    
+    if (error) {
+        console.error("Error loading fame wall:", error);
+        return;
+    }
+
+    const allFame = data || [];
+    const grid = document.getElementById('fame-grid');
+
+    if (!grid) return;
+
+    grid.innerHTML = allFame.map(item => {
+        const safeImgUrl = formatImageUrl(item.image_url);
+        const linkedin = ensureProtocol(item.linkedin_url);
+        const project = ensureProtocol(item.project_link);
+        
+        return `
+        <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm relative group text-center flex flex-col h-full">
+            <button onclick="deleteFameEntry('${item.id}')" class="absolute top-4 right-4 text-slate-300 hover:text-red-500 transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+            
+            <div class="w-20 h-20 mx-auto rounded-full bg-slate-100 mb-4 overflow-hidden border-4 border-white shadow-lg">
+                <!-- Added referrerpolicy="no-referrer" to allow Google Drive images to load -->
+                <img src="${safeImgUrl}" referrerpolicy="no-referrer" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/100'">
+            </div>
+            
+            <h3 class="font-bold text-slate-900 text-lg">${escapeHtml(item.name)}</h3>
+            <p class="text-xs font-bold text-primary uppercase tracking-wide mt-1 mb-2">${escapeHtml(item.role_track)}</p>
+            
+            <p class="text-sm text-slate-500 line-clamp-2 mb-4 flex-grow">${escapeHtml(item.project_description)}</p>
+            
+            <div class="flex justify-center gap-3 mt-auto">
+                ${linkedin ? `<a href="${linkedin}" target="_blank" class="p-2 bg-blue-50 text-blue-600 rounded-full hover:bg-blue-600 hover:text-white transition"><i data-lucide="linkedin" class="w-4 h-4"></i></a>` : ''}
+                ${project ? `<a href="${project}" target="_blank" class="p-2 bg-slate-100 text-slate-600 rounded-full hover:bg-slate-800 hover:text-white transition"><i data-lucide="external-link" class="w-4 h-4"></i></a>` : ''}
+            </div>
+        </div>
+    `}).join('');
+    
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
+}
+
+// Ensure element exists before attaching listener
+const fameForm = document.getElementById('fame-form');
+if (fameForm) {
+    fameForm.onsubmit = async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('fame-save-btn');
+        const originalText = btn.textContent;
+        btn.disabled = true; 
+        btn.textContent = "Uploading...";
+    
+        try {
+            const fileInput = document.getElementById('fame-image-upload');
+            const file = fileInput ? fileInput.files[0] : null;
+            let imageUrl = document.getElementById('fame-image-url').value;
+            
+            if (file) {
+                if (typeof uploadImage === 'function') {
+                    const uploadedUrl = await uploadImage(file, 'course-images', 'fame');
+                    if (uploadedUrl) imageUrl = uploadedUrl;
+                } else {
+                    console.warn("uploadImage function is missing. Skipping file upload.");
+                    alert("Warning: Image upload functionality is missing. Only text data will be saved.");
+                }
+            }
+    
+            const payload = {
+                name: document.getElementById('fame-name').value,
+                role_track: document.getElementById('fame-role').value,
+                project_description: document.getElementById('fame-project-desc').value,
+                project_link: document.getElementById('fame-project-link').value,
+                linkedin_url: document.getElementById('fame-linkedin').value,
+                image_url: imageUrl
+            };
+    
+            const { error } = await db.from('wall_of_fame').insert([payload]);
+            
+            if (error) {
+                if (typeof showMessageBox === 'function') showMessageBox('Error adding to Fame Wall: ' + error.message);
+                else alert('Error: ' + error.message);
+            } else {
+                if (typeof showMessageBox === 'function') showMessageBox('Added to Hall of Fame!');
+                fameForm.reset();
+                loadFameWall();
+            }
+        } catch (err) {
+            console.error("Submission error:", err);
+            alert("An unexpected error occurred: " + err.message);
+        } finally {
+            btn.disabled = false; 
+            btn.textContent = originalText;
+        }
+    };
+}
+
+// Global scope required for HTML onclick attribute
+window.deleteFameEntry = (id) => {
+    const confirmAction = typeof showConfirmBox === 'function' 
+        ? showConfirmBox 
+        : (title, msg, callback) => { if(confirm(msg)) callback(); };
+
+    confirmAction('Remove Entry', 'Remove this student from the wall?', async () => {
+        const { error } = await db.from('wall_of_fame').delete().eq('id', id);
+        if (error) {
+            console.error("Delete error", error);
+            alert("Failed to delete entry");
+        } else {
+            loadFameWall();
+        }
+    });
+};
+
+const logoutBtn = document.getElementById('logout-button');
+if (logoutBtn) {
+    logoutBtn.onclick = async () => {
+        const { error } = await db.auth.signOut();
+        if (!error) window.location.href = 'admin.html';
+    };
+}
+
+if (typeof checkAuth === 'function') checkAuth();
     </script>
 </body>
 
