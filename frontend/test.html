@@ -121,6 +121,150 @@
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+         body.dl-no-scroll {
+            overflow: hidden;
+        }
+
+        /* The Overlay: Dark background with Blur effect */
+        .dl-privacy-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 99999; /* Very high z-index to sit on top of everything */
+            background-color: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Show the modal */
+        .dl-privacy-overlay.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        /* The White Box */
+        .dl-privacy-content {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 800px;
+            max-height: 90vh;
+            border-radius: 12px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            text-align: left; /* Ensure text aligns left regardless of parent styles */
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; /* Enforce font */
+        }
+
+        .dl-privacy-overlay.active .dl-privacy-content {
+            transform: translateY(0);
+        }
+
+        /* Header */
+        .dl-privacy-header {
+            padding: 20px 30px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            border-radius: 12px 12px 0 0;
+            flex-shrink: 0;
+        }
+
+        .dl-privacy-header h2 {
+            font-size: 1.5rem;
+            margin: 0;
+            color: #111827;
+            line-height: 1.2;
+        }
+
+        /* Close Button */
+        .dl-privacy-close {
+            background: transparent;
+            border: none;
+            font-size: 2rem;
+            line-height: 1;
+            color: #6b7280;
+            cursor: pointer;
+            padding: 0 5px;
+            margin: 0;
+        }
+
+        .dl-privacy-close:hover {
+            color: #ef4444;
+        }
+
+        /* Body Content */
+        .dl-privacy-body {
+            padding: 30px;
+            overflow-y: auto;
+            font-size: 0.95rem;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        /* Resetting styles inside the body to prevent inheritance issues */
+        .dl-privacy-body h3 {
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #1f2937;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .dl-privacy-body p {
+            margin-bottom: 1rem;
+        }
+
+        .dl-privacy-body ul {
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+            list-style-type: disc;
+        }
+
+        .dl-privacy-body li {
+            margin-bottom: 0.25rem;
+        }
+
+        .dl-section-title {
+            font-weight: 700;
+            color: #2563eb;
+            margin-top: 2rem;
+            display: block;
+            font-size: 1.2rem;
+        }
+
+        /* Scrollbar styling for the modal */
+        .dl-privacy-body::-webkit-scrollbar {
+            width: 8px;
+        }
+        .dl-privacy-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 0 0 12px 0;
+        }
+        .dl-privacy-body::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 4px;
+        }
+        .dl-privacy-body::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
+        }
     </style>
 </head>
 <body class="font-sans text-slate-700 bg-white min-h-screen flex flex-col">
@@ -422,7 +566,7 @@
                     <h4 class="font-bold mb-6 text-xs uppercase tracking-widest text-slate-500">Legal</h4>
                     <ul class="space-y-4 text-slate-400 text-sm font-medium">
                         <li><a href="aboutus-std.html" class="hover:text-white">About Us</a></li>
-                        <li><a href="#" class="hover:text-white">Privacy Policy</a></li>
+                        <li><a class="privacy-trigger" id="openPrivacyBtn" class="hover:text-white cursor-pointer">Privacy Policy</a></li>
                     </ul>
                 </div>
                 <div class="flex flex-col items-center sm:items-start">
@@ -436,6 +580,181 @@
             </div>
         </div>
     </footer>
+    
+
+   
+    <div class="dl-privacy-overlay" id="privacyModal">
+        <div class="dl-privacy-content">
+            <div class="dl-privacy-header">
+                <h2>Privacy Policy</h2>
+                <button class="dl-privacy-close" id="closePrivacyBtn">&times;</button>
+            </div>
+            <div class="dl-privacy-body">
+                <!-- CONTENT START -->
+                <span style="font-size: 0.85rem; color: #6b7280; display: block; margin-bottom: 10px;">Effective Date: October 25, 2025</span>
+                
+                <p><strong>Diverse Loopers</strong> (“Diverse Loopers,” “we,” “our,” or “us”) is a business and skill-development ecosystem providing educational programs, career-pathway initiatives, technology solutions, and software development services.</p>
+                <p>We are committed to safeguarding the privacy, confidentiality, and security of personal information entrusted to us. This Privacy Policy describes how we collect, use, store, disclose, and protect personal information when individuals interact with our website, platforms, programs, or services.</p>
+                <p>By accessing or using our services, you acknowledge and agree to the practices described in this Privacy Policy.</p>
+
+                <span class="dl-section-title">1. Information We Collect</span>
+                <p>We collect information necessary for legitimate academic, operational, and business purposes.</p>
+                
+                <h3>A. Information Provided Directly by You</h3>
+                <ul>
+                    <li>Name and contact details (email address, phone number)</li>
+                    <li>Institution / organization details (if applicable)</li>
+                    <li>Educational background, academic records, and skills</li>
+                    <li>Resume, portfolio, or professional profile</li>
+                    <li>Date of birth (where required for eligibility or verification)</li>
+                    <li>Location information (city, state, country)</li>
+                    <li>User account credentials</li>
+                    <li>Feedback, queries, and communications</li>
+                    <li>Documents submitted for verification or assessments</li>
+                    <li>Payment-related information processed through third-party payment gateways (We do not store full card or banking details.)</li>
+                </ul>
+
+                <h3>B. Information Collected Automatically</h3>
+                <ul>
+                    <li>IP address</li>
+                    <li>Device information (browser, operating system, device type)</li>
+                    <li>Usage logs and activity records</li>
+                    <li>Session data, clicks, navigation paths, and referral links</li>
+                    <li>Cookies and similar tracking technologies</li>
+                    <li>Performance, diagnostics, and crash reports</li>
+                </ul>
+
+                <h3>C. Information Received from Third Parties</h3>
+                <ul>
+                    <li>Authentication via Google, LinkedIn, or similar services</li>
+                    <li>Partner institutions and collaborating organizations</li>
+                    <li>Hiring and referral partners (where applicable)</li>
+                    <li>Payment gateways and financial processors</li>
+                    <li>Analytics, marketing, and communication service providers</li>
+                </ul>
+                <p>We collect only information necessary and lawful for the purposes described in this policy.</p>
+
+                <span class="dl-section-title">2. How We Use Your Information</span>
+                <h3>For Students / Participants</h3>
+                <ul>
+                    <li>Create and manage user accounts</li>
+                    <li>Enroll in programs, courses, workshops, and events</li>
+                    <li>Deliver personalized learning content and recommendations</li>
+                    <li>Monitor performance, assessments, and project outcomes</li>
+                    <li>Issue certificates, participation records, and reports</li>
+                    <li>Provide mentorship and career-pathway support</li>
+                    <li>Communicate updates, reminders, announcements, and notices</li>
+                </ul>
+
+                <h3>For Clients / Organizations</h3>
+                <ul>
+                    <li>Understand project and service requirements</li>
+                    <li>Deliver software development, consulting, and technology solutions</li>
+                    <li>Manage contracts, billing, and customer support</li>
+                    <li>Improve service quality, reliability, and performance</li>
+                </ul>
+
+                <h3>General Business Purposes</h3>
+                <ul>
+                    <li>Maintain and improve website and platform functionality</li>
+                    <li>Conduct internal research, analytics, and reporting</li>
+                    <li>Ensure platform safety, security, and fraud prevention</li>
+                    <li>Comply with legal and regulatory obligations</li>
+                    <li>Send newsletters, updates, and promotional communications (You may opt out at any time.)</li>
+                </ul>
+
+                <span class="dl-section-title">3. Cookies and Tracking Technologies</span>
+                <p>We use cookies and similar technologies to:</p>
+                <ul>
+                    <li>Maintain secure sessions</li>
+                    <li>Remember preferences</li>
+                    <li>Analyze website usage and performance</li>
+                    <li>Enhance learning and user experience</li>
+                    <li>Support limited marketing and remarketing activities</li>
+                </ul>
+                <p>You may disable cookies via browser settings; however, some features may not function correctly.</p>
+
+                <span class="dl-section-title">4. Legal Basis for Processing (Where Applicable)</span>
+                <p>We process information based on:</p>
+                <ul>
+                    <li>Performance of a contract</li>
+                    <li>Legitimate business interest</li>
+                    <li>Compliance with legal obligations</li>
+                    <li>Consent, where explicitly obtained</li>
+                </ul>
+                <p>Consent may be withdrawn at any time.</p>
+
+                <span class="dl-section-title">5. Sharing of Information</span>
+                <p>We may share information only with trusted service providers and partners for legitimate purposes, including:</p>
+                <ul>
+                    <li>Learning, certification, and collaboration partners</li>
+                    <li>Hiring and referral partners (with prior consent)</li>
+                    <li>Payment gateways and financial processors</li>
+                    <li>Cloud hosting and IT infrastructure providers</li>
+                    <li>Analytics, communication, and support tools</li>
+                    <li>Legal, audit, and regulatory authorities where required by law</li>
+                </ul>
+                <p>All partners are bound by confidentiality and data-protection obligations. We do not sell personal information.</p>
+
+                <span class="dl-section-title">6. Data Security</span>
+                <p>We implement appropriate administrative, technical, and physical safeguards, including:</p>
+                <ul>
+                    <li>Secure, encrypted data transmission (HTTPS/SSL)</li>
+                    <li>Restricted access control and authentication</li>
+                    <li>Secure storage systems</li>
+                    <li>Regular security monitoring and reviews</li>
+                    <li>Confidentiality obligations for personnel</li>
+                </ul>
+                <p>While we take reasonable protective measures, no system can guarantee absolute security.</p>
+
+                <span class="dl-section-title">7. Data Retention</span>
+                <p>We retain personal information only for as long as necessary to:</p>
+                <ul>
+                    <li>Provide requested services</li>
+                    <li>Comply with legal and regulatory requirements</li>
+                    <li>Resolve disputes and enforce agreements</li>
+                </ul>
+                <p>Data is securely deleted or anonymized when no longer required.</p>
+
+                <span class="dl-section-title">8. Children’s Privacy</span>
+                <p>We do not knowingly collect personal information from individuals under 16 years of age without verified parental or guardian consent. If such data is discovered, it will be removed promptly upon notification.</p>
+
+                <span class="dl-section-title">9. Your Rights</span>
+                <p>Depending on applicable law, you may have the right to:</p>
+                <ul>
+                    <li>Access personal information</li>
+                    <li>Request corrections or updates</li>
+                    <li>Request deletion (where legally permissible)</li>
+                    <li>Restrict or object to processing</li>
+                    <li>Withdraw consent for marketing communications</li>
+                    <li>Request data portability</li>
+                </ul>
+                <p>Requests may be submitted using the contact details below.</p>
+
+                <span class="dl-section-title">10. International Data Transfers</span>
+                <p>Personal information may be stored or processed in jurisdictions outside your country of residence. Appropriate safeguards are applied to protect such data in accordance with applicable law.</p>
+
+                <span class="dl-section-title">11. Third-Party Websites</span>
+                <p>Our website may contain links to third-party websites or services. We are not responsible for their privacy practices and recommend reviewing their respective policies.</p>
+
+                <span class="dl-section-title">12. Marketing Preferences</span>
+                <p>You may unsubscribe from marketing communications at any time by using the unsubscribe option or contacting us directly.</p>
+
+                <span class="dl-section-title">13. Updates to This Policy</span>
+                <p>We may revise or update this Privacy Policy periodically. The updated version will be posted with a revised Effective Date. Continued use of our services constitutes acceptance of any changes.</p>
+
+                <span class="dl-section-title">14. Contact Details</span>
+                <p>For questions, concerns, or privacy-related requests, please contact:</p>
+                <p>
+                    <strong>Diverse Loopers</strong><br>
+                    Email: <a href="mailto:contact@diverseloopers.com">contact@diverseloopers.com</a><br>
+                    Website: <a href="https://diverseloopers.com" target="_blank">https://diverseloopers.com</a><br>
+                    Phone: +91 9839350961
+                </p>
+                <!-- CONTENT END -->
+            </div>
+        </div>
+    </div>
 
     <script type="module">
         lucide.createIcons();
@@ -586,6 +905,46 @@
         // Initialize Page
         loadAchievers();
         loadEvents();
+        (function() {
+            // We wrap code in a function to avoid variable conflicts with other scripts
+            var openBtn = document.getElementById('openPrivacyBtn');
+            var modal = document.getElementById('privacyModal');
+            var closeBtn = document.getElementById('closePrivacyBtn');
+            var body = document.body;
+
+            if(openBtn) {
+                openBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if(modal) {
+                        modal.classList.add('active');
+                        body.classList.add('dl-no-scroll'); // Using new unique class
+                    }
+                });
+            }
+
+            function closeDLModal() {
+                if(modal) modal.classList.remove('active');
+                body.classList.remove('dl-no-scroll');
+            }
+
+            if(closeBtn) {
+                closeBtn.addEventListener('click', closeDLModal);
+            }
+            
+            if(modal) {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        closeDLModal();
+                    }
+                });
+            }
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modal && modal.classList.contains('active')) {
+                    closeDLModal();
+                }
+            });
+        })();
     </script>
 </body>
 </html>
