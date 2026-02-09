@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TO45 | Autonomous Sleepness Detection</title>
+    <title>RoadWatch | Safety Monitoring System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- MediaPipe Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
@@ -11,194 +11,267 @@
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
     
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
         :root {
-            --bg-dark: #0f172a;
-            --accent-blue: #3b82f6;
-            --accent-red: #ef4444;
+            --bg-page: #f9fafb;
+            --card-bg: #ffffff;
+            --accent-primary: #4f46e5;
+            --text-main: #111827;
+            --text-muted: #6b7280;
         }
 
         body {
-            background-color: var(--bg-dark);
-            color: #f8fafc;
-            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
             overflow-x: hidden;
         }
 
-        .glass-panel {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .dashboard-card {
+            background: var(--card-bg);
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            border-radius: 1.25rem;
         }
 
-        .video-container::after {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.05) 50%);
-            background-size: 100% 4px;
-            pointer-events: none;
-            z-index: 10;
+        .video-wrapper {
+            background: #000;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
 
-        @keyframes pulse-red {
-            0%, 100% { border-color: rgba(239, 68, 68, 0.3); }
-            50% { border-color: rgba(239, 68, 68, 1); box-shadow: 0 0 30px rgba(239, 68, 68, 0.6); }
+        @keyframes subtle-pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            100% { transform: scale(1); opacity: 1; }
         }
 
-        .alert-active { animation: pulse-red 0.5s infinite; }
-        .meter-fill { transition: width 0.1s linear; }
+        .alert-active-ui {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        /* Removing the AI-generated HUD look */
+        .camera-overlay-label {
+            background: rgba(255, 255, 255, 0.9);
+            color: #1f2937;
+            font-weight: 600;
+            font-size: 0.75rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.75rem;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .custom-file-input::-webkit-file-upload-button {
+            visibility: hidden;
+            display: none;
+        }
+        .custom-file-input::before {
+            content: 'Select custom sound';
+            display: inline-block;
+            background: #eff6ff;
+            border: 1px solid #dbeafe;
+            border-radius: 0.5rem;
+            padding: 8px 12px;
+            outline: none;
+            white-space: nowrap;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            color: #1e40af;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
-    <header class="p-6 border-b border-slate-800 flex justify-between items-center glass-panel sticky top-0 z-50">
-        <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/20">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+    <header class="px-8 py-5 border-b border-gray-200 bg-white flex justify-between items-center sticky top-0 z-50">
+        <div class="flex items-center space-x-4">
+            <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
             </div>
             <div>
-                <h1 class="text-xl font-bold tracking-tight text-white">VisionGuard <span class="text-blue-500">TO45</span></h1>
-                <p class="text-[10px] text-slate-400 font-mono tracking-widest uppercase" id="loadStatus">Initializing Computer Vision...</p>
+                <h1 class="text-xl font-bold tracking-tight text-gray-900">Minor Project<span class="text-indigo-600 font-medium">T045</span></h1>
+                <p class="text-[11px] text-gray-500 font-medium uppercase tracking-wider" id="loadStatus">System Standby</p>
             </div>
         </div>
-        <div class="flex items-center space-x-4">
-             <div id="aiStatus" class="px-3 py-1 bg-slate-800 rounded-full border border-white/5 text-[10px] font-bold text-blue-400 uppercase">AI INFERENCE: ACTIVE</div>
+        <div class="flex items-center space-x-3">
+            <div class="flex items-center space-x-2 px-3 py-1.5 bg-green-50 rounded-full border border-green-100">
+                <span class="status-dot bg-green-500 animate-pulse"></span>
+                <span class="text-[11px] font-bold text-green-700 uppercase tracking-tighter">Live Monitor</span>
+            </div>
         </div>
     </header>
 
-    <main class="flex-1 p-4 lg:p-8 grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto w-full">
+    <main class="flex-1 p-6 lg:p-10 grid grid-cols-1 lg:grid-cols-12 gap-8 max-w-[1440px] mx-auto w-full">
         
-        <!-- Camera Column -->
-        <div class="lg:col-span-2 space-y-6">
-            <div id="monitorFrame" class="relative video-container bg-black rounded-3xl overflow-hidden shadow-2xl border-4 border-slate-800 transition-all duration-300 h-[400px] lg:h-[550px]">
+        <!-- Left: Camera Control -->
+        <div class="lg:col-span-8 space-y-6">
+            <div id="monitorFrame" class="relative video-wrapper aspect-video bg-gray-100">
                 <video id="input_video" class="absolute inset-0 w-full h-full object-cover scale-x-[-1]" playsinline></video>
                 <canvas id="output_canvas" class="absolute inset-0 w-full h-full object-cover scale-x-[-1] z-20"></canvas>
                 
-                <!-- AI HUD Overlays -->
+                <!-- Minimal HUD Overlays -->
                 <div class="absolute inset-0 p-6 flex flex-col justify-between pointer-events-none z-30">
                     <div class="flex justify-between items-start">
-                        <div class="glass-panel p-3 rounded-xl border border-white/10">
-                            <p class="text-[10px] text-blue-400 font-mono mb-1">METRIC TRACKING</p>
-                            <div class="font-mono text-sm">EAR: <span id="earVal">0.00</span></div>
+                        <div class="camera-overlay-label flex items-center space-x-2">
+                            <span class="text-indigo-600 font-black">EAR</span>
+                            <span id="earVal" class="font-mono">0.00</span>
                         </div>
-                        <div id="distractionHUD" class="hidden glass-panel p-3 rounded-xl border border-red-500/50 bg-red-900/20 text-right">
-                            <p class="text-[10px] text-red-400 font-mono mb-1">LOOK-AWAY TIMER</p>
-                            <p id="distractionTimer" class="text-xl font-mono text-red-500">0.0s</p>
+                        <div id="distractionHUD" class="hidden camera-overlay-label !bg-red-50 !text-red-700 !border-red-200 shadow-lg animate-bounce">
+                            LOOK-AWAY TIMER: <span id="distractionTimer" class="font-bold ml-1">0.0s</span>
                         </div>
                     </div>
 
                     <div class="flex justify-between items-end">
-                        <div id="eyeStateDisplay" class="glass-panel px-4 py-2 rounded-full border border-white/10 text-sm font-bold flex items-center space-x-2">
-                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
-                            <span>DETECTING...</span>
-                        </div>
-                        <div class="glass-panel px-4 py-2 rounded-full border border-white/10 text-sm font-bold text-white">
-                            CALIBRATION: OK
+                        <div id="eyeStateDisplay" class="camera-overlay-label flex items-center space-x-2">
+                            <span class="status-dot bg-gray-300" id="eyeDot"></span>
+                            <span id="eyeText">WAITING FOR FEED</span>
                         </div>
                     </div>
                 </div>
 
-                <!-- Start UI -->
-                <div id="cameraPrompt" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-900/95 text-center p-8 z-[100]">
-                    <h3 class="text-2xl font-bold mb-4 text-white">Configure System</h3>
+                <!-- Setup Experience -->
+                <div id="cameraPrompt" class="absolute inset-0 flex flex-col items-center justify-center bg-white/95 text-center p-12 z-[100] transition-opacity duration-500">
+                    <div class="mb-8">
+                        <h3 class="text-3xl font-extrabold text-gray-900 mb-2">Driver Monitoring Setup</h3>
+                        <p class="text-gray-500 max-w-sm mx-auto">Configure your safety environment before starting the journey.</p>
+                    </div>
                     
-                    <!-- Custom Audio Section -->
-                    <div class="mb-8 w-full max-w-xs p-4 border border-white/10 bg-white/5 rounded-2xl">
-                        <label class="block text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-3">Custom Alarm Sound (Optional)</label>
-                        <input type="file" id="audioUpload" accept="audio/*" class="text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer w-full" />
-                        <p class="mt-2 text-[9px] text-slate-500">Default: High-Intensity Siren</p>
+                    <div class="grid grid-cols-1 gap-4 w-full max-w-sm mb-10">
+                        <div class="p-5 dashboard-card text-left hover:border-indigo-300 transition-colors">
+                            <label class="block text-[11px] font-bold text-indigo-600 uppercase mb-3">Custom Alert Sound</label>
+                            <input type="file" id="audioUpload" accept="audio/*" class="custom-file-input w-full text-sm text-gray-500" />
+                        </div>
                     </div>
 
-                    <button id="startBtn" class="bg-blue-600 hover:bg-blue-500 text-white px-10 py-4 rounded-full font-black uppercase tracking-widest transition-all shadow-xl shadow-blue-600/20 active:scale-95">Enable Camera & Audio</button>
+                    <button id="startBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-10 py-4 rounded-2xl font-bold transition-all shadow-lg hover:shadow-indigo-200 active:scale-95">
+                        Initialize Safety Feed
+                    </button>
                 </div>
             </div>
 
-            <div class="glass-panel p-6 rounded-3xl flex justify-between items-center italic text-xs text-slate-500">
-                <p>Note: AI processing occurs entirely on-device. No video is transmitted.</p>
-                <button onclick="location.reload()" class="text-blue-400 underline uppercase font-bold text-[10px]">Hard Reset</button>
+            <div class="flex justify-between items-center p-5 dashboard-card border-none bg-indigo-50/50">
+                <div class="flex items-center space-x-3">
+                    <div class="p-2 bg-indigo-100 rounded-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <p class="text-xs text-indigo-800 font-medium">Privacy: All facial tracking is processed on your device. Video never leaves this page.</p>
+                </div>
+                <button onclick="location.reload()" class="text-indigo-600 text-xs font-bold uppercase hover:underline">Restart Calibration</button>
             </div>
         </div>
 
-        <!-- Sidebar -->
-        <div class="space-y-6">
-            <div id="statusCard" class="glass-panel p-6 rounded-3xl border-l-4 border-emerald-500 transition-colors duration-300">
-                <h2 class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">AI Driver Status</h2>
-                <div class="flex items-center space-x-4">
-                    <div id="statusIcon" class="w-16 h-16 rounded-2xl bg-emerald-500/20 flex items-center justify-center text-emerald-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        <!-- Right: Insights -->
+        <div class="lg:col-span-4 space-y-6">
+            
+            <!-- Status Widget -->
+            <div id="statusCard" class="dashboard-card p-6 border-l-8 border-green-500 transition-all duration-300">
+                <h2 class="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-6">Real-time Biometrics</h2>
+                
+                <div class="flex items-center space-x-5 mb-8">
+                    <div id="statusIcon" class="w-14 h-14 rounded-2xl bg-green-50 flex items-center justify-center text-green-600 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                         </svg>
                     </div>
                     <div>
-                        <h3 id="statusHeading" class="text-2xl font-black uppercase italic tracking-tighter text-white">Normal</h3>
-                        <p id="statusDescription" class="text-xs text-slate-400">Eyes tracked. Attention centered.</p>
+                        <h3 id="statusHeading" class="text-xl font-extrabold text-gray-900 leading-tight tracking-tight">System Ready</h3>
+                        <p id="statusDescription" class="text-sm text-gray-500">Normal driver activity detected.</p>
                     </div>
                 </div>
                 
-                <div class="mt-6 space-y-4">
+                <div class="space-y-6 pt-4 border-t border-gray-100">
                     <div>
-                        <div class="flex justify-between text-[10px] font-bold mb-1">
-                            <span class="text-slate-400">EYE ASPECT RATIO</span>
-                            <span id="earLabel" class="text-white">0.00</span>
+                        <div class="flex justify-between text-[11px] font-bold mb-2">
+                            <span class="text-gray-400">EYE CLOSURE SENSITIVITY</span>
+                            <span id="earLabel" class="text-gray-900 font-mono">0.00</span>
                         </div>
-                        <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
-                            <div id="earMeter" class="meter-fill h-full bg-blue-500" style="width: 0%"></div>
+                        <div class="w-full bg-gray-100 h-3 rounded-full overflow-hidden">
+                            <div id="earMeter" class="meter-fill h-full bg-indigo-500" style="width: 0%"></div>
                         </div>
                     </div>
-                    <div class="p-4 bg-slate-900/50 rounded-xl border border-white/5">
-                        <p class="text-[10px] font-bold text-slate-500 mb-2 uppercase">System Sound State</p>
-                        <p id="soundName" class="font-mono text-[10px] text-emerald-400">SIREN_DEFAULT_ACTIVE</p>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="p-3 bg-gray-50 rounded-xl border border-gray-100">
+                            <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">Audio Profile</p>
+                            <p id="soundName" class="text-[11px] font-bold text-gray-700 truncate">STANDARD_ALARM</p>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded-xl border border-gray-100">
+                            <p class="text-[10px] font-bold text-gray-400 uppercase mb-1">Last Sync</p>
+                            <p id="lastSyncTime" class="text-[11px] font-bold text-gray-700">---</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Reference -->
-            <div class="glass-panel p-6 rounded-3xl">
-                <h2 class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4 text-white">Alert Matrix</h2>
-                <div class="space-y-2 text-[10px] font-mono">
-                    <div class="flex justify-between p-2 rounded bg-amber-500/10 text-amber-500">
-                        <span>0.4 - 0.8s Closure</span>
-                        <span>FATIGUE</span>
+            <!-- Protocol Table -->
+            <div class="dashboard-card p-6">
+                <h2 class="text-[11px] font-bold uppercase tracking-wider text-gray-400 mb-4">Safety Protocol</h2>
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between p-3 rounded-xl bg-gray-50 border border-gray-100">
+                        <span class="text-xs font-semibold text-gray-700">Fatigue Warning</span>
+                        <span class="text-[10px] font-bold bg-amber-100 text-amber-700 px-2 py-1 rounded-lg">0.4s - 0.8s</span>
                     </div>
-                    <div class="flex justify-between p-2 rounded bg-orange-500/10 text-orange-500">
-                        <span>0.8 - 1.5s Closure</span>
-                        <span>DROWSY</span>
+                    <div class="flex items-center justify-between p-3 rounded-xl bg-gray-50 border border-gray-100">
+                        <span class="text-xs font-semibold text-gray-700">Drowsy Alert</span>
+                        <span class="text-[10px] font-bold bg-orange-100 text-orange-700 px-2 py-1 rounded-lg">0.8s - 1.5s</span>
                     </div>
-                    <div class="flex justify-between p-2 rounded bg-red-500/10 text-red-500 border border-red-500/20">
-                        <span>> 1.5s Closure</span>
-                        <span>MICROSLEEP</span>
+                    <div class="flex items-center justify-between p-3 rounded-xl bg-red-50 border border-red-100">
+                        <span class="text-xs font-semibold text-red-700">Microsleep Hazard</span>
+                        <span class="text-[10px] font-bold bg-red-600 text-white px-2 py-1 rounded-lg">> 1.5s</span>
                     </div>
-                    <div class="flex justify-between p-2 rounded bg-red-900/40 text-red-400 mt-2">
-                        <span>> 5.0s Look-Away</span>
-                        <span>DANGER ALARM</span>
+                    <div class="flex items-center justify-between p-3 rounded-xl bg-red-50 border border-red-100">
+                        <span class="text-xs font-semibold text-red-700">Distraction Alarm</span>
+                        <span class="text-[10px] font-bold bg-red-600 text-white px-2 py-1 rounded-lg">> 5.0s</span>
                     </div>
                 </div>
             </div>
 
-            <div class="glass-panel rounded-3xl h-48 overflow-hidden flex flex-col">
-                <div class="p-4 border-b border-white/5 bg-slate-800/50 text-[10px] font-bold text-slate-400 uppercase">Live Audit Log</div>
-                <div id="systemLog" class="p-4 space-y-1 overflow-y-auto text-[10px] font-mono flex-1"></div>
+            <!-- Activity Log -->
+            <div class="dashboard-card overflow-hidden flex flex-col h-48">
+                <div class="px-5 py-3 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
+                    <h2 class="text-[11px] font-bold uppercase tracking-wider text-gray-400">Activity Log</h2>
+                    <span id="logCount" class="text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full">0</span>
+                </div>
+                <div id="systemLog" class="p-4 space-y-2 overflow-y-auto text-[11px] flex-1">
+                    <div class="text-gray-400 italic">Waiting for system start...</div>
+                </div>
             </div>
         </div>
     </main>
 
-    <!-- Overlays -->
-    <div id="fullScreenAlert" class="fixed inset-0 z-[200] bg-red-600 flex flex-col items-center justify-center p-8 text-center hidden">
-        <h2 class="text-6xl font-black text-white mb-4 animate-bounce uppercase">DANGER!</h2>
-        <p class="text-2xl font-bold text-white/90 mb-12 uppercase tracking-widest" id="alertSubText">WAKE UP / EYES ON ROAD</p>
-        <button onclick="dismissAlarm()" class="bg-white text-red-600 px-12 py-4 rounded-full font-black text-xl shadow-2xl">DISMISS</button>
+    <!-- Visual Intervention -->
+    <div id="fullScreenAlert" class="fixed inset-0 z-[200] bg-white flex flex-col items-center justify-center p-8 text-center hidden">
+        <div class="w-32 h-32 bg-red-600 rounded-3xl flex items-center justify-center mb-10 shadow-2xl shadow-red-200 animate-bounce">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+        </div>
+        <h2 class="text-5xl font-extrabold text-gray-900 mb-6 uppercase tracking-tight">Immediate Action Required</h2>
+        <p class="text-xl text-gray-500 mb-12 max-w-lg mx-auto font-medium" id="alertSubText">Safety sensors have detected a critical state. Please focus on the road or pull over immediately.</p>
+        <button onclick="dismissAlarm()" class="bg-gray-900 hover:bg-black text-white px-16 py-6 rounded-2xl font-bold text-xl shadow-2xl transition-all active:scale-95">I am Focused / Dismiss</button>
     </div>
 
-    <!-- Alarm Audio -->
+    <!-- Hidden Alarm Sound -->
     <audio id="warningSnd" loop preload="auto">
         <source src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" type="audio/mpeg">
     </audio>
 
     <script>
-        // DOM Elements
+        // MediaPipe Setup
         const videoElement = document.getElementById('input_video');
         const canvasElement = document.getElementById('output_canvas');
         const canvasCtx = canvasElement.getContext('2d');
@@ -206,7 +279,7 @@
         const audioUpload = document.getElementById('audioUpload');
         const soundNameDisp = document.getElementById('soundName');
 
-        // Thresholds
+        // Config
         const EAR_THRESHOLD = 0.22; 
         const LOOK_AWAY_THRESHOLD = 0.15; 
 
@@ -215,19 +288,18 @@
             eyeClosedStartTime: null,
             lookAwayStartTime: null,
             alarmActive: false,
-            lastEAR: 0,
             systemReady: false,
-            audioUnlocked: false
+            logCounter: 0
         };
 
-        // Handle Audio Upload
+        // File Handler
         audioUpload.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
                 const url = URL.createObjectURL(file);
                 warningSnd.src = url;
-                soundNameDisp.innerText = "CUSTOM: " + file.name.toUpperCase();
-                addLog("Custom Audio Loaded: " + file.name, "emerald");
+                soundNameDisp.innerText = file.name.toUpperCase();
+                addLog("Sound set: " + file.name, "indigo");
             }
         });
 
@@ -248,18 +320,30 @@
             onFrame: async () => {
                 await faceMesh.send({image: videoElement});
             },
-            width: 640,
-            height: 480
+            width: 1280,
+            height: 720
         });
 
-        function addLog(msg, color = 'slate') {
-            const time = new Date().toLocaleTimeString('en-GB', { hour12: false });
-            const log = document.getElementById('systemLog');
+        function addLog(msg, color = 'gray') {
+            const time = new Date().toLocaleTimeString('en-US', { hour12: false });
+            const logContainer = document.getElementById('systemLog');
             const entry = document.createElement('div');
-            const colorClass = { emerald: 'text-emerald-400', red: 'text-red-400', orange: 'text-orange-400', blue: 'text-blue-400' }[color] || 'text-slate-500';
-            entry.className = colorClass;
-            entry.innerHTML = `<span class="opacity-50">[${time}]</span> ${msg}`;
-            log.prepend(entry);
+            
+            const colorClasses = {
+                indigo: 'text-indigo-600',
+                red: 'text-red-600 font-bold',
+                orange: 'text-orange-600',
+                emerald: 'text-emerald-600',
+                gray: 'text-gray-500'
+            };
+
+            entry.className = `flex space-x-2 ${colorClasses[color] || colorClasses.gray}`;
+            entry.innerHTML = `<span class="opacity-40 font-mono">${time}</span> <span>${msg}</span>`;
+            
+            if (state.logCounter === 0) logContainer.innerHTML = '';
+            logContainer.prepend(entry);
+            state.logCounter++;
+            document.getElementById('logCount').innerText = state.logCounter;
         }
 
         function distance(p1, p2) {
@@ -285,11 +369,8 @@
                 const leftEye = [landmarks[33], landmarks[160], landmarks[158], landmarks[133], landmarks[153], landmarks[144]];
                 const rightEye = [landmarks[362], landmarks[385], landmarks[387], landmarks[263], landmarks[373], landmarks[380]];
                 
-                const leftEAR = calculateEAR(leftEye);
-                const rightEAR = calculateEAR(rightEye);
-                const ear = (leftEAR + rightEAR) / 2;
-                state.lastEAR = ear;
-
+                const ear = (calculateEAR(leftEye) + calculateEAR(rightEye)) / 2;
+                
                 const noseTip = landmarks[1];
                 const eyeCenter = (landmarks[33].x + landmarks[263].x) / 2;
                 const headOffset = noseTip.x - eyeCenter;
@@ -306,6 +387,7 @@
             const now = Date.now();
             let currentStatus = 'safe';
 
+            // Drowsiness logic
             if (ear < EAR_THRESHOLD) {
                 if (!state.eyeClosedStartTime) state.eyeClosedStartTime = now;
                 const duration = (now - state.eyeClosedStartTime) / 1000;
@@ -318,6 +400,7 @@
                 state.eyeClosedStartTime = null;
             }
 
+            // Distraction logic
             const isLookingAway = Math.abs(headOffset) > LOOK_AWAY_THRESHOLD;
             if (isLookingAway) {
                 if (!state.lookAwayStartTime) state.lookAwayStartTime = now;
@@ -328,7 +411,7 @@
 
                 if (distractionDuration > 5.0) {
                     currentStatus = 'microsleep'; 
-                    document.getElementById('alertSubText').innerText = "EYES ON ROAD - 5S TIMEOUT";
+                    document.getElementById('alertSubText').innerText = "Focus Loss Detected: The system has initiated an emergency safety protocol after 5 seconds of distraction.";
                 } else if (currentStatus === 'safe') {
                     currentStatus = 'distracted';
                 }
@@ -342,56 +425,77 @@
 
         function updateUI(status, ear = 0) {
             const card = document.getElementById('statusCard');
+            const icon = document.getElementById('statusIcon');
             const heading = document.getElementById('statusHeading');
             const desc = document.getElementById('statusDescription');
-            const frame = document.getElementById('monitorFrame');
             const fullAlert = document.getElementById('fullScreenAlert');
+            const earMeter = document.getElementById('earMeter');
 
             document.getElementById('earVal').innerText = ear.toFixed(3);
             document.getElementById('earLabel').innerText = ear.toFixed(3);
-            document.getElementById('earMeter').style.width = Math.min(100, (ear / 0.4) * 100) + '%';
+            earMeter.style.width = Math.min(100, (ear / 0.4) * 100) + '%';
+            document.getElementById('lastSyncTime').innerText = new Date().toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit', hour12:true});
 
-            card.className = "glass-panel p-6 rounded-3xl border-l-4 transition-all duration-300 ";
-            frame.classList.remove('alert-active');
-            
+            const eyeText = document.getElementById('eyeText');
+            const eyeDot = document.getElementById('eyeDot');
+
+            // Reset UI
+            card.classList.remove('border-red-500', 'border-amber-500', 'border-orange-500', 'border-green-500', 'alert-active-ui');
+            icon.classList.remove('text-red-600', 'bg-red-50', 'text-amber-600', 'bg-amber-50', 'text-orange-600', 'bg-orange-50', 'text-green-600', 'bg-green-50');
+
             switch(status) {
                 case 'safe':
                 case 'blink':
-                    card.classList.add('border-emerald-500');
-                    heading.innerText = 'Normal';
-                    desc.innerText = 'Driver is focused and alert.';
+                    card.classList.add('border-green-500');
+                    icon.classList.add('text-green-600', 'bg-green-50');
+                    heading.innerText = 'Optimized';
+                    desc.innerText = 'Driver is focused and attentive.';
+                    eyeText.innerText = 'EYES TRACKED';
+                    eyeDot.className = 'status-dot bg-green-500';
                     stopAlarm();
                     break;
                 case 'fatigue':
                     card.classList.add('border-amber-500');
-                    heading.innerText = 'Fatigue';
-                    desc.innerText = 'Slow blink detected. Stay alert.';
+                    icon.classList.add('text-amber-600', 'bg-amber-50');
+                    heading.innerText = 'Fatigue Warning';
+                    desc.innerText = 'Slow blinking detected.';
+                    eyeText.innerText = 'EYE CLOSURE';
+                    eyeDot.className = 'status-dot bg-amber-500';
                     stopAlarm();
                     break;
                 case 'drowsy':
                     card.classList.add('border-orange-500');
-                    heading.innerText = 'Drowsy';
-                    desc.innerText = 'Warning: Eye closure exceeds limit!';
+                    icon.classList.add('text-orange-600', 'bg-orange-50');
+                    heading.innerText = 'Drowsiness Alert';
+                    desc.innerText = 'High risk of micro-sleep.';
+                    eyeText.innerText = 'CRITICAL CLOSURE';
+                    eyeDot.className = 'status-dot bg-orange-500';
                     triggerAlarm();
                     break;
                 case 'microsleep':
-                    card.classList.add('border-red-600', 'alert-active');
-                    heading.innerText = 'CRITICAL';
-                    desc.innerText = 'DANGER: Microsleep/Distraction detected!';
-                    frame.classList.add('alert-active');
+                    card.classList.add('border-red-500', 'alert-active-ui');
+                    icon.classList.add('text-red-600', 'bg-red-50');
+                    heading.innerText = 'Emergency Protocol';
+                    desc.innerText = 'Immediate action required.';
                     fullAlert.classList.remove('hidden');
+                    eyeText.innerText = 'SENSORS TRIGGERED';
+                    eyeDot.className = 'status-dot bg-red-600';
                     triggerAlarm();
                     break;
                 case 'distracted':
-                    card.classList.add('border-blue-500');
-                    heading.innerText = 'Distracted';
+                    card.classList.add('border-amber-500');
+                    icon.classList.add('text-amber-600', 'bg-amber-50');
+                    heading.innerText = 'Inattentive';
                     desc.innerText = 'Eyes diverted from driving path.';
-                    stopAlarm();
+                    eyeText.innerText = 'LOOKING AWAY';
+                    eyeDot.className = 'status-dot bg-indigo-500';
                     break;
                 case 'lost':
-                    card.classList.add('border-slate-500');
-                    heading.innerText = 'Searching';
-                    desc.innerText = 'Driver face not in frame.';
+                    card.classList.add('border-gray-200');
+                    heading.innerText = 'Disconnected';
+                    desc.innerText = 'Analyzing driver environment...';
+                    eyeText.innerText = 'SIGNAL LOST';
+                    eyeDot.className = 'status-dot bg-gray-400';
                     break;
             }
         }
@@ -399,19 +503,9 @@
         function triggerAlarm() {
             if (!state.alarmActive) {
                 state.alarmActive = true;
-                addLog("ALARM ACTIVATED: PULL OVER", "red");
-                
-                warningSnd.volume = 1.0;
-                const playPromise = warningSnd.play();
-                
-                if (playPromise !== undefined) {
-                    playPromise.catch(error => {
-                        console.log("Playback failed. Interaction required.", error);
-                        addLog("AUDIO ERROR: RE-CLICK SYSTEM", "orange");
-                    });
-                }
-
-                if (navigator.vibrate) navigator.vibrate([500, 200, 500, 200, 500]);
+                addLog("CRITICAL: SAFETY INTERVENTION", "red");
+                warningSnd.play().catch(() => {});
+                if (navigator.vibrate) navigator.vibrate([500, 200, 500]);
             }
         }
 
@@ -421,8 +515,6 @@
                 warningSnd.pause();
                 warningSnd.currentTime = 0;
                 document.getElementById('fullScreenAlert').classList.add('hidden');
-                document.getElementById('alertSubText').innerText = "WAKE UP / EYES ON ROAD";
-                addLog("Alarm Silenced", "emerald");
             }
         }
 
@@ -430,36 +522,34 @@
             state.eyeClosedStartTime = null;
             state.lookAwayStartTime = null;
             stopAlarm();
+            addLog("System manually confirmed", "indigo");
         }
 
         function drawLandmarks(landmarks) {
-            canvasCtx.fillStyle = state.alarmActive ? '#ef4444' : '#3b82f6';
+            // Very subtle white dots instead of neon scifi HUD
+            canvasCtx.fillStyle = "rgba(255, 255, 255, 0.6)";
             const eyeIndices = [33, 133, 158, 153, 362, 263, 385, 373];
             eyeIndices.forEach(idx => {
                 const p = landmarks[idx];
                 canvasCtx.beginPath();
-                canvasCtx.arc(p.x * canvasElement.width, p.y * canvasElement.height, 2, 0, 2 * Math.PI);
+                canvasCtx.arc(p.x * canvasElement.width, p.y * canvasElement.height, 1.5, 0, 2 * Math.PI);
                 canvasCtx.fill();
             });
-            const n = landmarks[1];
-            canvasCtx.beginPath();
-            canvasCtx.arc(n.x * canvasElement.width, n.y * canvasElement.height, 3, 0, 2 * Math.PI);
-            canvasCtx.stroke();
         }
 
         document.getElementById('startBtn').addEventListener('click', async () => {
-            // Unlocking Audio
+            // Unlock audio
             warningSnd.play().then(() => {
                 warningSnd.pause();
                 warningSnd.currentTime = 0;
-                state.audioUnlocked = true;
-            }).catch(err => console.error("Audio unlock failed", err));
+            }).catch(e => console.log(e));
 
-            document.getElementById('cameraPrompt').classList.add('hidden');
-            document.getElementById('loadStatus').innerText = "System Live: Monitoring...";
+            document.getElementById('cameraPrompt').style.opacity = '0';
+            setTimeout(() => document.getElementById('cameraPrompt').classList.add('hidden'), 500);
+            document.getElementById('loadStatus').innerText = "Monitoring Active";
             state.systemReady = true;
             camera.start();
-            addLog("AI BIOMETRIC FEED STARTED", "emerald");
+            addLog("Safety Dashboard Initialized", "emerald");
         });
 
         window.onload = () => {
