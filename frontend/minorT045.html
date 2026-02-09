@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TO45 | Autonomous Sleepness Detection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- MediaPipe Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
+    
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --accent-blue: #3b82f6;
+            --accent-red: #ef4444;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: #f8fafc;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .video-container::after {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.05) 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        @keyframes pulse-red {
+            0%, 100% { border-color: rgba(239, 68, 68, 0.3); }
+            50% { border-color: rgba(239, 68, 68, 1); box-shadow: 0 0 30px rgba(239, 68, 68, 0.6); }
+        }
+
+        .alert-active { animation: pulse-red 0.5s infinite; }
+        .meter-fill { transition: width 0.1s linear; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <header class="p-6 border-b border-slate-800 flex justify-between items-center glass-panel sticky top-0 z-50">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-500/20">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold tracking-tight text-white">VisionGuard <span class="text-blue-500">TO45</span></h1>
+                <p class="text-[10px] text-slate-400 font-mono tracking-widest uppercase" id="loadStatus">Initializing Computer Vision...</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-4">
+             <div id="aiStatus" class="px-3 py-1 bg-slate-800 rounded-full border border-white/5 text-[10px] font-bold text-blue-400 uppercase">AI INFERENCE: ACTIVE</div>
+        </div>
+    </header>
+
+    <main class="flex-1 p-4 lg:p-8 grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto w-full">
+        
+        <!-- Camera Column -->
+        <div class="lg:col-span-2 space-y-6">
+            <div id="monitorFrame" class="relative video-container bg-black rounded-3xl overflow-hidden shadow-2xl border-4 border-slate-800 transition-all duration-300 h-[400px] lg:h-[550px]">
+                <video id="input_video" class="absolute inset-0 w-full h-full object-cover scale-x-[-1]" playsinline></video>
+                <canvas id="output_canvas" class="absolute inset-0 w-full h-full object-cover scale-x-[-1] z-20"></canvas>
+                
+                <!-- AI HUD Overlays -->
+                <div class="absolute inset-0 p-6 flex flex-col justify-between pointer-events-none z-30">
+                    <div class="flex justify-between items-start">
+                        <div class="glass-panel p-3 rounded-xl border border-white/10">
+                            <p class="text-[10px] text-blue-400 font-mono mb-1">METRIC TRACKING</p>
+                            <div class="font-mono text-sm">EAR: <span id="earVal">0.00</span></div>
+                        </div>
+                        <div id="distractionHUD" class="hidden glass-panel p-3 rounded-xl border border-red-500/50 bg-red-900/20 text-right">
+                            <p class="text-[10px] text-red-400 font-mono mb-1">LOOK-AWAY TIMER</p>
+                            <p id="distractionTimer" class="text-xl font-mono text-red-500">0.0s</p>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between items-end">
+                        <div id="eyeStateDisplay" class="glass-panel px-4 py-2 rounded-full border border-white/10 text-sm font-bold flex items-center space-x-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            <span>DETECTING...</span>
+                        </div>
+                        <div class="glass-panel px-4 py-2 rounded-full border border-white/10 text-sm font-bold text-white">
+                            CALIBRATION: OK
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Start UI -->
+                <div id="cameraPrompt" class="absolute inset-0 flex flex-col items-center justify-center bg-slate-900/95 text-center p-8 z-[100]">
+                    <h3 class="text-2xl font-bold mb-4 text-white">Configure System</h3>
+                    
+                    <!-- Custom Audio Section -->
+                    <div class="mb-8 w-full max-w-xs p-4 border border-white/10 bg-white/5 rounded-2xl">
+                        <label class="block text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-3">Custom Alarm Sound (Optional)</label>
+                        <input type="file" id="audioUpload" accept="audio/*" class="text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-blue-600 file:text-white hover:file:bg-blue-500 cursor-pointer w-full" />
+                        <p class="mt-2 text-[9px] text-slate-500">Default: High-Intensity Siren</p>
+                    </div>
+
+                    <button id="startBtn" class="bg-blue-600 hover:bg-blue-500 text-white px-10 py-4 rounded-full font-black uppercase tracking-widest transition-all shadow-xl shadow-blue-600/20 active:scale-95">Enable Camera & Audio</button>
+                </div>
+            </div>
+
+            <div class="glass-panel p-6 rounded-3xl flex justify-between items-center italic text-xs text-slate-500">
+                <p>Note: AI processing occurs entirely on-device. No video is transmitted.</p>
+                <button onclick="location.reload()" class="text-blue-400 underline uppercase font-bold text-[10px]">Hard Reset</button>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="space-y-6">
+            <div id="statusCard" class="glass-panel p-6 rounded-3xl border-l-4 border-emerald-500 transition-colors duration-300">
+                <h2 class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4">AI Driver Status</h2>
+                <div class="flex items-center space-x-4">
+                    <div id="statusIcon" class="w-16 h-16 rounded-2xl bg-emerald-500/20 flex items-center justify-center text-emerald-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 id="statusHeading" class="text-2xl font-black uppercase italic tracking-tighter text-white">Normal</h3>
+                        <p id="statusDescription" class="text-xs text-slate-400">Eyes tracked. Attention centered.</p>
+                    </div>
+                </div>
+                
+                <div class="mt-6 space-y-4">
+                    <div>
+                        <div class="flex justify-between text-[10px] font-bold mb-1">
+                            <span class="text-slate-400">EYE ASPECT RATIO</span>
+                            <span id="earLabel" class="text-white">0.00</span>
+                        </div>
+                        <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                            <div id="earMeter" class="meter-fill h-full bg-blue-500" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="p-4 bg-slate-900/50 rounded-xl border border-white/5">
+                        <p class="text-[10px] font-bold text-slate-500 mb-2 uppercase">System Sound State</p>
+                        <p id="soundName" class="font-mono text-[10px] text-emerald-400">SIREN_DEFAULT_ACTIVE</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reference -->
+            <div class="glass-panel p-6 rounded-3xl">
+                <h2 class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-4 text-white">Alert Matrix</h2>
+                <div class="space-y-2 text-[10px] font-mono">
+                    <div class="flex justify-between p-2 rounded bg-amber-500/10 text-amber-500">
+                        <span>0.4 - 0.8s Closure</span>
+                        <span>FATIGUE</span>
+                    </div>
+                    <div class="flex justify-between p-2 rounded bg-orange-500/10 text-orange-500">
+                        <span>0.8 - 1.5s Closure</span>
+                        <span>DROWSY</span>
+                    </div>
+                    <div class="flex justify-between p-2 rounded bg-red-500/10 text-red-500 border border-red-500/20">
+                        <span>> 1.5s Closure</span>
+                        <span>MICROSLEEP</span>
+                    </div>
+                    <div class="flex justify-between p-2 rounded bg-red-900/40 text-red-400 mt-2">
+                        <span>> 5.0s Look-Away</span>
+                        <span>DANGER ALARM</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-panel rounded-3xl h-48 overflow-hidden flex flex-col">
+                <div class="p-4 border-b border-white/5 bg-slate-800/50 text-[10px] font-bold text-slate-400 uppercase">Live Audit Log</div>
+                <div id="systemLog" class="p-4 space-y-1 overflow-y-auto text-[10px] font-mono flex-1"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Overlays -->
+    <div id="fullScreenAlert" class="fixed inset-0 z-[200] bg-red-600 flex flex-col items-center justify-center p-8 text-center hidden">
+        <h2 class="text-6xl font-black text-white mb-4 animate-bounce uppercase">DANGER!</h2>
+        <p class="text-2xl font-bold text-white/90 mb-12 uppercase tracking-widest" id="alertSubText">WAKE UP / EYES ON ROAD</p>
+        <button onclick="dismissAlarm()" class="bg-white text-red-600 px-12 py-4 rounded-full font-black text-xl shadow-2xl">DISMISS</button>
+    </div>
+
+    <!-- Alarm Audio -->
+    <audio id="warningSnd" loop preload="auto">
+        <source src="https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // DOM Elements
+        const videoElement = document.getElementById('input_video');
+        const canvasElement = document.getElementById('output_canvas');
+        const canvasCtx = canvasElement.getContext('2d');
+        const warningSnd = document.getElementById('warningSnd');
+        const audioUpload = document.getElementById('audioUpload');
+        const soundNameDisp = document.getElementById('soundName');
+
+        // Thresholds
+        const EAR_THRESHOLD = 0.22; 
+        const LOOK_AWAY_THRESHOLD = 0.15; 
+
+        // State
+        const state = {
+            eyeClosedStartTime: null,
+            lookAwayStartTime: null,
+            alarmActive: false,
+            lastEAR: 0,
+            systemReady: false,
+            audioUnlocked: false
+        };
+
+        // Handle Audio Upload
+        audioUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                warningSnd.src = url;
+                soundNameDisp.innerText = "CUSTOM: " + file.name.toUpperCase();
+                addLog("Custom Audio Loaded: " + file.name, "emerald");
+            }
+        });
+
+        const faceMesh = new FaceMesh({
+            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
+        });
+
+        faceMesh.setOptions({
+            maxNumFaces: 1,
+            refineLandmarks: true,
+            minDetectionConfidence: 0.5,
+            minTrackingConfidence: 0.5
+        });
+
+        faceMesh.onResults(onResults);
+
+        const camera = new Camera(videoElement, {
+            onFrame: async () => {
+                await faceMesh.send({image: videoElement});
+            },
+            width: 640,
+            height: 480
+        });
+
+        function addLog(msg, color = 'slate') {
+            const time = new Date().toLocaleTimeString('en-GB', { hour12: false });
+            const log = document.getElementById('systemLog');
+            const entry = document.createElement('div');
+            const colorClass = { emerald: 'text-emerald-400', red: 'text-red-400', orange: 'text-orange-400', blue: 'text-blue-400' }[color] || 'text-slate-500';
+            entry.className = colorClass;
+            entry.innerHTML = `<span class="opacity-50">[${time}]</span> ${msg}`;
+            log.prepend(entry);
+        }
+
+        function distance(p1, p2) {
+            return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2));
+        }
+
+        function calculateEAR(eyeLandmarks) {
+            const vertical1 = distance(eyeLandmarks[1], eyeLandmarks[5]);
+            const vertical2 = distance(eyeLandmarks[2], eyeLandmarks[4]);
+            const horizontal = distance(eyeLandmarks[0], eyeLandmarks[3]);
+            return (vertical1 + vertical2) / (2.0 * horizontal);
+        }
+
+        function onResults(results) {
+            if (!state.systemReady) return;
+
+            canvasCtx.save();
+            canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+            
+            if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
+                const landmarks = results.multiFaceLandmarks[0];
+
+                const leftEye = [landmarks[33], landmarks[160], landmarks[158], landmarks[133], landmarks[153], landmarks[144]];
+                const rightEye = [landmarks[362], landmarks[385], landmarks[387], landmarks[263], landmarks[373], landmarks[380]];
+                
+                const leftEAR = calculateEAR(leftEye);
+                const rightEAR = calculateEAR(rightEye);
+                const ear = (leftEAR + rightEAR) / 2;
+                state.lastEAR = ear;
+
+                const noseTip = landmarks[1];
+                const eyeCenter = (landmarks[33].x + landmarks[263].x) / 2;
+                const headOffset = noseTip.x - eyeCenter;
+
+                processBiometrics(ear, headOffset);
+                drawLandmarks(landmarks);
+            } else {
+                updateUI('lost');
+            }
+            canvasCtx.restore();
+        }
+
+        function processBiometrics(ear, headOffset) {
+            const now = Date.now();
+            let currentStatus = 'safe';
+
+            if (ear < EAR_THRESHOLD) {
+                if (!state.eyeClosedStartTime) state.eyeClosedStartTime = now;
+                const duration = (now - state.eyeClosedStartTime) / 1000;
+
+                if (duration > 1.5) currentStatus = 'microsleep';
+                else if (duration > 0.8) currentStatus = 'drowsy';
+                else if (duration > 0.4) currentStatus = 'fatigue';
+                else currentStatus = 'blink';
+            } else {
+                state.eyeClosedStartTime = null;
+            }
+
+            const isLookingAway = Math.abs(headOffset) > LOOK_AWAY_THRESHOLD;
+            if (isLookingAway) {
+                if (!state.lookAwayStartTime) state.lookAwayStartTime = now;
+                const distractionDuration = (now - state.lookAwayStartTime) / 1000;
+                
+                document.getElementById('distractionHUD').classList.remove('hidden');
+                document.getElementById('distractionTimer').innerText = distractionDuration.toFixed(1) + 's';
+
+                if (distractionDuration > 5.0) {
+                    currentStatus = 'microsleep'; 
+                    document.getElementById('alertSubText').innerText = "EYES ON ROAD - 5S TIMEOUT";
+                } else if (currentStatus === 'safe') {
+                    currentStatus = 'distracted';
+                }
+            } else {
+                state.lookAwayStartTime = null;
+                document.getElementById('distractionHUD').classList.add('hidden');
+            }
+
+            updateUI(currentStatus, ear);
+        }
+
+        function updateUI(status, ear = 0) {
+            const card = document.getElementById('statusCard');
+            const heading = document.getElementById('statusHeading');
+            const desc = document.getElementById('statusDescription');
+            const frame = document.getElementById('monitorFrame');
+            const fullAlert = document.getElementById('fullScreenAlert');
+
+            document.getElementById('earVal').innerText = ear.toFixed(3);
+            document.getElementById('earLabel').innerText = ear.toFixed(3);
+            document.getElementById('earMeter').style.width = Math.min(100, (ear / 0.4) * 100) + '%';
+
+            card.className = "glass-panel p-6 rounded-3xl border-l-4 transition-all duration-300 ";
+            frame.classList.remove('alert-active');
+            
+            switch(status) {
+                case 'safe':
+                case 'blink':
+                    card.classList.add('border-emerald-500');
+                    heading.innerText = 'Normal';
+                    desc.innerText = 'Driver is focused and alert.';
+                    stopAlarm();
+                    break;
+                case 'fatigue':
+                    card.classList.add('border-amber-500');
+                    heading.innerText = 'Fatigue';
+                    desc.innerText = 'Slow blink detected. Stay alert.';
+                    stopAlarm();
+                    break;
+                case 'drowsy':
+                    card.classList.add('border-orange-500');
+                    heading.innerText = 'Drowsy';
+                    desc.innerText = 'Warning: Eye closure exceeds limit!';
+                    triggerAlarm();
+                    break;
+                case 'microsleep':
+                    card.classList.add('border-red-600', 'alert-active');
+                    heading.innerText = 'CRITICAL';
+                    desc.innerText = 'DANGER: Microsleep/Distraction detected!';
+                    frame.classList.add('alert-active');
+                    fullAlert.classList.remove('hidden');
+                    triggerAlarm();
+                    break;
+                case 'distracted':
+                    card.classList.add('border-blue-500');
+                    heading.innerText = 'Distracted';
+                    desc.innerText = 'Eyes diverted from driving path.';
+                    stopAlarm();
+                    break;
+                case 'lost':
+                    card.classList.add('border-slate-500');
+                    heading.innerText = 'Searching';
+                    desc.innerText = 'Driver face not in frame.';
+                    break;
+            }
+        }
+
+        function triggerAlarm() {
+            if (!state.alarmActive) {
+                state.alarmActive = true;
+                addLog("ALARM ACTIVATED: PULL OVER", "red");
+                
+                warningSnd.volume = 1.0;
+                const playPromise = warningSnd.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.catch(error => {
+                        console.log("Playback failed. Interaction required.", error);
+                        addLog("AUDIO ERROR: RE-CLICK SYSTEM", "orange");
+                    });
+                }
+
+                if (navigator.vibrate) navigator.vibrate([500, 200, 500, 200, 500]);
+            }
+        }
+
+        function stopAlarm() {
+            if (state.alarmActive) {
+                state.alarmActive = false;
+                warningSnd.pause();
+                warningSnd.currentTime = 0;
+                document.getElementById('fullScreenAlert').classList.add('hidden');
+                document.getElementById('alertSubText').innerText = "WAKE UP / EYES ON ROAD";
+                addLog("Alarm Silenced", "emerald");
+            }
+        }
+
+        function dismissAlarm() {
+            state.eyeClosedStartTime = null;
+            state.lookAwayStartTime = null;
+            stopAlarm();
+        }
+
+        function drawLandmarks(landmarks) {
+            canvasCtx.fillStyle = state.alarmActive ? '#ef4444' : '#3b82f6';
+            const eyeIndices = [33, 133, 158, 153, 362, 263, 385, 373];
+            eyeIndices.forEach(idx => {
+                const p = landmarks[idx];
+                canvasCtx.beginPath();
+                canvasCtx.arc(p.x * canvasElement.width, p.y * canvasElement.height, 2, 0, 2 * Math.PI);
+                canvasCtx.fill();
+            });
+            const n = landmarks[1];
+            canvasCtx.beginPath();
+            canvasCtx.arc(n.x * canvasElement.width, n.y * canvasElement.height, 3, 0, 2 * Math.PI);
+            canvasCtx.stroke();
+        }
+
+        document.getElementById('startBtn').addEventListener('click', async () => {
+            // Unlocking Audio
+            warningSnd.play().then(() => {
+                warningSnd.pause();
+                warningSnd.currentTime = 0;
+                state.audioUnlocked = true;
+            }).catch(err => console.error("Audio unlock failed", err));
+
+            document.getElementById('cameraPrompt').classList.add('hidden');
+            document.getElementById('loadStatus').innerText = "System Live: Monitoring...";
+            state.systemReady = true;
+            camera.start();
+            addLog("AI BIOMETRIC FEED STARTED", "emerald");
+        });
+
+        window.onload = () => {
+            canvasElement.width = videoElement.clientWidth;
+            canvasElement.height = videoElement.clientHeight;
+        };
+    </script>
+</body>
+</html>

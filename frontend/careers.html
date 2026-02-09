@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Careers | Diverse Loopers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --brand-dark: #0a0a0b;
+            --brand-accent: #2563eb;
+            --brand-muted: #6b7280;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            scroll-behavior: smooth; 
+            background-color: #ffffff;
+            color: var(--brand-dark);
+        }
+
+        .serif {
+            font-family: 'Instrument Serif', serif;
+        }
+
+        .reveal { 
+            opacity: 0; 
+            transform: translateY(20px); 
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1); 
+        }
+        .reveal.active { 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
+
+        /* Sophisticated Button */
+        .btn-premium {
+            background: var(--brand-dark);
+            color: white;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-premium:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px -10px rgba(0,0,0,0.3);
+        }
+
+        /* Image Masking & Effects */
+        .img-container {
+            border-radius: 24px;
+            overflow: hidden;
+            position: relative;
+        }
+        .img-container img {
+            transition: transform 1.2s ease;
+        }
+        .img-container:hover img {
+            transform: scale(1.05);
+        }
+
+        /* Timeline Path */
+        .journey-line {
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: linear-gradient(to bottom, #e5e7eb 0%, #e5e7eb 80%, transparent 100%);
+        }
+
+        /* Custom Modal Scroll */
+        #appModal ::-webkit-scrollbar { width: 4px; }
+        #appModal ::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 10px; }
+
+        .faq-item summary::-webkit-details-marker { display: none; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Subtle Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-[100] transition-all duration-300 px-6 py-6" id="navbar">
+        <div class="max-w-7xl mx-auto flex justify-between items-center bg-white/80 backdrop-blur-md rounded-2xl px-6 py-4 shadow-sm border border-slate-100">
+            <div class="flex items-center space-x-3 group cursor-pointer">
+                <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <i data-lucide="loop" class="text-white w-5 h-5"></i>
+                </div>
+                <span class="font-bold text-xl tracking-tight">Diverse Loopers</span>
+            </div>
+            <div class="hidden md:flex items-center space-x-10 text-sm font-medium text-slate-500">
+                <a href="#culture" class="hover:text-black transition">Culture</a>
+                <a href="#growth" class="hover:text-black transition">Growth</a>
+                <a href="#jobs-section" class="btn-premium px-6 py-2.5 rounded-xl">Open Roles</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative pt-44 pb-32 px-6 overflow-hidden">
+        <div class="max-w-5xl mx-auto text-center reveal active">
+            <p class="text-blue-600 font-semibold tracking-widest uppercase text-xs mb-6">Join the execution ecosystem</p>
+            <h1 class="text-6xl md:text-8xl font-medium serif leading-[0.95] mb-8 tracking-tight">
+                Escape the average. <br>
+                <span class="italic text-slate-400">Build the future.</span>
+            </h1>
+            <p class="max-w-xl mx-auto text-lg text-slate-500 leading-relaxed mb-12">
+                Diverse Loopers is where talent meets industrial-grade execution. We’re looking for builders who value outcomes over instruction.
+            </p>
+            <div class="flex justify-center gap-6">
+                <a href="#jobs-section" class="btn-premium px-10 py-4 rounded-2xl font-bold flex items-center group">
+                    Explore Missions
+                    <i data-lucide="arrow-right" class="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Hero Collage: More Balanced -->
+        <div class="max-w-7xl mx-auto mt-24 grid grid-cols-12 gap-6 reveal active delay-200">
+            <div class="col-span-8 img-container h-[450px]">
+                <img src="d429e030a40e603b6b41c7e341c2d4c748854ebd-943x494.avif" class="w-full h-full object-cover" alt="Office Culture">
+            </div>
+            <div class="col-span-4 img-container h-[450px]">
+                <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=600" class="w-full h-full object-cover" alt="Collaboration">
+            </div>
+        </div>
+    </header>
+
+    <!-- Culture Section -->
+    <section id="culture" class="py-32 bg-slate-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid lg:grid-cols-2 gap-24 items-center">
+                <div class="reveal">
+                    <h2 class="text-5xl font-medium serif mb-8">Life at Diverse Loopers</h2>
+                    <p class="text-slate-500 text-lg mb-12 leading-relaxed">
+                        We don’t believe in simulation. Every week is a war-room environment where we solve live client challenges with total autonomy.
+                    </p>
+                    
+                    <div class="grid gap-8">
+                        <div class="flex gap-6 group">
+                            <div class="w-12 h-12 rounded-2xl bg-white flex items-center justify-center shadow-sm group-hover:bg-blue-600 transition-colors">
+                                <i data-lucide="zap" class="w-6 h-6 group-hover:text-white transition-colors"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg mb-1">Direct Ownership</h4>
+                                <p class="text-slate-500 text-sm">No gatekeepers. You own the result from day one.</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-6 group">
+                            <div class="w-12 h-12 rounded-2xl bg-white flex items-center justify-center shadow-sm group-hover:bg-blue-600 transition-colors">
+                                <i data-lucide="shield" class="w-6 h-6 group-hover:text-white transition-colors"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-lg mb-1">Founder Access</h4>
+                                <p class="text-slate-500 text-sm">Zero hierarchy. Learn directly from those building the ecosystem.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative reveal delay-200">
+                    <div class="img-container h-[600px] shadow-2xl">
+                        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover" alt="Team">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Filter -->
+    <section class="py-32 bg-white">
+        <div class="max-w-4xl mx-auto px-6 text-center reveal">
+            <h2 class="text-4xl font-medium serif mb-16">The Looper Fit</h2>
+            <div class="grid md:grid-cols-2 text-left border border-slate-100 rounded-[32px] overflow-hidden shadow-sm">
+                <div class="p-12 border-r border-slate-100">
+                    <h3 class="text-blue-600 font-bold uppercase tracking-widest text-[10px] mb-8">You'll thrive if</h3>
+                    <ul class="space-y-6">
+                        <li class="flex items-start gap-4 text-slate-700">
+                            <i data-lucide="check" class="w-5 h-5 text-green-500 mt-0.5"></i>
+                            <span>You learn by building, not waiting.</span>
+                        </li>
+                        <li class="flex items-start gap-4 text-slate-700">
+                            <i data-lucide="check" class="w-5 h-5 text-green-500 mt-0.5"></i>
+                            <span>You care more about outcomes than titles.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="p-12 bg-slate-50/50">
+                    <h3 class="text-slate-400 font-bold uppercase tracking-widest text-[10px] mb-8">This isn't for you if</h3>
+                    <ul class="space-y-6 grayscale">
+                        <li class="flex items-start gap-4 text-slate-400">
+                            <i data-lucide="x" class="w-5 h-5 text-slate-400 mt-0.5"></i>
+                            <span>You need rigid instructions.</span>
+                        </li>
+                        <li class="flex items-start gap-4 text-slate-400">
+                            <i data-lucide="x" class="w-5 h-5 text-slate-400 mt-0.5"></i>
+                            <span>You avoid total responsibility.</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Growth Journey -->
+    <section id="growth" class="py-32 bg-white border-t border-slate-50">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-24 reveal">
+                <h2 class="text-5xl font-medium serif mb-4 text-blue-600">Growth Path</h2>
+                <p class="text-slate-500">Execution is the only currency here.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-4 gap-12 relative">
+                <div class="space-y-4 reveal">
+                    <div class="text-4xl font-medium serif text-slate-200">01</div>
+                    <h4 class="text-xl font-bold">Entry Level</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">Mastering tools and task delivery with consistent quality.</p>
+                </div>
+                <div class="space-y-4 reveal delay-100">
+                    <div class="text-4xl font-medium serif text-slate-200">02</div>
+                    <h4 class="text-xl font-bold">Core Contributor</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">Ownership of modules and managing end-to-end delivery.</p>
+                </div>
+                <div class="space-y-4 reveal delay-200">
+                    <div class="text-4xl font-medium serif text-slate-200">03</div>
+                    <h4 class="text-xl font-bold">Strategic Track</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">Direct business impact, high-level client navigation.</p>
+                </div>
+                <div class="space-y-4 reveal delay-300">
+                    <div class="text-4xl font-medium serif text-blue-600">04</div>
+                    <h4 class="text-xl font-bold">Leadership</h4>
+                    <p class="text-slate-500 text-sm leading-relaxed">Scaling the team, product, or revenue streams.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Founder's Note -->
+    <section class="py-40 bg-slate-900 text-white overflow-hidden relative">
+        <div class="max-w-4xl mx-auto px-6 text-center reveal">
+            <h3 class="text-4xl md:text-5xl font-medium serif leading-tight italic mb-16">
+                “DL was built to break the cycle of fake experience and disconnected hiring.”
+            </h3>
+            <div class="flex flex-col items-center">
+                <div class="w-12 h-12 bg-white rounded-full mb-4"></div>
+                <p class="font-bold text-lg">The Founders</p>
+                <p class="text-slate-500 text-xs uppercase tracking-widest font-semibold">Diverse Loopers</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Open Roles -->
+    <section id="jobs-section" class="py-32 bg-[#fafafa]">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-20 gap-8 reveal">
+                <div>
+                    <h2 class="text-5xl font-medium serif">The Missions</h2>
+                    <p class="text-slate-500 mt-2">Find your path and build your impact.</p>
+                </div>
+                <div class="relative group">
+                    <input type="text" id="jobSearch" placeholder="Search for roles..." class="w-72 pl-6 pr-6 py-4 bg-white border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-100 transition shadow-sm font-medium">
+                </div>
+            </div>
+
+            <div id="jobGrid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="col-span-full py-20 text-center text-slate-400 font-medium">Syncing with database...</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="py-32 bg-white">
+        <div class="max-w-3xl mx-auto px-6">
+            <h2 class="text-4xl font-medium serif mb-16 text-center tracking-tight">Common Queries</h2>
+            <div class="space-y-6">
+                <details class="faq-item group border-b border-slate-100 py-8 cursor-pointer">
+                    <summary class="flex justify-between items-center font-bold text-xl list-none">
+                        Is this remote or hybrid?
+                        <i data-lucide="plus" class="w-6 h-6 transition-transform group-open:rotate-45"></i>
+                    </summary>
+                    <p class="mt-6 text-slate-500 leading-relaxed max-w-2xl">Most roles are remote-first. Some strategic phases may require hybrid collaboration for war-room execution.</p>
+                </details>
+                <details class="faq-item group border-b border-slate-100 py-8 cursor-pointer">
+                    <summary class="flex justify-between items-center font-bold text-xl list-none">
+                        Do you hire freshers?
+                        <i data-lucide="plus" class="w-6 h-6 transition-transform group-open:rotate-45"></i>
+                    </summary>
+                    <p class="mt-6 text-slate-500 leading-relaxed max-w-2xl">Always. If you can build and deliver, we don't care about your graduation year.</p>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <!-- Simple Footer -->
+    <footer class="py-24 bg-white border-t border-slate-50">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-12">
+            <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
+                    <i data-lucide="loop" class="text-white w-4 h-4"></i>
+                </div>
+                <span class="font-bold text-lg tracking-tight">Diverse Loopers</span>
+            </div>
+            <div class="flex space-x-12 text-slate-400 text-xs font-bold uppercase tracking-widest">
+                <a href="#" class="hover:text-black transition">Privacy</a>
+                <a href="#" class="hover:text-black transition">Terms</a>
+                <a href="mailto:hello@diverseloopers.com" class="hover:text-black transition">Contact</a>
+            </div>
+            <p class="text-slate-300 text-xs">© 2024 DIVERSE LOOPERS</p>
+        </div>
+    </footer>
+
+    <!-- Full-Screen Application Modal -->
+    <div id="appModal" class="fixed inset-0 z-[200] hidden flex items-center justify-center bg-white">
+        <div class="w-full h-full flex flex-col md:flex-row overflow-hidden relative">
+            
+            <!-- Close Button -->
+            <button onclick="closeModal()" class="fixed top-8 right-8 z-50 p-3 hover:bg-slate-100 rounded-full transition group">
+                <i data-lucide="x" class="group-hover:rotate-90 transition-transform"></i>
+            </button>
+
+            <!-- Left Panel (Context) -->
+            <div class="md:w-[400px] bg-slate-50 p-16 flex flex-col justify-between border-r border-slate-100">
+                <div>
+                    <p class="text-blue-600 font-bold uppercase text-[10px] tracking-widest mb-4">Mission Registration</p>
+                    <h3 id="modalJobTitle" class="text-4xl font-medium serif mb-8 leading-none italic">Job Title</h3>
+                    <div id="viewResponsibilities" class="space-y-6 text-sm text-slate-500"></div>
+                </div>
+                <div class="pt-8">
+                    <p id="viewEligibility" class="text-xs font-bold text-slate-400 uppercase tracking-widest"></p>
+                </div>
+            </div>
+
+            <!-- Right Panel (Form) -->
+            <div class="flex-1 overflow-y-auto p-8 md:p-32">
+                <div class="max-w-2xl mx-auto">
+                    <form id="applyForm" class="space-y-16">
+                        <h4 class="text-5xl font-medium serif tracking-tight">Identity Profile</h4>
+                        
+                        <div class="grid md:grid-cols-2 gap-12">
+                            <div class="border-b border-slate-200 focus-within:border-black transition-colors pb-4">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Your Name</label>
+                                <input type="text" name="name" required class="w-full bg-transparent outline-none font-medium text-lg" placeholder="Full Name">
+                            </div>
+                            <div class="border-b border-slate-200 focus-within:border-black transition-colors pb-4">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Email Address</label>
+                                <input type="email" name="email" required class="w-full bg-transparent outline-none font-medium text-lg" placeholder="email@address.com">
+                            </div>
+                        </div>
+
+                        <div class="grid md:grid-cols-2 gap-12">
+                            <div class="border-b border-slate-200 focus-within:border-black transition-colors pb-4">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Portfolio / LinkedIn</label>
+                                <input type="url" name="linkedin" class="w-full bg-transparent outline-none font-medium text-lg" placeholder="https://...">
+                            </div>
+                            <div class="border-b border-slate-200 focus-within:border-black transition-colors pb-4">
+                                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Contact Number</label>
+                                <input type="tel" name="phone" required class="w-full bg-transparent outline-none font-medium text-lg" placeholder="+91 ...">
+                            </div>
+                        </div>
+
+                        <div class="space-y-4">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Resume (PDF)</label>
+                            <div class="relative h-24 border-2 border-dashed border-slate-200 rounded-2xl flex items-center px-8 hover:border-black hover:bg-slate-50 transition cursor-pointer group">
+                                <input type="file" id="resumeFile" accept=".pdf" required class="absolute inset-0 opacity-0 cursor-pointer">
+                                <div id="fileInfo" class="flex items-center gap-4">
+                                    <i data-lucide="upload-cloud" class="w-6 h-6 text-slate-400"></i>
+                                    <span class="text-sm font-medium text-slate-400 group-hover:text-black transition-colors">Select your mission profile</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="border-b border-slate-200 focus-within:border-black transition-colors pb-4">
+                            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-2">Why Diverse Loopers?</label>
+                            <textarea name="reason" rows="3" required class="w-full bg-transparent outline-none font-medium text-lg" placeholder="Tell us about your drive..."></textarea>
+                        </div>
+
+                        <button type="submit" id="submitBtn" class="btn-premium px-12 py-5 rounded-2xl font-bold text-lg w-full md:w-auto">Launch Application</button>
+                    </form>
+
+                    <!-- Success UI -->
+                    <div id="successState" class="hidden text-center py-24 reveal active">
+                        <div class="w-20 h-20 bg-green-50 text-green-600 rounded-full flex items-center justify-center mx-auto mb-8">
+                            <i data-lucide="check" class="w-10 h-10"></i>
+                        </div>
+                        <h3 class="text-4xl font-medium serif mb-4">Application Sent</h3>
+                        <p class="text-slate-500 mb-12">Our scouts will review your profile and respond within 48 hours.</p>
+                        <button onclick="closeModal()" class="btn-premium px-12 py-4 rounded-2xl font-bold">Return to Careers</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Supabase Config ---
+        const supabaseUrl = ""; // ADD URL
+        const supabaseKey = ""; // ADD KEY
+        let supabaseClient;
+        let allJobs = [];
+        let selectedJobId = null;
+
+        window.onload = async () => {
+            lucide.createIcons();
+            initAnimations();
+            
+            if (supabaseUrl && supabaseKey) {
+                supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+                await fetchJobs();
+            } else {
+                renderMockJobs();
+            }
+            setupForm();
+        };
+
+        // Scroll animations
+        function initAnimations() {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.classList.add('active');
+                });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        }
+
+        async function fetchJobs() {
+            const { data, error } = await supabaseClient.from('jobs').select('*').eq('status', 'open');
+            if (!error) {
+                allJobs = data;
+                renderJobs(allJobs);
+            }
+        }
+
+        function renderJobs(jobs) {
+            const grid = document.getElementById('jobGrid');
+            if (jobs.length === 0) {
+                grid.innerHTML = `<div class="col-span-full py-10 text-center serif text-4xl text-slate-200 italic">No missions active today.</div>`;
+                return;
+            }
+
+            grid.innerHTML = jobs.map(job => `
+                <div class="group bg-white p-12 rounded-[32px] border border-slate-100 hover:shadow-2xl transition-all duration-700 cursor-pointer flex flex-col justify-between" onclick="openJobDetails(${job.id})">
+                    <div>
+                        <div class="flex justify-between items-start mb-10">
+                            <span class="text-[10px] font-bold text-blue-600 uppercase tracking-widest">${job.department}</span>
+                            <span class="text-[10px] font-bold text-slate-300 uppercase tracking-widest">${job.location}</span>
+                        </div>
+                        <h3 class="text-4xl font-medium serif group-hover:text-blue-600 transition duration-500 leading-tight mb-4">${job.title}</h3>
+                        <p class="text-sm text-slate-400 font-medium uppercase tracking-tighter">${job.type}</p>
+                    </div>
+                    <div class="mt-12 flex items-center justify-between">
+                        <p class="text-xl font-medium serif text-slate-400 group-hover:text-black transition-colors">${job.salary}</p>
+                        <div class="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center group-hover:bg-black group-hover:text-white transition duration-500">
+                            <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function openJobDetails(id) {
+            const job = allJobs.find(j => j.id == id);
+            if (!job) return;
+            selectedJobId = id;
+            
+            document.getElementById('modalJobTitle').innerText = job.title;
+            document.getElementById('viewEligibility').innerText = "Path // " + (job.eligibility || 'OPEN ACCESS');
+            document.getElementById('viewResponsibilities').innerHTML = (job.responsibilities || []).map(r => `
+                <div class="flex items-start gap-4">
+                    <div class="w-1 h-1 bg-black rounded-full mt-2"></div>
+                    <span>${r}</span>
+                </div>
+            `).join('');
+
+            document.getElementById('appModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            lucide.createIcons();
+        }
+
+        function closeModal() {
+            document.getElementById('appModal').classList.add('hidden');
+            document.body.style.overflow = '';
+            document.getElementById('applyForm').classList.remove('hidden');
+            document.getElementById('successState').classList.add('hidden');
+            document.getElementById('applyForm').reset();
+            resetFileUI();
+        }
+
+        function resetFileUI() {
+            document.getElementById('fileInfo').innerHTML = `<i data-lucide="upload-cloud" class="w-6 h-6 text-slate-400"></i><span class="text-sm font-medium text-slate-400">Select your mission profile</span>`;
+            lucide.createIcons();
+        }
+
+        function setupForm() {
+            // Search
+            document.getElementById('jobSearch').oninput = (e) => {
+                const q = e.target.value.toLowerCase();
+                renderJobs(allJobs.filter(j => j.title.toLowerCase().includes(q) || j.department.toLowerCase().includes(q)));
+            };
+
+            // File select
+            document.getElementById('resumeFile').onchange = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    document.getElementById('fileInfo').innerHTML = `<span class="text-sm font-bold text-blue-600 uppercase tracking-widest">${file.name}</span>`;
+                }
+            };
+
+            // Submission
+            document.getElementById('applyForm').onsubmit = async (e) => {
+                e.preventDefault();
+                const btn = document.getElementById('submitBtn');
+                const btnOriginal = btn.innerText;
+                btn.disabled = true;
+                btn.innerText = "UPLOADING PROFILE...";
+
+                try {
+                    const formData = new FormData(e.target);
+                    const file = document.getElementById('resumeFile').files[0];
+                    let resumeUrl = "";
+
+                    if (supabaseClient && file) {
+                        const fileName = `${Date.now()}_${file.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
+                        const { data, error } = await supabaseClient.storage.from('resumes').upload(fileName, file);
+                        if (error) throw error;
+                        const { data: { publicUrl } } = supabaseClient.storage.from('resumes').getPublicUrl(fileName);
+                        resumeUrl = publicUrl;
+                    }
+
+                    const application = {
+                        job_id: selectedJobId,
+                        job_title: document.getElementById('modalJobTitle').innerText,
+                        applicant_name: formData.get('name'),
+                        applicant_email: formData.get('email'),
+                        applicant_phone: formData.get('phone'),
+                        resume_url: resumeUrl,
+                        linkedin_url: formData.get('linkedin'),
+                        reason: formData.get('reason')
+                    };
+
+                    if (supabaseClient) {
+                        const { error } = await supabaseClient.from('applications').insert([application]);
+                        if (error) throw error;
+                    }
+
+                    document.getElementById('applyForm').classList.add('hidden');
+                    document.getElementById('successState').classList.remove('hidden');
+                } catch (err) {
+                    alert("Submission Error: " + err.message);
+                } finally {
+                    btn.disabled = false;
+                    btn.innerText = btnOriginal;
+                }
+            };
+        }
+
+        function renderMockJobs() {
+            allJobs = [
+                { id: 1, title: 'Growth Ops Lead', department: 'Growth', location: 'New Delhi / Hybrid', type: 'Full-time', salary: '₹12L - 18L PA', responsibilities: ['Direct experimentos', 'Market navigation'], eligibility: 'Hustle mindset required' },
+                { id: 2, title: 'Backend Architect', department: 'Technology', location: 'Remote', type: 'Full-time', salary: '₹22L - 35L PA', responsibilities: ['System scale', 'Infrastructure'], eligibility: 'Node.js Expertise' }
+            ];
+            renderJobs(allJobs);
+        }
+    </script>
+</body>
+</html>
